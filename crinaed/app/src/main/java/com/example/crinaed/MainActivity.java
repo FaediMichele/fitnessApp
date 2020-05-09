@@ -19,25 +19,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         final SharedPreferences preferences = getSharedPreferences(ID_APPLICATION,MODE_PRIVATE);
+        if(VALUE_LIGHT.equals(preferences.getString(KEY,VALUE_LIGHT))){
+            setTheme(R.style.AppTheme);
+        }else{
+            setTheme(R.style.ThemeCri);
+        }
+        setContentView(R.layout.activity_main);
 
         findViewById(R.id.button_change_theme).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(VALUE_LIGHT.equals(preferences.getString(KEY,VALUE_LIGHT))){
-                    setTheme(R.style.AppTheme);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(KEY,VALUE_DARK);
                     editor.apply();
-                    Log.d("theme",VALUE_LIGHT);
                 }
                 else {
-                    setTheme(R.style.ThemeCri);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(KEY,VALUE_LIGHT);
                     editor.apply();
-                    Log.d("theme",VALUE_DARK);
 
                 }
                 Intent refresh = new Intent(thisActivity(), MainActivity.class);
