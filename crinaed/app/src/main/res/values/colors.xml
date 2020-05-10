@@ -6,4 +6,5 @@
     <color name="colorPrimaryb">#f00</color>
     <color name="colorPrimaryDarkb">#0f0</color>
     <color name="colorAccentb">#00f</color>
+    <color name="color_setting_icon">#949494</color>
 </resources>

@@ -1,0 +1,20 @@
+- il nome 
+- il logo
+- i colori
+	- colore fisico --- rosso FF7DC2 FF8599
+	- colore sociale --- verde 7DFF7D 85FFC6
+	- colore del mentale-- blu 85C6FF - 7D7DFF
+
+	- colore grafici generali -- #FFA26B #FFD387 LOGO
+
+
+
+https://colorhunt.co/palette/145393
+
+
+
+
+
+
+#F07590
+#FDAB84
