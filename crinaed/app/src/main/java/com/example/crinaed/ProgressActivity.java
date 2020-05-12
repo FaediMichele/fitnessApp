@@ -7,7 +7,7 @@ import android.widget.ProgressBar;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.crinaed.util.ArcProgress;
+import com.example.crinaed.view.ArcProgressBar;
 
 public class ProgressActivity extends AppCompatActivity {
     private int progress = 10;
@@ -20,7 +20,7 @@ public class ProgressActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 progress=(progress+10)%100;
-                ((ArcProgress) findViewById(R.id.progressBar2)).setProgress(progress);
+                ((ArcProgressBar) findViewById(R.id.progressBar2)).setProgress(progress);
             }
         });
     }

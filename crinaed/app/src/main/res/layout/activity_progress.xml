@@ -5,17 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.crinaed.util.ArcProgress
+    <com.example.crinaed.view.ArcProgressBar
         android:id="@+id/progressBar2"
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:layout_height="200dp"
-        app:arc_progress="10"
-        app:arc_bottom_text="Ciao"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:arc_finished_color="@color/colorPrimary"
-        app:arc_unfinished_color="@color/color_setting_icon"
+        app:angle="270"
+        app:progress="50"
+        app:strokeWidth="10dp"
+        app:startAngle="270"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
