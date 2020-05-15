@@ -139,8 +139,6 @@ public class ArcProgressBar extends View {
         }
     }
 
-
-
     public int getStartAngle() {
         return startAngle;
     }
@@ -203,8 +201,6 @@ public class ArcProgressBar extends View {
         this.showText = showText;
         this.invalidate();
     }
-
-
 
     @Override
     protected int getSuggestedMinimumHeight() {
