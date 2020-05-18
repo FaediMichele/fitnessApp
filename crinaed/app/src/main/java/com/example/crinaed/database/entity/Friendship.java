@@ -16,7 +16,7 @@ import static androidx.room.ForeignKey.NO_ACTION;
                 onDelete = NO_ACTION)})
 public class Friendship {
     @PrimaryKey
-    public int idFriendShip;
+    public int idFriendship;
     public int idUser1;
     public int idUser2;
 }

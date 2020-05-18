@@ -1,4 +1,4 @@
-package com.example.crinaed.database.entity.crossRef;
+package com.example.crinaed.database.entity;
 
 import androidx.room.Entity;
 
