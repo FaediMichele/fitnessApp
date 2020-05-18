@@ -6,8 +6,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.crinaed.database.dao.CourseBoughtDao;
 import com.example.crinaed.database.dao.FriendMessageDao;
 import com.example.crinaed.database.dao.FriendshipDao;
+import com.example.crinaed.database.dao.MyCommitmentDao;
 import com.example.crinaed.database.dao.SchoolDao;
 import com.example.crinaed.database.dao.UserDao;
 import com.example.crinaed.database.entity.Course;
@@ -37,6 +39,8 @@ abstract public class AppDatabase extends RoomDatabase {
     abstract public FriendshipDao friendshipDao();
     abstract public SchoolDao schoolDao();
     abstract public UserDao userDao();
+    abstract public MyCommitmentDao commitmentDao();
+    abstract public CourseBoughtDao courseBoughtDao();
 
     private static AppDatabase instance;
     private static final int NUMBER_OF_THREAD = 4;
