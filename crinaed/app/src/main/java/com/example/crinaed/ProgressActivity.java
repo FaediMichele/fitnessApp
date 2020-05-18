@@ -1,6 +1,7 @@
 package com.example.crinaed;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -23,5 +24,6 @@ public class ProgressActivity extends AppCompatActivity {
                 ((ArcProgressBar) findViewById(R.id.progressBar2)).setProgress(progress);
             }
         });
+
     }
 }
