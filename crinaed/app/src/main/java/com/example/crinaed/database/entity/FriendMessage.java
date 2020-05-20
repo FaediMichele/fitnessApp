@@ -14,9 +14,9 @@ import static androidx.room.ForeignKey.NO_ACTION;
         @ForeignKey(entity = Friendship.class, parentColumns = "idFriendship", childColumns = "idFriendship", onDelete = CASCADE)
 })
 public class FriendMessage {
-    int idFriendship;
-    Date date;
-    int idSender;
-    int IdReceiver;
-    String message;
+    public long idFriendship;
+    public Date date;
+    public long idSender;
+    public long idReceiver;
+    public String message;
 }

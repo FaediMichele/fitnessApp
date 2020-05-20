@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "User")
 public class User {
     @PrimaryKey
-    public int idUser;
+    public long idUser;
     public String firstname;
     public String surname;
     public String email;

@@ -5,9 +5,9 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class MyCommitment {
-    @PrimaryKey public int idCommitment;
+    @PrimaryKey public long idCommitment;
     public String name;
     public String desc;
     public int duration; // minutes
-    public int idUser;
+    public long idUser;
 }

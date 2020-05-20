@@ -1,4 +1,4 @@
-package com.example.crinaed.database.entity.join;
+package com.example.crinaed.database.entity.join.user;
 
 import androidx.room.Embedded;
 import androidx.room.Junction;
@@ -10,8 +10,9 @@ import com.example.crinaed.database.entity.UserSchoolCrossRef;
 
 import java.util.List;
 
-public class SchoolWithUser {
-    @Embedded public School school;
-    @Relation(parentColumn = "idSchool", entityColumn = "idUser", associateBy = @Junction(UserSchoolCrossRef.class))
-    public List<User> users;
+public class UserInscription {
+    @Embedded public User user;
+
+    @Relation(parentColumn = "idUser", entityColumn = "idSchool", associateBy = @Junction(UserSchoolCrossRef.class))
+    public List<School> schools;
 }

@@ -6,9 +6,9 @@ import java.util.Date;
 
 @Entity(primaryKeys = {"idUser", "idExercise"})
 public class ExerciseInProgress {
-    public int idUser;
-    public int idExercise;
-    public float progression;
+    public long idUser;
+    public long idExercise;
+    public double progression;
     public int numStep;
     public Date lastEdit;
 }

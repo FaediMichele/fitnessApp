@@ -18,18 +18,10 @@ import java.util.List;
 @Dao
 public interface MyCommitmentDao {
     @Insert
-    void insert(MyCommitment... commitments);
+    long[] insert(MyCommitment... commitments);
 
     @Insert
-    void insert(MyStep... mySteps);
-
-    @Transaction
-    @Query("SELECT * FROM MyCommitment")
-    LiveData<List<CommitmentWithMyStep>> getCommitments();
-
-    @Transaction
-    @Query("SELECT * FROM MyCommitment")
-    LiveData<List<UserCommitment>> getUserCommitment();
+    long[] insert(MyStep... mySteps);
 
     @Update
     void update(MyCommitment... commitments);
@@ -42,4 +34,11 @@ public interface MyCommitmentDao {
 
     @Delete
     void delete(MyStep... steps);
+
+    @Transaction
+    @Query("SELECT * FROM MyCommitment")
+    LiveData<List<CommitmentWithMyStep>> getCommitments();
+
+    @Query("SELECT * FROM MyStep WHERE idCommitment = (:idCommitment)")
+    List<MyStep> getStepByIdCommitment(long idCommitment);
 }

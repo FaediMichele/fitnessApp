@@ -11,13 +11,8 @@ import androidx.room.Update;
 import com.example.crinaed.database.entity.User;
 import com.example.crinaed.database.entity.UserLevel;
 import com.example.crinaed.database.entity.UserSchoolCrossRef;
-import com.example.crinaed.database.entity.join.user.UserCommitment;
-import com.example.crinaed.database.entity.join.user.UserCourseBought;
 import com.example.crinaed.database.entity.join.user.UserData;
-import com.example.crinaed.database.entity.join.user.UserExercise;
-import com.example.crinaed.database.entity.join.user.UserHistory;
-import com.example.crinaed.database.entity.join.user.UserIscription;
-import com.example.crinaed.database.entity.join.user.UserReview;
+import com.example.crinaed.database.entity.join.user.UserInscription;
 
 import java.util.List;
 
@@ -26,17 +21,14 @@ public interface UserDao {
     @Query("SELECT * FROM user")
     List<User> getAll();
 
-    @Query("SELECT * FROM User WHERE idUser IN (:ids)")
-    List<User> getById(int... ids);
+    @Insert
+    long[] insert(User... users);
 
     @Insert
-    void insert(User user);
+    long[] insert(UserSchoolCrossRef subscription);
 
     @Insert
-    void insert(UserSchoolCrossRef subscription);
-
-    @Insert
-    void insert(UserLevel level);
+    long[] insert(UserLevel... levels);
 
     @Update
     void update(User user);
@@ -56,19 +48,5 @@ public interface UserDao {
 
     @Transaction
     @Query("SELECT * FROM User")
-    LiveData<List<UserExercise>> getExercise();
-
-    @Transaction
-    @Query("SELECT * FROM User")
-    LiveData<List<UserIscription>> getInscription();
-
-    @Transaction
-    @Query("SELECT * FROM User")
-    LiveData<List<UserReview>> getReview();
-
-
-
-    @Transaction
-    @Query("SELECT * FROM User")
-    LiveData<List<UserHistory>> getHistory();
+    LiveData<List<UserInscription>> getInscription();
 }

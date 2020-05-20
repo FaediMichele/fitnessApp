@@ -4,8 +4,8 @@ import androidx.room.Entity;
 
 @Entity(primaryKeys = {"idSchool", "idUser"})
 public class Review {
-    public int idSchool;
-    public int idUser;
+    public long idSchool;
+    public long idUser;
     public int val;
     public String comment;
 }

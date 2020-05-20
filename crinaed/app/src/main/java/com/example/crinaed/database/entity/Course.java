@@ -5,11 +5,11 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class Course {
-    @PrimaryKey public int idCourse;
+    @PrimaryKey public long idCourse;
     public String cat;
     public String name;
     public String desc;
     public int minimumLevel;
 
-    public int idSchool;
+    public long idSchool;
 }

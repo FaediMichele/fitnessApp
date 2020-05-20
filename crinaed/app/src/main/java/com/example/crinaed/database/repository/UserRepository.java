@@ -6,56 +6,39 @@ import androidx.lifecycle.LiveData;
 
 import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.dao.UserDao;
+import com.example.crinaed.database.entity.History;
 import com.example.crinaed.database.entity.User;
 import com.example.crinaed.database.entity.UserLevel;
 import com.example.crinaed.database.entity.UserSchoolCrossRef;
-import com.example.crinaed.database.entity.join.user.UserCommitment;
-import com.example.crinaed.database.entity.join.user.UserCourseBought;
 import com.example.crinaed.database.entity.join.user.UserData;
-import com.example.crinaed.database.entity.join.user.UserExercise;
-import com.example.crinaed.database.entity.join.user.UserHistory;
-import com.example.crinaed.database.entity.join.user.UserIscription;
-import com.example.crinaed.database.entity.join.user.UserReview;
+import com.example.crinaed.database.entity.join.user.UserInscription;
 import com.example.crinaed.util.Category;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class UserRepository {
+public class UserRepository implements Repository{
     private UserDao userDao;
-    private LiveData<List<UserData>> data;
-    private LiveData<List<UserExercise>> exercises;
-    private LiveData<List<UserIscription>> inscriptions;
-    private LiveData<List<UserReview>> reviews;
-    private LiveData<List<UserHistory>> history;
+    private LiveData<List<UserData>> userData;
+    private LiveData<List<UserInscription>> inscriptions;
 
     public UserRepository(Application application){
         AppDatabase db = AppDatabase.getDatabase(application);
         userDao = db.userDao();
-        data = userDao.getData();
-        exercises = userDao.getExercise();
+        userData = userDao.getData();
         inscriptions = userDao.getInscription();
-        reviews = userDao.getReview();
-        history = userDao.getHistory();
     }
 
     public LiveData<List<UserData>> getData() {
-        return data;
+        return userData;
     }
-
-    public LiveData<List<UserExercise>> getExercise(){
-        return exercises;
-    }
-
-    public LiveData<List<UserIscription>> getInscriptions(){
+    public LiveData<List<UserInscription>> getInscription(){
         return inscriptions;
-    }
-
-    public  LiveData<List<UserReview>> getReviews(){
-        return reviews;
-    }
-
-    public LiveData<List<UserHistory>> getHistory() {
-        return history;
     }
 
     public void addUser(final User user ){
@@ -116,6 +99,40 @@ public class UserRepository {
             @Override
             public void run() {
                 userDao.delete(inscription);
+            }
+        });
+    }
+
+    @Override
+    public void loadData(JSONObject data) throws JSONException {
+        JSONArray array = data.getJSONArray("User");
+        final List<User> users = new ArrayList<>();
+        final List<UserLevel> userLevels = new ArrayList<>();
+        for(int i = 0; i < array.length(); i++){
+            JSONObject obj = array.getJSONObject(i);
+            User user = new User();
+            user.idUser = obj.getLong("idUser");
+            user.firstname = obj.getString("firstname");
+            user.surname = obj.getString("surname");
+            user.email = obj.getString("email");
+            user.hashPassword = obj.getString("hashPassword");
+            users.add(user);
+        }
+        array = data.getJSONArray("Level");
+        for(int i = 0; i < array.length(); i++){
+            JSONObject obj = array.getJSONObject(i);
+            UserLevel userLevel = new UserLevel();
+            userLevel.idUser = obj.getLong("idUser");
+            userLevel.cat = obj.getString("cat");
+            userLevel.PE = obj.getInt("PE");
+            userLevel.level = obj.getInt("level");
+            userLevels.add(userLevel);
+        }
+        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                userDao.insert((User[]) users.toArray());
+                userDao.insert((UserLevel[]) userLevels.toArray());
             }
         });
     }

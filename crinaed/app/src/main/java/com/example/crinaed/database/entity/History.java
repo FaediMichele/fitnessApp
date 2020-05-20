@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Entity(primaryKeys = {"idUser", "date"})
 public class History {
-    public int idUser;
+    public long idUser;
     public Date date;
-    public int idExercise;
+    public long idExercise;
 }

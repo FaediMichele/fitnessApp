@@ -4,7 +4,6 @@ import androidx.room.Embedded;
 import androidx.room.Relation;
 
 import com.example.crinaed.database.entity.Course;
-import com.example.crinaed.database.entity.Review;
 import com.example.crinaed.database.entity.School;
 
 import java.util.List;
@@ -15,7 +14,4 @@ public class SchoolData {
 
     @Relation(parentColumn = "idSchool", entityColumn = "idSchool")
     public List<Course> courses;
-
-    @Relation(parentColumn = "idSchool", entityColumn = "idSchool")
-    public List<Review> reviews;
 }

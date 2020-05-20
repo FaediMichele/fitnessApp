@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey;
 @Entity(foreignKeys = @ForeignKey(entity = User.class, parentColumns = "idUser", childColumns = "idTrainer"))
 public class School {
     @PrimaryKey
-    public int idSchool;
+    public long idSchool;
     public String name;
     public String email;
     public String address;
-    public int idTrainer;
+    public long idTrainer;
 }

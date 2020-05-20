@@ -1,13 +1,16 @@
 package com.example.crinaed.database.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import androidx.room.Update;
 
+import com.example.crinaed.database.entity.Course;
 import com.example.crinaed.database.entity.School;
 import com.example.crinaed.database.entity.join.SchoolData;
-import com.example.crinaed.database.entity.join.SchoolWithUser;
 
 import java.util.List;
 
@@ -15,12 +18,27 @@ import java.util.List;
 public interface SchoolDao {
     @Transaction
     @Query("SELECT * FROM School")
-    List<SchoolData> getData();
+    LiveData<List<SchoolData>> get();
 
     @Transaction
-    @Query("SELECT * FROM School")
-    List<SchoolWithUser> getSchoolWithUser();
+    @Query("SELECT * FROM School WHERE idTrainer = (:idTrainer)")
+    LiveData<List<SchoolData>> getSchoolTrained(long idTrainer);
 
     @Insert
-    void insertAll(School... schools);
+    long[] insert(School... schools);
+
+    @Insert
+    long[] insert(Course... courses);
+
+    @Update
+    void update(School... schools);
+
+    @Update
+    void update(Course... courses);
+
+    @Delete
+    void delete(School... schools);
+
+    @Delete
+    void delete(Course... courses);
 }

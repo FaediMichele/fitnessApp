@@ -9,34 +9,37 @@ import com.example.crinaed.database.dao.CourseBoughtDao;
 import com.example.crinaed.database.entity.CourseBought;
 import com.example.crinaed.database.entity.join.user.UserCourseBought;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class CourseBoughtRepository {
+public class CourseBoughtRepository implements Repository{
 
     private CourseBoughtDao courseBoughtDao;
-    private LiveData<List<UserCourseBought>> courses;
 
     public CourseBoughtRepository(Application application){
         AppDatabase db = AppDatabase.getDatabase(application);
-
         courseBoughtDao = db.courseBoughtDao();
-        courses = courseBoughtDao.getCourseBought();
     }
 
     public LiveData<List<UserCourseBought>> getCourses() {
-        return courses;
+        return courseBoughtDao.getCourseBought();
     }
 
-    public void addCourseBought(final CourseBought courseBought){
+    public void insert(final CourseBought... courseBoughts){
         AppDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                courseBoughtDao.insert(courseBought);
+                courseBoughtDao.insert(courseBoughts);
             }
         });
     }
 
-    public void updateCourseBought(final CourseBought courseBought){
+    public void update(final CourseBought courseBought){
         AppDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -45,12 +48,28 @@ public class CourseBoughtRepository {
         });
     }
 
-    public void deleteCourseBought(final CourseBought courseBought){
+    public void delete(final CourseBought courseBought){
         AppDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 courseBoughtDao.delete(courseBought);
             }
         });
+    }
+
+    @Override
+    public void loadData(JSONObject data) throws JSONException {
+        JSONArray array = data.getJSONArray("CourseBought");
+        final List<CourseBought> courseBoughts = new ArrayList<>();
+        for(int i = 0; i < array.length(); i++){
+            JSONObject obj = array.getJSONObject(i);
+            CourseBought courseBought = new CourseBought();
+            courseBought.idUser = obj.getLong("idUser");
+            courseBought.idCourse = obj.getLong("idCourse");
+            courseBought.level = obj.getInt("level");
+            courseBought.purchaseDate = new Date(obj.getLong("purchaseDate"));
+            courseBoughts.add(courseBought);
+        }
+        insert((CourseBought[]) courseBoughts.toArray());
     }
 }

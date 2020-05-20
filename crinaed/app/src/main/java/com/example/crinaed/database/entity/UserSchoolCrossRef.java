@@ -4,6 +4,6 @@ import androidx.room.Entity;
 
 @Entity(primaryKeys = {"idUser", "idSchool"})
 public class UserSchoolCrossRef {
-    public int idUser;
-    public int idSchool;
+    public long idUser;
+    public long idSchool;
 }

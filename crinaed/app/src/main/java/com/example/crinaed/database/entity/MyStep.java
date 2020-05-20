@@ -4,11 +4,11 @@ import androidx.room.Entity;
 
 @Entity(primaryKeys = {"idCommitment", "num"})
 public class MyStep {
-    public int idCommitment;
+    public long idCommitment;
     public int num;
     public String name;
-    public float incVal;
+    public double incVal;
     public String unitMeasure;
-    public float max;
-    public float progression;
+    public double max;
+    public double progression;
 }
