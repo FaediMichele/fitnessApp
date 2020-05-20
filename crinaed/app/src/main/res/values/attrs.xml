@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ArcProgressBar">
+    <declare-styleable name="ProgressBarView">
         <attr name="progress" format="integer"/>
         <attr name="angle" format="float"/>
         <attr name="strokeWidth" format="dimension"/>

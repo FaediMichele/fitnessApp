@@ -6,5 +6,11 @@
     <color name="colorPrimaryb">#f00</color>
     <color name="colorPrimaryDarkb">#0f0</color>
     <color name="colorAccentb">#00f</color>
-    <color name="color_setting_icon">#949494</color>
+    <color name="colorSettingIcon">#949494</color>
+    <color name="redPrimary">#FF8599 </color>
+    <color name="redSecondary">#FF7DC2</color>
+    <color name="greenPrimary">#7DFF7D</color>
+    <color name="greenSecondary">#85FFC6</color>
+    <color name="bluPrimary">#85C6FF</color>
+    <color name="bluSecondary">#7D7DFF</color>
 </resources>
