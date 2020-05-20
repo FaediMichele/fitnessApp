@@ -1,23 +1,29 @@
 package com.example.crinaed;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.crinaed.ProgressBar.ProgressBarPageFragment;
 import com.example.crinaed.ProgressBar.ProgressBarPagerAdapter;
 import com.example.crinaed.view.ProgressBarView;
 
 
-public class ProgressActivity extends FragmentActivity {
-    /**
-     * For the test
-     */
+public class ProgerssBarActivity extends FragmentActivity {
+
     private int progress = 10;
+    /**
+     * The number of pages (wizard steps) to show in this demo.
+     */
+    private static final int NUM_PAGES = 5;
+
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
@@ -39,7 +45,6 @@ public class ProgressActivity extends FragmentActivity {
         pagerAdapter = new ProgressBarPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mPager.setAdapter(pagerAdapter);
 
-
         findViewById(R.id.progressBar2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +65,5 @@ public class ProgressActivity extends FragmentActivity {
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
     }
-
 
 }
