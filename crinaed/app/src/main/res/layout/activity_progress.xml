@@ -5,29 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- activity_screen_slide.xml -->
+
     <com.example.crinaed.view.ArcProgressBar
         android:id="@+id/progressBar2"
         android:layout_width="300dp"
         android:layout_height="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:angle="270"
+        app:backgroundColor="#f0f"
+        app:foregroundColor="#ff0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:angle="270"
         app:progress="10"
-        app:strokeWidth="10dp"
         app:startAngle="270"
-        app:backgroundColor="#f0f"
-        app:foregroundColor="#ff0"
-        />
+        app:strokeWidth="10dp" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="I"
-        app:layout_constraintBottom_toTopOf="@+id/progressBar2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/progressBar2" />
+
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="409dp"
+        android:layout_height="220dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
