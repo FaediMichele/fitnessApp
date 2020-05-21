@@ -1,6 +1,8 @@
 package com.example.crinaed.util;
 
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -21,6 +23,7 @@ public class Util {
             e.printStackTrace();
             return 0;
         }
+
     }
 
     public static String timestampToIso(long l){

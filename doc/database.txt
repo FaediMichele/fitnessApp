@@ -30,7 +30,8 @@ JSON structure for test purpose:
 	Step: [{idExercise: "90", num: "1", name: "riscaldamento", desc: "corsa di 1 km", incVal: "100", unitMeasure: "metri", max: "1000", video: "na"}],
 	ExerciseInProgress: [{idUser: "123", idExercise: "90", numStep: "1", progression: "400", lastEdit: "2020-05-02T20:25:43Z"}],
 	CourseBought: [{idUser: "123", idCourse: "420", level: "1", purchaseDate: "2020-05-01T18:25:43Z"}],
-	MyCommitment: [{idCommitment: "73", name: "studiare mobile", desc: "Fare il progetto in android", duration: "6000", idUser: "123"}],
-	MyStep: [{idCommitment: "73", num: "1", name: "fare database sql", incVal: "60", unitMeasure: "minuti", max: "300", progression: "120"}, {idCommitment: "73", num: "2", name: "fare database nosql", incVal: "60", unitMeasure: "minuti", max: "300", progression: "0"}]
+	MyCommitment: [{idCommitment: "73", name: "studiare mobile", desc: "Fare il progetto in android", creationDate: "2020-05-02T20:25:43Z", idUser: "123"}],
+	MyStep: [{idMyStep: "42", idCommitment: "73", name: "fare database sql", unitMeasure: "minuti", max: "300", repetitionDay: "1", type: "incremental"}],
+	MyStepDone: [{idMyStep: "42", dateStart: "2020-05-03T20:25:43Z", result: "300"}]
 }
 	

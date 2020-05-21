@@ -1,24 +1,25 @@
 package com.example.crinaed.database.entity;
 
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-@Entity(primaryKeys = {"idCommitment", "num"})
+@Entity
 public class MyStep {
+    @PrimaryKey  public long idMyStep;
     public long idCommitment;
-    public int num;
     public String name;
-    public double incVal;
     public String unitMeasure;
     public double max;
-    public double progression;
+    public int repetitionDay; // day to reset the progression and save progress
+    public String type;
 
-    public MyStep(long idCommitment, int num, String name, double incVal, String unitMeasure, double max, double progression) {
+    public MyStep(long idMyStep, long idCommitment, String name, String unitMeasure, double max, int repetitionDay, String type) {
+        this.idMyStep = idMyStep;
         this.idCommitment = idCommitment;
-        this.num = num;
         this.name = name;
-        this.incVal = incVal;
         this.unitMeasure = unitMeasure;
         this.max = max;
-        this.progression = progression;
+        this.repetitionDay = repetitionDay;
+        this.type = type;
     }
 }
