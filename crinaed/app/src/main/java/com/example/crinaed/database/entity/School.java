@@ -2,9 +2,11 @@ package com.example.crinaed.database.entity;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(foreignKeys = @ForeignKey(entity = User.class, parentColumns = "idUser", childColumns = "idTrainer"))
+@Entity(foreignKeys = @ForeignKey(entity = User.class, parentColumns = "idUser", childColumns = "idTrainer"),
+indices = @Index("idTrainer"))
 public class School {
     @PrimaryKey
     public long idSchool;
