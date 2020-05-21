@@ -8,7 +8,7 @@ import com.example.crinaed.database.entity.ExerciseInProgress;
 
 
 public class ExerciseInProgressWithExercise {
-    @Embedded ExerciseInProgress exerciseInProgress;
+    @Embedded public ExerciseInProgress exerciseInProgress;
     @Relation(parentColumn = "idExercise", entityColumn = "idExercise")
     public Exercise exercise;
 }

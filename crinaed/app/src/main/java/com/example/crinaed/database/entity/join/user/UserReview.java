@@ -10,7 +10,7 @@ import java.util.List;
 
 public class UserReview {
 
-    @Embedded User user;
+    @Embedded public User user;
     @Relation(parentColumn = "idUser", entityColumn = "idUser")
     public List<Review> reviews;
 }

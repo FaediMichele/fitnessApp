@@ -1,12 +1,13 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.util.Log;
+import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.dao.UserDao;
-import com.example.crinaed.database.entity.History;
 import com.example.crinaed.database.entity.User;
 import com.example.crinaed.database.entity.UserLevel;
 import com.example.crinaed.database.entity.UserSchoolCrossRef;
@@ -19,8 +20,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class UserRepository implements Repository{
     private UserDao userDao;
@@ -41,34 +43,18 @@ public class UserRepository implements Repository{
         return inscriptions;
     }
 
-    public void addUser(final User user ){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> addUser(final User user, final UserLevel... levels){
+        return AppDatabase.databaseWriteExecutor.submit(new Callable<Pair<Long, Long[]>>() {
             @Override
-            public void run() {
-                userDao.insert(user);
+            public Pair<Long, Long[]> call() {
+                long idUser = userDao.insert(user)[0];
+                return new Pair<>(idUser, userDao.insert(levels));
             }
         });
-
-        // Also add the level for each category.
-        Category[] cats = Category.values();
-        for(int i = 0; i < cats.length; i++){
-            final UserLevel level = new UserLevel();
-            level.cat = cats[i].toString();
-            level.idUser = user.idUser;
-            level.level = 1;
-            level.PE = 0;
-            AppDatabase.databaseWriteExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    userDao.insert(level);
-                }
-            });
-        }
-
     }
 
-    public void addInscription(final UserSchoolCrossRef inscription){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> addInscription(final UserSchoolCrossRef inscription){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 userDao.insert(inscription);
@@ -76,8 +62,8 @@ public class UserRepository implements Repository{
         });
     }
 
-    public void updateUser(final User user){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> updateUser(final User user){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 userDao.update(user);
@@ -85,8 +71,8 @@ public class UserRepository implements Repository{
         });
     }
 
-    public void updateUserLevel(final UserLevel level){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> updateUserLevel(final UserLevel level){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 userDao.update(level);
@@ -94,8 +80,8 @@ public class UserRepository implements Repository{
         });
     }
 
-    public void deleteInscription(final UserSchoolCrossRef inscription){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> deleteInscription(final UserSchoolCrossRef inscription){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 userDao.delete(inscription);
@@ -104,35 +90,27 @@ public class UserRepository implements Repository{
     }
 
     @Override
-    public void loadData(JSONObject data) throws JSONException {
+    public Future<?> loadData(JSONObject data) throws JSONException {
         JSONArray array = data.getJSONArray("User");
         final List<User> users = new ArrayList<>();
         final List<UserLevel> userLevels = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
             JSONObject obj = array.getJSONObject(i);
-            User user = new User();
-            user.idUser = obj.getLong("idUser");
-            user.firstname = obj.getString("firstname");
-            user.surname = obj.getString("surname");
-            user.email = obj.getString("email");
-            user.hashPassword = obj.getString("hashPassword");
+            User user = new User(obj.getLong("idUser"), obj.getString("firstname"), obj.getString("surname"),
+                    obj.getString("email"), obj.getString("hashPassword"));
             users.add(user);
         }
         array = data.getJSONArray("Level");
         for(int i = 0; i < array.length(); i++){
             JSONObject obj = array.getJSONObject(i);
-            UserLevel userLevel = new UserLevel();
-            userLevel.idUser = obj.getLong("idUser");
-            userLevel.cat = obj.getString("cat");
-            userLevel.PE = obj.getInt("PE");
-            userLevel.level = obj.getInt("level");
+            UserLevel userLevel = new UserLevel(obj.getLong("idUser"), obj.getString("cat"), obj.getInt("PE"), obj.getInt("level"));
             userLevels.add(userLevel);
         }
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
-                userDao.insert((User[]) users.toArray());
-                userDao.insert((UserLevel[]) userLevels.toArray());
+                userDao.insert(users.toArray(new User[0]));
+                userDao.insert(userLevels.toArray(new UserLevel[0]));
             }
         });
     }

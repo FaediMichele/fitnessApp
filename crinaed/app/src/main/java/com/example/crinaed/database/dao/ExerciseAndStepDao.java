@@ -17,10 +17,10 @@ import java.util.List;
 @Dao
 public interface ExerciseAndStepDao {
     @Insert
-    long[] insert(Exercise... exercises);
+    Long[] insert(Exercise... exercises);
 
     @Insert
-    long[] insert(Step... steps);
+    Long[] insert(Step... steps);
 
     @Update
     void update(Exercise... exercises);

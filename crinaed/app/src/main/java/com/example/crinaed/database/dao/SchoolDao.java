@@ -25,10 +25,10 @@ public interface SchoolDao {
     LiveData<List<SchoolData>> getSchoolTrained(long idTrainer);
 
     @Insert
-    long[] insert(School... schools);
+    Long[] insert(School... schools);
 
     @Insert
-    long[] insert(Course... courses);
+    Long[] insert(Course... courses);
 
     @Update
     void update(School... schools);

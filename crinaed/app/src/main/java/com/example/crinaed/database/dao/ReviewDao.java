@@ -17,7 +17,7 @@ import java.util.List;
 public interface ReviewDao {
 
     @Insert
-    long[] insert(Review... reviews);
+    Long[] insert(Review... reviews);
 
     @Update
     void update(Review... reviews);
@@ -26,10 +26,10 @@ public interface ReviewDao {
     void delete(Review... reviews);
 
     @Transaction
-    @Query("SELECT * FROM Review")
+    @Query("SELECT * FROM User")
     LiveData<List<UserReview>> getUserReview();
 
     @Transaction
     @Query("SELECT * FROM Review WHERE idSchool = (:idSchool)")
-    LiveData<List<UserReview>> getSchoolReview(long idSchool);
+    LiveData<List<Review>> getSchoolReview(long idSchool);
 }

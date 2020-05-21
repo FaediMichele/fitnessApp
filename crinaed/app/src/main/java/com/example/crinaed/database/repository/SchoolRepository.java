@@ -1,6 +1,7 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -8,7 +9,6 @@ import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.dao.SchoolDao;
 import com.example.crinaed.database.entity.Course;
 import com.example.crinaed.database.entity.School;
-import com.example.crinaed.database.entity.Step;
 import com.example.crinaed.database.entity.join.SchoolData;
 import com.example.crinaed.util.Lambda;
 
@@ -18,6 +18,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class SchoolRepository implements Repository {
     private SchoolDao schoolDao;
@@ -37,36 +39,27 @@ public class SchoolRepository implements Repository {
         return schoolDao.getSchoolTrained(idTrainer);
     }
 
-    /**
-     * Insert new schools in the db
-     * @param l callback function that will be called when the insert is done. Pass a parameter(long[])
-     * @param school the schools to add
-     */
-    public void insert( final Lambda l, final School... school){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+
+    public Future<?> insert(final Lambda l, final School... school){
+        return AppDatabase.databaseWriteExecutor.submit(new Callable<Long[]>() {
             @Override
-            public void run() {
-                l.run((Object) schoolDao.insert(school));
+            public Long[] call() {
+                return schoolDao.insert(school);
             }
         });
     }
 
-    /**
-     * Insert new schools in the db
-     * @param l callback function that will be called when the insert is done. Pass a parameter(long[])
-     * @param courses the courses to add
-     */
-    public void insert( final Lambda l, final Course... courses){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> insert(final Course... courses){
+        return AppDatabase.databaseWriteExecutor.submit(new Callable<Long[]>() {
             @Override
-            public void run() {
-                l.run((Object) schoolDao.insert(courses));
+            public Long[] call() {
+                return schoolDao.insert(courses);
             }
         });
     }
 
-    public void update(final School... schools){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> update(final School... schools){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 schoolDao.update(schools);
@@ -74,8 +67,8 @@ public class SchoolRepository implements Repository {
         });
     }
 
-    public void update(final Course... courses){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> update(final Course... courses){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 schoolDao.update(courses);
@@ -83,8 +76,8 @@ public class SchoolRepository implements Repository {
         });
     }
 
-    public void delete(final School... schools){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> delete(final School... schools){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 schoolDao.delete(schools);
@@ -92,8 +85,8 @@ public class SchoolRepository implements Repository {
         });
     }
 
-    public void delete(final Course... courses){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> delete(final Course... courses){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 schoolDao.delete(courses);
@@ -102,39 +95,29 @@ public class SchoolRepository implements Repository {
     }
 
     @Override
-    public void loadData(JSONObject data) throws JSONException {
+    public Future<?> loadData(JSONObject data) throws JSONException {
         JSONArray array = data.getJSONArray("School");
         final List<School> schools = new ArrayList<>();
         final List<Course> courses = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
             JSONObject obj = array.getJSONObject(i);
-            School school = new School();
-            school.idSchool = obj.getLong("idSchool");
-            school.idTrainer = obj.getLong("idTrainer");
-            school.name = obj.getString("name");
-            school.address = obj.getString("address");
-            school.email = obj.getString("email");
+            School school = new School(obj.getLong("idSchool"), obj.getString("name"),
+                    obj.getString("email"), obj.getString("address"),  obj.getLong("idTrainer"));
             schools.add(school);
         }
         array = data.getJSONArray("Course");
         for(int i = 0; i < array.length(); i++) {
             JSONObject obj = array.getJSONObject(i);
-            Course course = new Course();
-            course.idCourse = obj.getLong("idCourse");
-            course.idSchool = obj.getLong("idSchool");
-            course.cat = obj.getString("cat");
-            course.name = obj.getString("name");
-            course.desc = obj.getString("desc");
-            course.minimumLevel = obj.getInt("minimumLevel");
+            Course course = new Course(obj.getLong("idCourse"), obj.getString("cat"),
+                    obj.getString("name"), obj.getString("desc"), obj.getInt("minimumLevel"),  obj.getLong("idSchool"));
             courses.add(course);
         }
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
-                schoolDao.insert((School[]) schools.toArray());
-                schoolDao.insert((Course[]) courses.toArray());
+                schoolDao.insert(schools.toArray(new School[0]));
+                schoolDao.insert(courses.toArray(new Course[0]));
             }
         });
-
     }
 }

@@ -13,4 +13,14 @@ public class Exercise {
     public String desc;
 
     public long idCourse;
+
+    public Exercise(long idExercise, int level, int PE, int duration, String name, String desc, long idCourse) {
+        this.idExercise = idExercise;
+        this.level = level;
+        this.PE = PE;
+        this.duration = duration;
+        this.name = name;
+        this.desc = desc;
+        this.idCourse = idCourse;
+    }
 }

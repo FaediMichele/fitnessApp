@@ -16,7 +16,7 @@ public interface FriendshipDao {
     LiveData<List<Friendship>> getFriendshipByIdUser(long idUser);
 
     @Insert
-    long[] insert(Friendship... friendships);
+    Long[] insert(Friendship... friendships);
 
     @Delete
     void delete(Friendship... friendships);

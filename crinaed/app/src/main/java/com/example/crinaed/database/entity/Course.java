@@ -12,4 +12,13 @@ public class Course {
     public int minimumLevel;
 
     public long idSchool;
+
+    public Course(long idCourse, String cat, String name, String desc, int minimumLevel, long idSchool){
+        this.idSchool = idSchool;
+        this.idCourse = idCourse;
+        this.cat = cat;
+        this.name = name;
+        this.desc = desc;
+        this.minimumLevel = minimumLevel;
+    }
 }

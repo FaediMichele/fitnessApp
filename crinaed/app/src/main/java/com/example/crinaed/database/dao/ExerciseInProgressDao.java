@@ -17,7 +17,7 @@ import java.util.List;
 @Dao
 public interface ExerciseInProgressDao {
     @Insert
-    void insert(ExerciseInProgress... exercise);
+    Long[] insert(ExerciseInProgress... exercise);
 
     @Update
     void update(ExerciseInProgress... exercise);

@@ -1,24 +1,25 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.dao.FriendMessageDao;
 import com.example.crinaed.database.dao.FriendshipDao;
-import com.example.crinaed.database.entity.Exercise;
 import com.example.crinaed.database.entity.FriendMessage;
 import com.example.crinaed.database.entity.Friendship;
-import com.example.crinaed.database.entity.Step;
+import com.example.crinaed.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class FriendRepository implements Repository{
 
@@ -40,21 +41,18 @@ public class FriendRepository implements Repository{
     }
 
 
-    public void addFriend(long idUser1, long idUser2){
-        final Friendship friendship = new Friendship();
-        friendship.idUser1 = idUser1;
-        friendship.idUser2 = idUser2;
-        friendship.idFriendship = 0;
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> addFriend(long idUser1, long idUser2){
+        final Friendship friendship = new Friendship(0, idUser1, idUser2);
+        return AppDatabase.databaseWriteExecutor.submit(new Callable<Long>() {
             @Override
-            public void run() {
-                friendshipDao.insert(friendship);
+            public Long call() {
+                return friendshipDao.insert(friendship)[0];
             }
         });
     }
 
-    public void removeFriend(final Friendship friendship){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> removeFriend(final Friendship friendship){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 friendshipDao.delete(friendship);
@@ -62,8 +60,8 @@ public class FriendRepository implements Repository{
         });
     }
 
-    public void addMessage(final FriendMessage... friendMessages){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> addMessage(final FriendMessage... friendMessages){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 friendMessageDao.insert(friendMessages);
@@ -71,16 +69,16 @@ public class FriendRepository implements Repository{
         });
     }
 
-    public void updateMessage(final FriendMessage friendMessage){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> updateMessage(final FriendMessage friendMessage){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 friendMessageDao.update(friendMessage);
             }
         });
     }
-    public void deleteMessages(final FriendMessage... friendMessages){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> deleteMessages(final FriendMessage... friendMessages){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 friendMessageDao.delete(friendMessages);
@@ -89,33 +87,27 @@ public class FriendRepository implements Repository{
     }
 
     @Override
-    public void loadData(JSONObject data) throws JSONException {
+    public Future<?> loadData(JSONObject data) throws JSONException {
         JSONArray array = data.getJSONArray("Friendship");
         final List<Friendship> friendships = new ArrayList<>();
         final List<FriendMessage> messages = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
             JSONObject obj = array.getJSONObject(i);
-            Friendship friendship = new Friendship();
-            friendship.idFriendship = obj.getLong("idFriendship");
-            friendship.idUser1 = obj.getLong("idUser1");
-            friendship.idUser2 = obj.getLong("idUser2");
+            Friendship friendship = new Friendship(obj.getLong("idFriendship"), obj.getLong("idUser1"), obj.getLong("idUser2"));
             friendships.add(friendship);
         }
+        array = data.getJSONArray("Message");
         for(int i = 0; i < array.length(); i++){
             JSONObject obj = array.getJSONObject(i);
-            FriendMessage message = new FriendMessage();
-            message.idFriendship = obj.getLong("idFriendship");
-            message.idSender = obj.getLong("idSender");
-            message.idReceiver = obj.getLong("idReceiver");
-            message.date = new Date(obj.getLong("date"));
-            message.message = obj.getString("message");
+            FriendMessage message = new FriendMessage(obj.getLong("idFriendship"), Util.isoFormatToTimestamp(obj.getString("date")),
+                    obj.getLong("idSender"), obj.getLong("idReceiver"), obj.getString("message"));
             messages.add(message);
         }
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
-                friendMessageDao.insert((FriendMessage[]) messages.toArray());
-                friendshipDao.insert((Friendship[]) friendships.toArray());
+                friendshipDao.insert(friendships.toArray(new Friendship[0]));
+                friendMessageDao.insert(messages.toArray(new FriendMessage[0]));
             }
         });
     }

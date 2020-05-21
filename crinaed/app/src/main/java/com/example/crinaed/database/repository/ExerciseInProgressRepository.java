@@ -1,6 +1,7 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -8,14 +9,16 @@ import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.dao.ExerciseInProgressDao;
 import com.example.crinaed.database.entity.ExerciseInProgress;
 import com.example.crinaed.database.entity.join.ExerciseInProgressWithExercise;
+import com.example.crinaed.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class ExerciseInProgressRepository implements Repository {
     private ExerciseInProgressDao exerciseInProgressDao;
@@ -30,17 +33,17 @@ public class ExerciseInProgressRepository implements Repository {
         return exercise;
     }
 
-    public void insert(final ExerciseInProgress... exercise){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> insert(final ExerciseInProgress... exercise){
+        return AppDatabase.databaseWriteExecutor.submit(new Callable<Long[]>() {
             @Override
-            public void run() {
-                exerciseInProgressDao.insert(exercise);
+            public Long[] call() {
+                return exerciseInProgressDao.insert(exercise);
             }
         });
     }
 
-    public void update(final ExerciseInProgress... exercise){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> update(final ExerciseInProgress... exercise){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 exerciseInProgressDao.update(exercise);
@@ -48,8 +51,8 @@ public class ExerciseInProgressRepository implements Repository {
         });
     }
 
-    public void delete(final ExerciseInProgress... exercise){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> delete(final ExerciseInProgress... exercise){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 exerciseInProgressDao.delete(exercise);
@@ -58,19 +61,17 @@ public class ExerciseInProgressRepository implements Repository {
     }
 
     @Override
-    public void loadData(JSONObject data) throws JSONException {
-        JSONArray array = data.getJSONArray("CourseBought");
+    public Future<?> loadData(JSONObject data) throws JSONException {
+        JSONArray array = data.getJSONArray("ExerciseInProgress");
         final List<ExerciseInProgress> exercises = new ArrayList<>();
         for(int i = 0; i < array.length(); i++) {
             JSONObject obj = array.getJSONObject(i);
-            ExerciseInProgress exerciseInProgress = new ExerciseInProgress();
-            exerciseInProgress.idUser = obj.getLong("idUser");
-            exerciseInProgress.idExercise = obj.getLong("idExercise");
-            exerciseInProgress.numStep = obj.getInt("numStep");
-            exerciseInProgress.progression = obj.getDouble("progression");
-            exerciseInProgress.lastEdit = new Date(obj.getLong("lastEdit"));
+            ExerciseInProgress exerciseInProgress = new ExerciseInProgress(obj.getLong("idUser"),  obj.getLong("idExercise"),
+                    obj.getDouble("progression"), obj.getInt("numStep"),  Util.isoFormatToTimestamp(obj.getString("lastEdit")));
             exercises.add(exerciseInProgress);
         }
-        insert((ExerciseInProgress[]) exercises.toArray());
+
+        return insert(exercises.toArray(new ExerciseInProgress[0]));
+
     }
 }

@@ -10,4 +10,12 @@ public class MyCommitment {
     public String desc;
     public int duration; // minutes
     public long idUser;
+
+    public MyCommitment(long idCommitment, String name, String desc, int duration, long idUser) {
+        this.idCommitment = idCommitment;
+        this.name = name;
+        this.desc = desc;
+        this.duration = duration;
+        this.idUser = idUser;
+    }
 }

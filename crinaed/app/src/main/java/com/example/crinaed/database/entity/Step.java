@@ -11,4 +11,14 @@ public class Step {
     public double incVal;
     public String unitMeasure;
     public double max;
+
+    public Step(long idExercise, int num, String name, String desc, double incVal, String unitMeasure, double max) {
+        this.idExercise = idExercise;
+        this.num = num;
+        this.name = name;
+        this.desc = desc;
+        this.incVal = incVal;
+        this.unitMeasure = unitMeasure;
+        this.max = max;
+    }
 }

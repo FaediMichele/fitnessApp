@@ -1,6 +1,8 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.util.Log;
+import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
 
@@ -9,7 +11,6 @@ import com.example.crinaed.database.dao.MyCommitmentDao;
 import com.example.crinaed.database.entity.MyCommitment;
 import com.example.crinaed.database.entity.MyStep;
 import com.example.crinaed.database.entity.join.CommitmentWithMyStep;
-import com.example.crinaed.database.entity.join.user.UserCommitment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +18,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class CommitmentRepository implements Repository{
     private MyCommitmentDao commitmentDao;
@@ -30,22 +33,21 @@ public class CommitmentRepository implements Repository{
         return commitmentDao.getCommitments();
     }
 
-    public void insert(final MyCommitment commitment, final MyStep... steps){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> insert(final MyCommitment commitment, final MyStep... steps){
+        return AppDatabase.databaseWriteExecutor.submit(new Callable<Pair<Long, Long[]>>() {
             @Override
-            public void run() {
+            public Pair<Long, Long[]> call() {
                 long id = commitmentDao.insert(commitment)[0];
                 for (MyStep s: steps) {
                     s.idCommitment = id;
                 }
-                commitmentDao.insert(steps);
+                return new Pair<>(id, commitmentDao.insert(steps));
             }
         });
-
     }
 
-    public void updateCommitment(final MyCommitment commitment){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> updateCommitment(final MyCommitment commitment){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 commitmentDao.update(commitment);
@@ -53,8 +55,8 @@ public class CommitmentRepository implements Repository{
         });
     }
 
-    public void updateStep(final MyStep... steps){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> updateStep(final MyStep... steps){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 commitmentDao.update(steps);
@@ -62,8 +64,8 @@ public class CommitmentRepository implements Repository{
         });
     }
 
-    public void deleteCommitment(final MyCommitment commitment){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> deleteCommitment(final MyCommitment commitment){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 commitmentDao.delete((MyStep[]) commitmentDao.getStepByIdCommitment(commitment.idCommitment).toArray());
@@ -72,8 +74,8 @@ public class CommitmentRepository implements Repository{
         });
     }
 
-    public void deleteStep(final MyStep... steps){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> deleteStep(final MyStep... steps){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 commitmentDao.delete(steps);
@@ -82,38 +84,29 @@ public class CommitmentRepository implements Repository{
     }
 
     @Override
-    public void loadData(JSONObject data) throws JSONException {
+    public Future<?> loadData(JSONObject data) throws JSONException {
         JSONArray array = data.getJSONArray("MyCommitment");
         final List<MyCommitment> commitmentList = new ArrayList<>();
         final List<MyStep> stepList = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
             JSONObject obj = array.getJSONObject(i);
-            MyCommitment myCommitment = new MyCommitment();
-            myCommitment.idUser = obj.getLong("idUser");
-            myCommitment.desc = obj.getString("desc");
-            myCommitment.duration = obj.getInt("duration");
-            myCommitment.idCommitment = obj.getLong("idCommitment");
-            myCommitment.name = obj.getString("name");
+            MyCommitment myCommitment = new MyCommitment( obj.getLong("idCommitment"), obj.getString("name"),
+                    obj.getString("desc"), obj.getInt("duration"),  obj.getLong("idUser"));
             commitmentList.add(myCommitment);
         }
         array = data.getJSONArray("MyStep");
         for(int i = 0; i < array.length(); i++){
             JSONObject obj = array.getJSONObject(i);
-            MyStep myStep = new MyStep();
-            myStep.idCommitment = obj.getLong("idCommitment");
-            myStep.num = obj.getInt("num");
-            myStep.name = obj.getString("name");
-            myStep.incVal = obj.getDouble("incVal");
-            myStep.unitMeasure = obj.getString("unitMeasure");
-            myStep.max = obj.getDouble("max");
-            myStep.progression = obj.getDouble("progression");
+            MyStep myStep = new MyStep(obj.getLong("idCommitment"), obj.getInt("num"), obj.getString("name"),
+                    obj.getDouble("incVal"),  obj.getString("unitMeasure"), obj.getDouble("max"), obj.getDouble("progression"));
             stepList.add(myStep);
         }
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
-                commitmentDao.insert((MyCommitment[]) commitmentList.toArray());
-                commitmentDao.insert((MyStep[]) stepList.toArray());
+                commitmentDao.insert(commitmentList.toArray(new MyCommitment[0]));
+                commitmentDao.insert(stepList.toArray(new MyStep[0]));
             }
         });
     }

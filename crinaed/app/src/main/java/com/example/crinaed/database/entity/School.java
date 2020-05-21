@@ -12,4 +12,12 @@ public class School {
     public String email;
     public String address;
     public long idTrainer;
+
+    public School(long idSchool, String name, String email, String address, long idTrainer) {
+        this.idSchool = idSchool;
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.idTrainer = idTrainer;
+    }
 }

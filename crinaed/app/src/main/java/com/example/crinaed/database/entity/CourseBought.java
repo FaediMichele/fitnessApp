@@ -9,6 +9,12 @@ public class CourseBought {
     public long idUser;
     public long idCourse;
     public int level;
-    public float progression;
-    public Date purchaseDate;
+    public long purchaseDate;
+
+    public CourseBought(long idUser, long idCourse, int level, long purchaseDate) {
+        this.idUser = idUser;
+        this.idCourse = idCourse;
+        this.level = level;
+        this.purchaseDate = purchaseDate;
+    }
 }

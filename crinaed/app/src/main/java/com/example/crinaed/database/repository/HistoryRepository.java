@@ -1,22 +1,24 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.dao.HistoryDao;
-import com.example.crinaed.database.entity.CourseBought;
 import com.example.crinaed.database.entity.History;
 import com.example.crinaed.database.entity.join.HistoryWithExercise;
+import com.example.crinaed.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class HistoryRepository implements Repository{
     private HistoryDao historyDao;
@@ -29,17 +31,17 @@ public class HistoryRepository implements Repository{
         return historyDao.getUserHistory();
     }
 
-    public void insert(final History... histories){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> insert(final History... histories){
+        return AppDatabase.databaseWriteExecutor.submit(new Callable<Long[]>() {
             @Override
-            public void run() {
-                historyDao.insert(histories);
+            public Long[] call() {
+                return historyDao.insert(histories);
             }
         });
     }
 
-    public void update(final History... histories){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> update(final History... histories){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 historyDao.update(histories);
@@ -47,8 +49,8 @@ public class HistoryRepository implements Repository{
         });
     }
 
-    public void delete(final History... histories){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> delete(final History... histories){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 historyDao.delete(histories);
@@ -57,22 +59,14 @@ public class HistoryRepository implements Repository{
     }
 
     @Override
-    public void loadData(JSONObject data) throws JSONException {
+    public Future<?> loadData(JSONObject data) throws JSONException {
         JSONArray array = data.getJSONArray("History");
         final List<History> histories = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
             JSONObject obj = array.getJSONObject(i);
-            History history = new History();
-            history.date = new Date(obj.getLong("date"));
-            history.idExercise = obj.getLong("idExercise");
-            history.idUser = obj.getLong("idUser");
+            History history = new History(obj.getLong("idUser"), Util.isoFormatToTimestamp(obj.getString("date")), obj.getLong("idExercise"));
             histories.add(history);
         }
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                historyDao.insert((History[]) histories.toArray());
-            }
-        });
+        return insert(histories.toArray(new History[0]));
     }
 }

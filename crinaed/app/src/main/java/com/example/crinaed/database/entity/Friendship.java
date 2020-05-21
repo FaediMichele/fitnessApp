@@ -11,7 +11,7 @@ import static androidx.room.ForeignKey.NO_ACTION;
             parentColumns = "idUser",
             childColumns = "idUser1",
             onDelete = NO_ACTION),
-        @ForeignKey(entity = Friendship.class,
+        @ForeignKey(entity = User.class,
                 parentColumns = "idUser",
                 childColumns = "idUser2",
                 onDelete = NO_ACTION)})
@@ -20,4 +20,10 @@ public class Friendship {
     public long idFriendship;
     public long idUser1;
     public long idUser2;
+
+    public Friendship(long idFriendship, long idUser1, long idUser2) {
+        this.idFriendship = idFriendship;
+        this.idUser1 = idUser1;
+        this.idUser2 = idUser2;
+    }
 }

@@ -8,4 +8,11 @@ public class Review {
     public long idUser;
     public int val;
     public String comment;
+
+    public Review(long idSchool, long idUser, int val, String comment) {
+        this.idSchool = idSchool;
+        this.idUser = idUser;
+        this.val = val;
+        this.comment = comment;
+    }
 }

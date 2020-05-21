@@ -9,7 +9,7 @@ import com.example.crinaed.database.entity.Step;
 import java.util.List;
 
 public class ExerciseWithStep {
-    @Embedded Exercise course;
+    @Embedded public Exercise course;
 
     @Relation(parentColumn = "idExercise", entityColumn = "idExercise")
     public List<Step> steps;

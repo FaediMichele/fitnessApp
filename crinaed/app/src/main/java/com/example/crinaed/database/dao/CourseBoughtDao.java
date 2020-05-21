@@ -17,7 +17,7 @@ import java.util.List;
 public interface CourseBoughtDao {
 
     @Insert
-    long[] insert(CourseBought... courseBoughts);
+    Long[] insert(CourseBought... courseBoughts);
 
     @Update
     void update(CourseBought... courseBoughts);

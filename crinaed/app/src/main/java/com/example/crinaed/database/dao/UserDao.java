@@ -22,13 +22,13 @@ public interface UserDao {
     List<User> getAll();
 
     @Insert
-    long[] insert(User... users);
+    Long[] insert(User... users);
 
     @Insert
-    long[] insert(UserSchoolCrossRef subscription);
+    Long insert(UserSchoolCrossRef subscription);
 
     @Insert
-    long[] insert(UserLevel... levels);
+    Long[] insert(UserLevel... levels);
 
     @Update
     void update(User user);

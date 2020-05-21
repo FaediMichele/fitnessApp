@@ -7,7 +7,7 @@ import com.example.crinaed.database.entity.CourseBought;
 import com.example.crinaed.database.entity.Exercise;
 
 public class CourseBoughtWithExercise {
-    @Embedded CourseBought courseBought;
+    @Embedded public CourseBought courseBought;
     @Relation(parentColumn = "idExercise", entityColumn = "idExercise")
     public Exercise exercise;
 }

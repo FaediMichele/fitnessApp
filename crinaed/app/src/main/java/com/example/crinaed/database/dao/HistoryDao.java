@@ -17,7 +17,7 @@ import java.util.List;
 @Dao
 public interface HistoryDao {
     @Insert
-    long[] insert(History... histories);
+    Long[] insert(History... histories);
 
     @Delete
     void delete(History... histories);

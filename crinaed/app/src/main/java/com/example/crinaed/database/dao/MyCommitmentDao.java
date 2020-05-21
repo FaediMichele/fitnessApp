@@ -18,10 +18,10 @@ import java.util.List;
 @Dao
 public interface MyCommitmentDao {
     @Insert
-    long[] insert(MyCommitment... commitments);
+    Long[] insert(MyCommitment... commitments);
 
     @Insert
-    long[] insert(MyStep... mySteps);
+    Long[] insert(MyStep... mySteps);
 
     @Update
     void update(MyCommitment... commitments);

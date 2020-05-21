@@ -59,14 +59,16 @@ abstract public class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance;
     private static final int NUMBER_OF_THREAD = 4;
+    static public final String DATABASE_NAME = "database";
 
     static public final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREAD);
+
 
     public static AppDatabase getDatabase(Context context) {
         if(instance == null){
             synchronized (AppDatabase.class){
                 if(instance == null){
-                    instance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "database").build();
+                    instance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, DATABASE_NAME).build();
                 }
             }
         }

@@ -1,12 +1,12 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.dao.ReviewDao;
-import com.example.crinaed.database.entity.History;
 import com.example.crinaed.database.entity.Review;
 import com.example.crinaed.database.entity.join.user.UserReview;
 
@@ -15,8 +15,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class ReviewRepository implements Repository{
     private ReviewDao reviewDao;
@@ -30,29 +31,29 @@ public class ReviewRepository implements Repository{
         return reviewDao.getUserReview();
     }
 
-    public LiveData<List<UserReview>> getSchoolReview(long idSchool){
+    public LiveData<List<Review>> getSchoolReview(long idSchool){
         return reviewDao.getSchoolReview(idSchool);
     }
 
-    public void insert(final Review... reviews){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> insert(final Review... reviews){
+        return AppDatabase.databaseWriteExecutor.submit(new Callable<Long[]>() {
             @Override
-            public void run() {
-                reviewDao.insert(reviews);
+            public Long[] call() {
+                return reviewDao.insert(reviews);
             }
         });
     }
 
-    public void update(final Review... reviews){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> update(final Review... reviews){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 reviewDao.update(reviews);
             }
         });
     }
-    public void delete(final Review... reviews){
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+    public Future<?> delete(final Review... reviews){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 reviewDao.delete(reviews);
@@ -61,23 +62,14 @@ public class ReviewRepository implements Repository{
     }
 
     @Override
-    public void loadData(JSONObject data) throws JSONException {
+    public Future<?> loadData(JSONObject data) throws JSONException {
         JSONArray array = data.getJSONArray("Review");
         final List<Review> reviews = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
             JSONObject obj = array.getJSONObject(i);
-            Review review = new Review();
-            review.idSchool = obj.getLong("idSchool");
-            review.idUser = obj.getLong("idUser");
-            review.val = obj.getInt("val");
-            review.comment = obj.getString("comment");
+            Review review = new Review(obj.getLong("idSchool"), obj.getLong("idUser"), obj.getInt("val"), obj.getString("comment"));
             reviews.add(review);
         }
-        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                reviewDao.insert((Review[]) reviews.toArray());
-            }
-        });
+        return insert(reviews.toArray(new Review[0]));
     }
 }

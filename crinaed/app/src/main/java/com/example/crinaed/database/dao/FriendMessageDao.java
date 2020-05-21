@@ -17,7 +17,7 @@ public interface FriendMessageDao {
     LiveData<List<FriendMessage>> getMessageByIdFriendship(long idFriendship);
 
     @Insert
-    long[] insert(FriendMessage... friendMessages);
+    Long[] insert(FriendMessage... friendMessages);
 
     @Update
     void update(FriendMessage friendMessage);
