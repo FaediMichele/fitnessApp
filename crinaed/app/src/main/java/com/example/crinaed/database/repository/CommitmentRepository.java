@@ -51,7 +51,14 @@ public class CommitmentRepository implements Repository{
                 for (MyStep s: steps) {
                     s.idCommitment = id;
                 }
-                return new Pair<>(id, commitmentDao.insert(steps));
+                final Pair<Long, Long[]> ret = new Pair<>(id, commitmentDao.insert(steps));
+                final long now = new Date().getTime();
+                final MyStepDone[] myStepsDone = new MyStepDone[ret.second.length];
+                for(int i = 0; i < ret.second.length; i++){
+                    myStepsDone[i] = new MyStepDone(ret.second[i], now, 0);
+                }
+                commitmentDao.insert(myStepsDone);
+                return ret;
             }
         });
     }
