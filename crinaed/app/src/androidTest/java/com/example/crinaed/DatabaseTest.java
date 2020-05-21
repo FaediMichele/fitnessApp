@@ -11,7 +11,11 @@ import androidx.test.core.app.ApplicationProvider;
 
 import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.entity.CourseBought;
+import com.example.crinaed.database.entity.MyStep;
 import com.example.crinaed.database.entity.join.CommitmentWithMyStep;
+import com.example.crinaed.database.entity.join.CourseBoughtWithCourse;
+import com.example.crinaed.database.entity.join.user.UserCourseBought;
 import com.example.crinaed.database.repository.CommitmentRepository;
 import com.example.crinaed.database.repository.CourseBoughtRepository;
 import com.example.crinaed.database.repository.ExerciseAndStepRepository;
@@ -21,6 +25,7 @@ import com.example.crinaed.database.repository.HistoryRepository;
 import com.example.crinaed.database.repository.ReviewRepository;
 import com.example.crinaed.database.repository.SchoolRepository;
 import com.example.crinaed.database.repository.UserRepository;
+import com.example.crinaed.util.Util;
 
 import org.json.JSONException;
 import org.junit.AfterClass;
@@ -95,7 +100,49 @@ public class DatabaseTest {
                 assertEquals(commits.size(), 1);
                 CommitmentWithMyStep commitment = commits.get(0);
                 assertEquals(commitment.commitment.idCommitment, 73);
+                assertEquals(commitment.commitment.name, "studiare mobile");
+                assertEquals(commitment.commitment.desc, "Fare il progetto in android");
+                assertEquals(commitment.commitment.duration, 6000);
+                assertEquals(commitment.commitment.idUser, 123);
                 assertEquals(commitment.steps.size(), 2);
+                final MyStep st1 = commitment.steps.get(0);
+                final MyStep st2 = commitment.steps.get(1);
+                assertNotNull(st1);
+                assertNotNull(st2);
+                assertEquals(st1.idCommitment, commitment.commitment.idCommitment);
+                assertEquals(st2.idCommitment, commitment.commitment.idCommitment);
+                assertEquals(st1.num, 1);
+                assertEquals(st2.num, 2);
+                assertEquals(st1.name, "fare database sql");
+                assertEquals(st2.name, "fare database nosql");
+                assertEquals(60, st1.incVal, 0.0);
+                assertEquals(60, st2.incVal, 0.0);
+
+                assertEquals(st1.unitMeasure, "minuti");
+                assertEquals(st2.unitMeasure, "minuti");
+
+                assertEquals(300, st1.max, 0.0);
+                assertEquals(300, st2.max, 0.0);
+
+                assertEquals(120, st1.progression, 0.0);
+                assertEquals(0, st2.progression, 0.0);
+            }
+        });
+    }
+
+    @Test
+    public void testCorrectLoadJsonCourseBoughtRepository(){
+        courseBoughtRepository.getCourses().observeForever(new Observer<List<CourseBoughtWithCourse>>() {
+            @Override
+            public void onChanged(List<CourseBoughtWithCourse> courses) {
+                assertNotNull(courses);
+                assertEquals(courses.size(), 1);
+                CourseBought us = courses.get(0).courseBought;
+                assertNotNull(us);
+                assertEquals(us.idUser, 123);
+                assertEquals(us.idCourse, 420);
+                assertEquals(us.level, 1);
+                assertEquals(us.purchaseDate, Util.isoFormatToTimestamp("2020-05-01T18:25:43Z"));
             }
         });
     }

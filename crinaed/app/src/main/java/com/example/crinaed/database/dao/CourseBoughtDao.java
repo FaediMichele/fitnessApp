@@ -9,6 +9,7 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.crinaed.database.entity.CourseBought;
+import com.example.crinaed.database.entity.join.CourseBoughtWithCourse;
 import com.example.crinaed.database.entity.join.user.UserCourseBought;
 
 import java.util.List;
@@ -26,6 +27,6 @@ public interface CourseBoughtDao {
     void delete(CourseBought... courseBoughts);
 
     @Transaction
-    @Query("SELECT * FROM User")
-    LiveData<List<UserCourseBought>> getCourseBought();
+    @Query("SELECT * FROM CourseBought")
+    LiveData<List<CourseBoughtWithCourse>> getCourseBought();
 }

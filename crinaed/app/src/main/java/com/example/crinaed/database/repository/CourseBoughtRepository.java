@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.dao.CourseBoughtDao;
 import com.example.crinaed.database.entity.CourseBought;
+import com.example.crinaed.database.entity.join.CourseBoughtWithCourse;
 import com.example.crinaed.database.entity.join.user.UserCourseBought;
 import com.example.crinaed.util.Util;
 
@@ -29,7 +30,7 @@ public class CourseBoughtRepository implements Repository{
         courseBoughtDao = db.courseBoughtDao();
     }
 
-    public LiveData<List<UserCourseBought>> getCourses() {
+    public LiveData<List<CourseBoughtWithCourse>> getCourses() {
         return courseBoughtDao.getCourseBought();
     }
 
@@ -70,6 +71,6 @@ public class CourseBoughtRepository implements Repository{
                     obj.getInt("level"), Util.isoFormatToTimestamp(obj.getString("purchaseDate")));
             courseBoughts.add(courseBought);
         }
-        return insert((CourseBought[]) courseBoughts.toArray(new CourseBought[0]));
+        return insert(courseBoughts.toArray(new CourseBought[0]));
     }
 }
