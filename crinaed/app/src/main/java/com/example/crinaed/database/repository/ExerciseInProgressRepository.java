@@ -1,6 +1,7 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -24,8 +25,8 @@ public class ExerciseInProgressRepository implements Repository {
     private ExerciseInProgressDao exerciseInProgressDao;
     private LiveData<List<ExerciseInProgressWithExercise>>  exercise;
 
-    public ExerciseInProgressRepository(Application application){
-        AppDatabase db = AppDatabase.getDatabase(application);
+    public ExerciseInProgressRepository(Context context){
+        AppDatabase db = AppDatabase.getDatabase(context);
         exerciseInProgressDao = db.exerciseInProgressDao();
         exercise = exerciseInProgressDao.get();
     }

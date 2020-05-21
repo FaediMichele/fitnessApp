@@ -1,6 +1,7 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -26,8 +27,8 @@ public class FriendRepository implements Repository{
     private FriendshipDao friendshipDao;
     private FriendMessageDao friendMessageDao;
 
-    public FriendRepository(Application application){
-        AppDatabase db = AppDatabase.getDatabase(application);
+    public FriendRepository(Context context){
+        AppDatabase db = AppDatabase.getDatabase(context);
         friendshipDao = db.friendshipDao();
         friendMessageDao = db.friendMessageDao();
     }

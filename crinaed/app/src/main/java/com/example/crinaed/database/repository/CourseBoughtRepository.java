@@ -1,6 +1,7 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -25,8 +26,8 @@ public class CourseBoughtRepository implements Repository{
 
     private CourseBoughtDao courseBoughtDao;
 
-    public CourseBoughtRepository(Application application){
-        AppDatabase db = AppDatabase.getDatabase(application);
+    public CourseBoughtRepository(Context context){
+        AppDatabase db = AppDatabase.getDatabase(context);
         courseBoughtDao = db.courseBoughtDao();
     }
 

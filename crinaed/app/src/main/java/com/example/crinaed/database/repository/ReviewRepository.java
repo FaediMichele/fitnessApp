@@ -1,6 +1,7 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -22,8 +23,8 @@ import java.util.concurrent.Future;
 public class ReviewRepository implements Repository{
     private ReviewDao reviewDao;
 
-    public ReviewRepository(Application application){
-        AppDatabase db = AppDatabase.getDatabase(application);
+    public ReviewRepository(Context context){
+        AppDatabase db = AppDatabase.getDatabase(context);
         reviewDao = db.reviewDao();
     }
 

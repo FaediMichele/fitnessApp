@@ -1,6 +1,7 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 import android.util.Pair;
 
@@ -29,8 +30,8 @@ public class UserRepository implements Repository{
     private LiveData<List<UserData>> userData;
     private LiveData<List<UserInscription>> inscriptions;
 
-    public UserRepository(Application application){
-        AppDatabase db = AppDatabase.getDatabase(application);
+    public UserRepository(Context context){
+        AppDatabase db = AppDatabase.getDatabase(context);
         userDao = db.userDao();
         userData = userDao.getData();
         inscriptions = userDao.getInscription();

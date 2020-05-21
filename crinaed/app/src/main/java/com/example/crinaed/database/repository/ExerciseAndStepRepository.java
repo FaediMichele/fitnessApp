@@ -1,6 +1,7 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 import android.util.Pair;
 
@@ -24,8 +25,8 @@ import java.util.concurrent.Future;
 public class ExerciseAndStepRepository implements Repository{
     private ExerciseAndStepDao exerciseAndStepDao;
 
-    public ExerciseAndStepRepository(Application application){
-        AppDatabase db = AppDatabase.getDatabase(application);
+    public ExerciseAndStepRepository(Context context){
+        AppDatabase db = AppDatabase.getDatabase(context);
         exerciseAndStepDao = db.exerciseAndStepDao();
     }
 

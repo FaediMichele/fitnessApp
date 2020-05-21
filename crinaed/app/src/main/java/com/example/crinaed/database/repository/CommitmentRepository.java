@@ -1,6 +1,7 @@
 package com.example.crinaed.database.repository;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 import android.util.Pair;
 
@@ -29,8 +30,8 @@ import java.util.concurrent.Future;
 public class CommitmentRepository implements Repository{
     private MyCommitmentDao commitmentDao;
 
-    public CommitmentRepository(Application application){
-        AppDatabase db = AppDatabase.getDatabase(application);
+    public CommitmentRepository(Context context){
+        AppDatabase db = AppDatabase.getDatabase(context);
         commitmentDao = db.commitmentDao();
     }
 
