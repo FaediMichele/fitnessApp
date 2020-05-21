@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- fragment_screen_slide_page.xml -->
-    <ScrollView
-        android:id="@+id/item_slider"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="@string/ciao">
-            </TextView>
-    </ScrollView>
 
+    <com.example.crinaed.view.ProgressBarView
+        android:id="@+id/progressBarView"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        app:angle="270"
+        app:progress="20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:startAngle="270"
+        app:strokeWidth="10dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
