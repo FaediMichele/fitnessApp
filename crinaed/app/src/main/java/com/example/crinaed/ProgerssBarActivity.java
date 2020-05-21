@@ -1,7 +1,7 @@
 package com.example.crinaed;
 
-import android.icu.lang.UCharacter;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -11,8 +11,14 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.crinaed.ProgressBar.ProgressBarPageFragment;
+import com.example.crinaed.ProgressBar.ProgressBarPagerAdapter;
+import com.example.crinaed.view.ProgressBarView;
 
-public class ProgerssBarSilderFragmentActivity extends FragmentActivity {
+
+public class ProgerssBarActivity extends FragmentActivity {
+
+    private int progress = 10;
     /**
      * The number of pages (wizard steps) to show in this demo.
      */
@@ -36,8 +42,16 @@ public class ProgerssBarSilderFragmentActivity extends FragmentActivity {
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
-        pagerAdapter = new ProgresBarPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        pagerAdapter = new ProgressBarPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mPager.setAdapter(pagerAdapter);
+
+        findViewById(R.id.progressBar2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progress=(progress+10)%100;
+                ((ProgressBarView) findViewById(R.id.progressBar2)).setProgress(progress);
+            }
+        });
     }
 
     @Override
@@ -52,27 +66,4 @@ public class ProgerssBarSilderFragmentActivity extends FragmentActivity {
         }
     }
 
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
-    private class ProgresBarPagerAdapter extends FragmentStatePagerAdapter {
-
-        public ProgresBarPagerAdapter(@NonNull FragmentManager fm, int behavior) {
-            super(fm, behavior);
-        }
-//        public ProgresBarPagerAdapter(FragmentManager fm) {
-//            super(fm);
-//        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return new ProgressBarPageFragment();
-        }
-
-        @Override
-        public int getCount() {
-            return NUM_PAGES;
-        }
-    }
 }

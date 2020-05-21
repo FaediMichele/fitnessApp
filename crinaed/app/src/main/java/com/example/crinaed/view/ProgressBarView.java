@@ -5,13 +5,11 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -20,7 +18,7 @@ import android.view.View;
 import com.example.crinaed.R;
 
 import java.text.DecimalFormat;
-public class ArcProgressBar extends View {
+public class ProgressBarView extends View {
     private Paint paint;
     private Paint backgroundPaint;
     protected Paint textPaint;
@@ -58,18 +56,18 @@ public class ArcProgressBar extends View {
     private static final String INSTANCE_ARC_ANGLE = "angle";
     private static final String INSTANCE_START_ANGLE = "startAngle";
 
-    public ArcProgressBar(Context context) {
+    public ProgressBarView(Context context) {
         this(context, null);
     }
 
-    public ArcProgressBar(Context context, AttributeSet attrs) {
+    public ProgressBarView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ArcProgressBar(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProgressBarView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        TypedArray attributes = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ArcProgressBar, defStyleAttr, 0);
+        TypedArray attributes = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ProgressBarView, defStyleAttr, 0);
         initByAttributes(attributes, context);
         attributes.recycle();
 
@@ -77,20 +75,20 @@ public class ArcProgressBar extends View {
     }
 
     protected void initByAttributes(TypedArray attributes, final Context context) {
-        foregroundColor = attributes.getColor(R.styleable.ArcProgressBar_foregroundColor, getThemeColor(context, R.attr.colorPrimary));
-        backgroundColor = attributes.getColor(R.styleable.ArcProgressBar_backgroundColor, getThemeColor(context, R.attr.colorPrimaryDark));
-        textColor = attributes.getColor(R.styleable.ArcProgressBar_percentageTextColor, getThemeColor(context, R.attr.colorPrimaryDark));
-        textSize = attributes.getDimension(R.styleable.ArcProgressBar_percentageTextSize, textSize);
-        arcAngle = attributes.getFloat(R.styleable.ArcProgressBar_angle, arcAngle);
-        setMax(attributes.getInt(R.styleable.ArcProgressBar_angleMax, max));
-        setProgress(attributes.getFloat(R.styleable.ArcProgressBar_progress, progress));
-        strokeWidth = attributes.getDimension(R.styleable.ArcProgressBar_strokeWidth, strokeWidth);
-        backgroundStrokeWidth = attributes.getDimension(R.styleable.ArcProgressBar_backgroundStrokeWidth, strokeWidth);
+        foregroundColor = attributes.getColor(R.styleable.ProgressBarView_foregroundColor, getThemeColor(context, R.attr.colorPrimary));
+        backgroundColor = attributes.getColor(R.styleable.ProgressBarView_backgroundColor, getThemeColor(context, R.attr.colorPrimaryDark));
+        textColor = attributes.getColor(R.styleable.ProgressBarView_percentageTextColor, getThemeColor(context, R.attr.colorPrimaryDark));
+        textSize = attributes.getDimension(R.styleable.ProgressBarView_percentageTextSize, textSize);
+        arcAngle = attributes.getFloat(R.styleable.ProgressBarView_angle, arcAngle);
+        setMax(attributes.getInt(R.styleable.ProgressBarView_angleMax, max));
+        setProgress(attributes.getFloat(R.styleable.ProgressBarView_progress, progress));
+        strokeWidth = attributes.getDimension(R.styleable.ProgressBarView_strokeWidth, strokeWidth);
+        backgroundStrokeWidth = attributes.getDimension(R.styleable.ProgressBarView_backgroundStrokeWidth, strokeWidth);
         if(backgroundStrokeWidth > strokeWidth){
             backgroundStrokeWidth = strokeWidth;
         }
-        showText = attributes.getBoolean(R.styleable.ArcProgressBar_showPercentage, showText);
-        startAngle = attributes.getInteger(R.styleable.ArcProgressBar_startAngle, startAngle);
+        showText = attributes.getBoolean(R.styleable.ProgressBarView_showPercentage, showText);
+        startAngle = attributes.getInteger(R.styleable.ProgressBarView_startAngle, startAngle);
     }
 
     protected void initPainters() {
@@ -147,7 +145,7 @@ public class ArcProgressBar extends View {
         this.progress = Float.valueOf(new DecimalFormat("#.##").format(progress));
 
         if (this.progress > getMax()) {
-            Log.d("ArcProgressBar", "progress: "+ this.progress  + ", max: " + getMax());
+            Log.d("ProgressBarView", "progress: "+ this.progress  + ", max: " + getMax());
             this.progress = getMax();
         }
         invalidate();
