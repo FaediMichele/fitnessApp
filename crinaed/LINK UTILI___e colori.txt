@@ -1,9 +1,9 @@
 - il nome 
 - il logo
 - i colori
-	- colore fisico --- rosso FF7DC2 FF8599
-	- colore sociale --- verde 7DFF7D 85FFC6
-	- colore del mentale-- blu 85C6FF - 7D7DFF
+	- colore fisico --- rosso FF7DC2 FF8599  2 1
+	- colore sociale --- verde 7DFF7D 85FFC6 1 2
+	- colore del mentale-- blu 85C6FF - 7D7DFF 1 2
 
 	- colore grafici generali -- #FFA26B #FFD387 LOGO
 

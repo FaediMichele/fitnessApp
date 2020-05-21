@@ -42,7 +42,6 @@ public class ProgressBarPageFragment extends Fragment {
                 ((ProgressBarView) view.findViewById(R.id.progressBarView)).setProgress(progress);
             }
         });
-
         return view;
     }
 }
