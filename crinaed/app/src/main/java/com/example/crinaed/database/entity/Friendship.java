@@ -2,6 +2,7 @@ package com.example.crinaed.database.entity;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.NO_ACTION;
@@ -14,7 +15,8 @@ import static androidx.room.ForeignKey.NO_ACTION;
         @ForeignKey(entity = User.class,
                 parentColumns = "idUser",
                 childColumns = "idUser2",
-                onDelete = NO_ACTION)})
+                onDelete = NO_ACTION)},
+        indices = {@Index("idUser1"), @Index("idUser2")})
 public class Friendship {
     @PrimaryKey(autoGenerate = true)
     public long idFriendship;
