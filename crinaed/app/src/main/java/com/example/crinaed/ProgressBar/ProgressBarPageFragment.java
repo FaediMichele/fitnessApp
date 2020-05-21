@@ -24,14 +24,24 @@ public class ProgressBarPageFragment extends Fragment {
      *
      */
 
+    private int progress = 10;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_progress_bar,container, false);
-        //ProgressBarView progressBar = view.findViewById(R.id.progressBarView);
-//        int color = ContextCompat.getColor(getContext(),R.color.redPrimary);
-//        progressBar.setBackgroundColor(color);
+        final ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_progress_bar,container, false);
+        ProgressBarView progressBar = view.findViewById(R.id.progressBarView);
+        int colorPrimary = ContextCompat.getColor(getContext(),R.color.colorRedPrimary);
+        progressBar.setForegroundColor(colorPrimary);
+
+        progressBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progress=(progress+10)%100;
+                ((ProgressBarView) view.findViewById(R.id.progressBarView)).setProgress(progress);
+            }
+        });
 
         return view;
     }
