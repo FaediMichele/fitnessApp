@@ -22,6 +22,7 @@ public class ProgressActivity extends AppCompatActivity {
             public void onClick(View v) {
                 progress=(progress+10)%100;
                 ((ArcProgressBar) findViewById(R.id.progressBar2)).setProgress(progress);
+                Log.d("arcProgress", "click");
             }
         });
 

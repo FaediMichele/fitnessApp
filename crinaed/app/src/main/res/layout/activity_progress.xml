@@ -14,6 +14,7 @@
         app:angle="270"
         app:backgroundColor="#f0f"
         app:foregroundColor="#ff0"
+        app:backgroundStrokeWidth="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

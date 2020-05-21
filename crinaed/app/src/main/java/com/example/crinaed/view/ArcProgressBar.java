@@ -22,11 +22,14 @@ import com.example.crinaed.R;
 import java.text.DecimalFormat;
 public class ArcProgressBar extends View {
     private Paint paint;
+    private Paint backgroundPaint;
     protected Paint textPaint;
 
     private RectF rectF = new RectF();
+    private RectF rectFBackground = new RectF();
 
     private float strokeWidth;
+    private float backgroundStrokeWidth;
 
     private float progress = 0;
     private int max = 100;
@@ -44,6 +47,7 @@ public class ArcProgressBar extends View {
 
     private static final String INSTANCE_STATE = "saved_instance";
     private static final String INSTANCE_STROKE_WIDTH = "strokeWidth";
+    private static final String INSTANCE_BACKGROUND_STROKE_WIDTH = "backgroundStrokeWidth";
     private static final String INSTANCE_TEXT_SIZE = "percentageTextSize";
     private static final String INSTANCE_TEXT_COLOR = "percentageTextColor";
     private static final String INSTANCE_SHOW_TEXT = "showPercentage";
@@ -81,6 +85,10 @@ public class ArcProgressBar extends View {
         setMax(attributes.getInt(R.styleable.ArcProgressBar_angleMax, max));
         setProgress(attributes.getFloat(R.styleable.ArcProgressBar_progress, progress));
         strokeWidth = attributes.getDimension(R.styleable.ArcProgressBar_strokeWidth, strokeWidth);
+        backgroundStrokeWidth = attributes.getDimension(R.styleable.ArcProgressBar_backgroundStrokeWidth, strokeWidth);
+        if(backgroundStrokeWidth > strokeWidth){
+            backgroundStrokeWidth = strokeWidth;
+        }
         showText = attributes.getBoolean(R.styleable.ArcProgressBar_showPercentage, showText);
         startAngle = attributes.getInteger(R.styleable.ArcProgressBar_startAngle, startAngle);
     }
@@ -97,6 +105,14 @@ public class ArcProgressBar extends View {
         paint.setStrokeWidth(strokeWidth);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeCap(Paint.Cap.BUTT); // set the arc line style(rounded o not)
+
+        backgroundPaint = new Paint();
+        backgroundPaint = new Paint();
+        backgroundPaint.setColor(backgroundColor);
+        backgroundPaint.setAntiAlias(true);
+        backgroundPaint.setStrokeWidth(backgroundStrokeWidth);
+        backgroundPaint.setStyle(Paint.Style.STROKE);
+        backgroundPaint.setStrokeCap(Paint.Cap.BUTT); // set the arc line style(rounded o not)
     }
 
     @Override
@@ -111,6 +127,15 @@ public class ArcProgressBar extends View {
 
     public void setStrokeWidth(float strokeWidth) {
         this.strokeWidth = strokeWidth;
+        this.invalidate();
+    }
+
+    public float getBackgroundStrokeWidth() {
+        return backgroundStrokeWidth;
+    }
+
+    public void setBackgroundStrokeWidth(float backgroundStrokeWidth) {
+        this.backgroundStrokeWidth = Math.min(backgroundStrokeWidth, this.strokeWidth);
         this.invalidate();
     }
 
@@ -218,6 +243,8 @@ public class ArcProgressBar extends View {
         int originalHeight = MeasureSpec.getSize(heightMeasureSpec);
         int finalWidth;
         int finalHeight;
+        float backgroundStrokeDiff = (strokeWidth - backgroundStrokeWidth) / 2f;
+        int incDim = backgroundStrokeDiff > 0 ? 0 : (int) backgroundStrokeDiff * -2;
         if (originalWidth > originalHeight)
         {
             finalWidth = originalHeight;
@@ -230,9 +257,10 @@ public class ArcProgressBar extends View {
         }
 
         super.onMeasure(
-                MeasureSpec.makeMeasureSpec(finalWidth, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(finalHeight, MeasureSpec.EXACTLY));
+                MeasureSpec.makeMeasureSpec(finalWidth + incDim, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(finalHeight + incDim, MeasureSpec.EXACTLY));
         rectF.set(strokeWidth / 2f, strokeWidth / 2f, finalWidth - strokeWidth / 2f, finalHeight - strokeWidth / 2f);
+        rectFBackground.set(backgroundStrokeWidth / 2f +backgroundStrokeDiff, backgroundStrokeWidth / 2f + backgroundStrokeDiff, finalWidth - backgroundStrokeWidth / 2f -backgroundStrokeDiff, finalHeight - backgroundStrokeWidth / 2f - backgroundStrokeDiff);
         float radius = finalWidth / 2f;
         float angle = (360 - arcAngle) / 2f;
         arcBottomHeight = radius * (float) (1 - Math.cos(angle / 180 * Math.PI));
@@ -245,8 +273,9 @@ public class ArcProgressBar extends View {
         float finishedSweepAngle = progress / (float) getMax() * arcAngle;
         float finishedStartAngle = startAngle;
         if(progress == 0) finishedStartAngle = 0.01f + this.startAngle;
-        paint.setColor(backgroundColor);
-        canvas.drawArc(rectF, startAngle, arcAngle, false, paint);
+        backgroundPaint.setColor(backgroundColor);
+        canvas.drawArc(rectFBackground, startAngle, arcAngle, false, backgroundPaint);
+
         paint.setColor(foregroundColor);
         canvas.drawArc(rectF, finishedStartAngle, finishedSweepAngle, false, paint);
 
@@ -272,6 +301,7 @@ public class ArcProgressBar extends View {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(INSTANCE_STATE, super.onSaveInstanceState());
         bundle.putFloat(INSTANCE_STROKE_WIDTH, getStrokeWidth());
+        bundle.putFloat(INSTANCE_BACKGROUND_STROKE_WIDTH, getBackgroundStrokeWidth());
         bundle.putFloat(INSTANCE_TEXT_SIZE, getTextSize());
         bundle.putInt(INSTANCE_TEXT_COLOR, getTextColor());
         bundle.putFloat(INSTANCE_PROGRESS, getProgress());
@@ -289,6 +319,10 @@ public class ArcProgressBar extends View {
         if(state instanceof Bundle) {
             final Bundle bundle = (Bundle) state;
             strokeWidth = bundle.getFloat(INSTANCE_STROKE_WIDTH);
+            backgroundStrokeWidth = bundle.getFloat(INSTANCE_BACKGROUND_STROKE_WIDTH);
+            if(backgroundStrokeWidth > strokeWidth){
+                backgroundStrokeWidth = strokeWidth;
+            }
             textSize = bundle.getFloat(INSTANCE_TEXT_SIZE);
             textColor = bundle.getInt(INSTANCE_TEXT_COLOR);
             showText = bundle.getBoolean(INSTANCE_SHOW_TEXT);
