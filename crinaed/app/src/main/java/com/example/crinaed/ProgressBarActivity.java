@@ -16,7 +16,7 @@ import com.example.crinaed.ProgressBar.ProgressBarPagerAdapter;
 import com.example.crinaed.view.ProgressBarView;
 
 
-public class ProgerssBarActivity extends FragmentActivity {
+public class ProgressBarActivity extends FragmentActivity {
 
     private int progress = 10;
     /**

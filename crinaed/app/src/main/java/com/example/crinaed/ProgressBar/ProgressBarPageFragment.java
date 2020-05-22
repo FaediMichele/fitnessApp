@@ -1,6 +1,7 @@
 package com.example.crinaed.ProgressBar;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,17 +24,18 @@ public class ProgressBarPageFragment extends Fragment {
      * percent complete
      *
      */
+    private   ProgressBarView progressBar;
 
     private int progress = 10;
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_progress_bar,container, false);
         ProgressBarView progressBar = view.findViewById(R.id.progressBarView);
-        int colorPrimary = ContextCompat.getColor(getContext(),R.color.colorRedPrimary);
-        progressBar.setForegroundColor(colorPrimary);
+
+//        progressBar.setForegroundColor(this.foregroundColor);
+//        progressBar.setBackgroundColor(this.backgroundColor);
 
         progressBar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,5 +45,10 @@ public class ProgressBarPageFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    public ProgressBarPageFragment setForegroundColor(int color){
+        progressBar.setForegroundColor(ContextCompat.getColor(getContext(),color));
+        return this;
     }
 }
