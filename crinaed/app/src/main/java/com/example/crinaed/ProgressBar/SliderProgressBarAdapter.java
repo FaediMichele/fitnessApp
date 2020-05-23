@@ -19,7 +19,6 @@ import java.util.function.BinaryOperator;
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.ToDoubleFunction;
 
-@SuppressWarnings({"ALL", "SyntaxError"})
 public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBarAdapter.SliderProgressBarVH> {
 
 
@@ -90,18 +89,11 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
     }
 
     private Float getPercentProgress (SliderProgressBarModel progressBarModel){
-        Double result =  progressBarModel.getStepList().stream().mapToDouble(new ToDoubleFunction<Step>() {
-            @Override
-            public double applyAsDouble(Step x) {
-                return x.getProgressPercentage();
-            }
-        }).reduce(new DoubleBinaryOperator() {
-            @Override
-            public double applyAsDouble(double x, double y) {
-                return x + y;
-            }
-        }).getAsDouble() / progressBarModel.getStepList().size();
-
+        Double result = 0.0;
+        for (Step step: progressBarModel.getStepList()) {
+            result = result + step.getProgressPercentage();
+        }
+        result = result / progressBarModel.getStepList().size();
         return result.floatValue();
     }
 

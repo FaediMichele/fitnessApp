@@ -3,6 +3,8 @@ package com.example.crinaed.ProgressBar;
 import com.example.crinaed.util.Pair;
 import com.example.crinaed.ProgressBar.Step;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +30,8 @@ public class SliderProgressBarModel {
     private String category;
     private String title;
     private String Description;
-    private List<Step> stepList;
-    private Map<Double, Pair<String,String>> motivationalMap;
+    private List<Step> stepList = new ArrayList<>();
+    private Map<Double, Pair<String,String>> motivationalMap = new HashMap<>();
 
     public String getCategory() {
         return category;

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.crinaed.ProgressBar.SliderProgressBarAdapter;
 import com.example.crinaed.ProgressBar.SliderProgressBarModel;
+import com.example.crinaed.ProgressBar.Step;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.IndicatorView.draw.controller.DrawController;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -50,17 +51,65 @@ public class MainActivity extends AppCompatActivity {
 
     public void renewItems(View view) {
         List<SliderProgressBarModel> sliderItemList = new ArrayList<>();
-        //dummy data
-//        for (int i = 0; i < 5; i++) {
-//            SliderItem sliderItem = new SliderItem();
-//            sliderItem.setDescription("Slider Item " + i);
-//            if (i % 2 == 0) {
-//                sliderItem.setImageUrl("https://images.pexels.com/photos/929778/pexels-photo-929778.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
-//            } else {
-//                sliderItem.setImageUrl("https://images.pexels.com/photos/747964/pexels-photo-747964.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260");
-//            }
-//            sliderItemList.add(sliderItem);
-//        }
+
+        //MENTAL
+        SliderProgressBarModel mental = new SliderProgressBarModel();
+        mental.setCategory(SliderProgressBarModel.MENTAL);
+        mental.setDescription("Test desccrizione mentale");
+        mental.setTitle("Test title");
+
+        Step stepMental1 = new Step();
+        stepMental1.setChecklist(false);
+        stepMental1.setProgressPercentage(30.0);
+        stepMental1.setDescription("Test stepMental1");
+        Step stepMental2 = new Step();
+        stepMental2.setChecklist(false);
+        stepMental2.setProgressPercentage(50.0);
+        stepMental2.setDescription("Test stepMental2");
+
+        mental.getStepList().add(stepMental1);
+        mental.getStepList().add(stepMental2);
+
+        //PHYSICAL
+        SliderProgressBarModel physical = new SliderProgressBarModel();
+        physical.setCategory(SliderProgressBarModel.PHYSICAL);
+        physical.setDescription("Test desccrizione mentale");
+        physical.setTitle("Test title");
+
+        Step stepPhysical1 = new Step();
+        stepPhysical1.setChecklist(false);
+        stepPhysical1.setProgressPercentage(30.0);
+        stepPhysical1.setDescription("Test stepMental1");
+        Step stepPhysical2 = new Step();
+        stepPhysical2.setChecklist(false);
+        stepPhysical2.setProgressPercentage(50.0);
+        stepPhysical2.setDescription("Test stepMental2");
+
+        physical.getStepList().add(stepPhysical1);
+        physical.getStepList().add(stepPhysical2);
+
+        //SOCIAL
+        SliderProgressBarModel social = new SliderProgressBarModel();
+        social.setCategory(SliderProgressBarModel.SOCIAL);
+        social.setDescription("Test desccrizione mentale");
+        social.setTitle("Test title");
+
+        Step stepSocial1 = new Step();
+        stepSocial1.setChecklist(false);
+        stepSocial1.setProgressPercentage(30.0);
+        stepSocial1.setDescription("Test stepMental1");
+        Step stepSocial2 = new Step();
+        stepSocial2.setChecklist(false);
+        stepSocial2.setProgressPercentage(80.0);
+        stepSocial2.setDescription("Test stepMental2");
+
+        social.getStepList().add(stepSocial1);
+        social.getStepList().add(stepSocial2);
+
+        //add
+        sliderItemList.add(mental);
+        sliderItemList.add(social);
+        sliderItemList.add(physical);
         adapter.renewItems(sliderItemList);
     }
 
@@ -70,9 +119,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addNewItem(View view) {
-        SliderProgressBarModel sliderItem = new SliderProgressBarModel();
-        sliderItem.setDescription("Slider Item Added Manually");
-//        sliderItem.setImageUrl("https://images.pexels.com/photos/929778/pexels-photo-929778.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
-        adapter.addItem(sliderItem);
+        //MENTAL
+        SliderProgressBarModel mental = new SliderProgressBarModel();
+        mental.setCategory(SliderProgressBarModel.MENTAL);
+        mental.setDescription("Test desccrizione mentale");
+        mental.setTitle("Test title");
+
+        Step stepMental1 = new Step();
+        stepMental1.setChecklist(false);
+        stepMental1.setProgressPercentage(30.0);
+        stepMental1.setDescription("Test stepMental1");
+        Step stepMental2 = new Step();
+        stepMental2.setChecklist(false);
+        stepMental2.setProgressPercentage(50.0);
+        stepMental2.setDescription("Test stepMental2");
+
+        mental.getStepList().add(stepMental1);
+        mental.getStepList().add(stepMental2);
+        adapter.addItem(mental);
     }
 }
