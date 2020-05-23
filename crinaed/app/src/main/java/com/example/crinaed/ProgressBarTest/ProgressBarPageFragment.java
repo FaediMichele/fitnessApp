@@ -1,11 +1,9 @@
-package com.example.crinaed.ProgressBar;
+package com.example.crinaed.ProgressBarTest;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

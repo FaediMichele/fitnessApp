@@ -1,4 +1,4 @@
-package com.example.crinaed.ProgressBar.TestModel;
+package com.example.crinaed.ProgressBarTest.TestModel;
 
 public enum TypeProgressBar {
     CHECKLIST,

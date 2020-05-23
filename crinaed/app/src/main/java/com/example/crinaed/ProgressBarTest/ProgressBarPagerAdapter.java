@@ -1,15 +1,14 @@
-package com.example.crinaed.ProgressBar;
+package com.example.crinaed.ProgressBarTest;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.example.crinaed.ProgressBar.TestModel.ListProgressBar;
-import com.example.crinaed.ProgressBar.TestModel.ProgressBarModel;
+import com.example.crinaed.ProgressBarTest.TestModel.ListProgressBar;
+import com.example.crinaed.ProgressBarTest.TestModel.ProgressBarModel;
 import com.example.crinaed.R;
 
 import java.util.List;

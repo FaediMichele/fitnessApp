@@ -3,16 +3,12 @@ package com.example.crinaed;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.crinaed.ProgressBar.ProgressBarPageFragment;
-import com.example.crinaed.ProgressBar.ProgressBarPagerAdapter;
+import com.example.crinaed.ProgressBarTest.ProgressBarPagerAdapter;
 import com.example.crinaed.view.ProgressBarView;
 
 

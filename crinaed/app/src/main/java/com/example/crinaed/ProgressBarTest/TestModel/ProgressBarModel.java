@@ -1,6 +1,4 @@
-package com.example.crinaed.ProgressBar.TestModel;
-
-import android.graphics.Color;
+package com.example.crinaed.ProgressBarTest.TestModel;
 
 public class ProgressBarModel {
 

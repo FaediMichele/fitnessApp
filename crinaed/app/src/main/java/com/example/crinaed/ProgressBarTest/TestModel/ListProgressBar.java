@@ -1,7 +1,5 @@
-package com.example.crinaed.ProgressBar.TestModel;
+package com.example.crinaed.ProgressBarTest.TestModel;
 
-
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
