@@ -41,7 +41,7 @@ public class SchoolRepository implements Repository {
     }
 
 
-    public Future<?> insert(final Lambda l, final School... school){
+    public Future<?> insert(final School... school){
         return AppDatabase.databaseWriteExecutor.submit(new Callable<Long[]>() {
             @Override
             public Long[] call() {

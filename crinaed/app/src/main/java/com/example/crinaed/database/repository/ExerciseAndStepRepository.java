@@ -66,7 +66,7 @@ public class ExerciseAndStepRepository implements Repository{
             JSONObject obj = array.getJSONObject(i);
             Exercise exercise = new Exercise(obj.getLong("idExercise"), obj.getInt("level"), obj.getInt("PE"),
                     obj.getInt("duration"), obj.getString("name"), obj.getString("desc"), obj.getLong("idCourse"));
-            /* TODO DatabaseUtil.getInstance().downloadVideo(obj.getString("video"), (urlSavedVideo) -> exercise.video = urlSavedVideo); */
+            /* TODO DatabaseUtil.getInstance().downloadVideo(obj.getLong("idExercise"), (urlSavedVideo) -> exercise.video = urlSavedVideo); */
             exercises.add(exercise);
         }
         array = data.getJSONArray("Step");
@@ -74,7 +74,7 @@ public class ExerciseAndStepRepository implements Repository{
             JSONObject obj = array.getJSONObject(i);
             Step step = new Step(obj.getLong("idExercise"), obj.getInt("num"), obj.getString("name"),
                     obj.getString("desc"), obj.getDouble("incVal"), obj.getString("unitMeasure"), obj.getDouble("max"));
-            /* TODO DatabaseUtil.getInstance().downloadVideo(obj.getString("video"), (urlSavedVideo) -> step.video = urlSavedVideo); */
+            /* TODO DatabaseUtil.getInstance().downloadVideo(obj.getLong("idExercise"), (urlSavedVideo) -> step.video = urlSavedVideo); */
         }
         return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override

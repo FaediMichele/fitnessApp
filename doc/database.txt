@@ -34,4 +34,8 @@ JSON structure for test purpose:
 	MyStep: [{idMyStep: "42", idCommitment: "73", name: "fare database sql", unitMeasure: "minuti", max: "300", repetitionDay: "1", type: "incremental"}],
 	MyStepDone: [{idMyStep: "42", dateStart: "2020-05-03T20:25:43Z", result: "300"}]
 }
-	
+
+
+NB. in the database there is a tables:
+Inscription(idUser, idSchool)
+Session(idSession, idUser, lastLogin)
