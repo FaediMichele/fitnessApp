@@ -41,17 +41,23 @@ public class ServerManager {
     }
 
 
-    public void ManagePost(final JSONObject body, final Lambda onResponseMethod, final Lambda onErrorMethod){
+    public void managePost(final JSONObject body, final Lambda onResponseMethod, final Lambda onErrorMethod){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, SERVER, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                onResponseMethod.run(response);
+                Log.d("ServerManager", "*" + response+ "*");
+                if(onResponseMethod != null) {
+                    onResponseMethod.run(response);
+                }
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                onErrorMethod.run(error);
-                Log.d("login", "error: *"+ error.toString() + "*");
+                Log.d("ServerManager", "*" + error.getMessage() + "*");
+                if(onErrorMethod != null) {
+                    onErrorMethod.run(error);
+                }
             }
         }){
             @Override
@@ -80,7 +86,7 @@ public class ServerManager {
 
         param.put("to", "login");
         param.put("data", data);
-        ManagePost(param, new Lambda() {
+        managePost(param, new Lambda() {
             @Override
             public Object[] run(final Object... paramether) {
                 AppDatabase.databaseWriteExecutor.submit(new Runnable() {

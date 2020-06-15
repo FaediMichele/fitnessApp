@@ -4,7 +4,9 @@ import android.app.Application;
 import android.content.Context;
 
 import com.example.crinaed.database.AppDatabase;
+import com.example.crinaed.database.DatabaseUtil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class RepositoryManager {
 
@@ -25,6 +28,9 @@ public class RepositoryManager {
     private FriendRepository friendRepository;
     private HistoryRepository historyRepository;
     private ReviewRepository reviewRepository;
+
+
+    private long idUser = -1;
 
     public RepositoryManager(Context context){
         userRepository = new UserRepository(context);
@@ -55,9 +61,26 @@ public class RepositoryManager {
     public void loadNewData(AppDatabase db, String data) throws JSONException, ExecutionException, InterruptedException {
         db.clearAllTables();
         JSONObject json = new JSONObject(data);
+        idUser = json.getJSONArray("User").getJSONObject(0).getLong("idUser");
         for(int i = 0; i < repositories.size(); i++){
             repositories.get(i).loadData(json).get();
         }
+    }
+
+    public JSONObject getData(){
+        JSONObject root = new JSONObject();
+        List<Future<?>> futureList = new ArrayList<>();
+        for(Repository r : repositories){
+            futureList.add(r.extractData(root));
+        }
+        for(Future<?> r : futureList){
+            try {
+                r.get();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return root;
     }
 
     public List<Repository> getAllRepository(){
@@ -103,5 +126,9 @@ public class RepositoryManager {
 
     public ReviewRepository getReviewRepository() {
         return reviewRepository;
+    }
+
+    public long getIdUser() {
+        return idUser;
     }
 }

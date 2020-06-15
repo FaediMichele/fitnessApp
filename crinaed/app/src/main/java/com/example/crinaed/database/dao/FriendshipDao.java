@@ -21,5 +21,6 @@ public interface FriendshipDao {
     @Delete
     void delete(Friendship... friendships);
 
-
+    @Query("SELECT * FROM Friendship")
+    List<Friendship> getFriendshipList();
 }

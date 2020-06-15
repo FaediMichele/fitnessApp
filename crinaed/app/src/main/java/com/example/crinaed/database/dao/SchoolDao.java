@@ -21,6 +21,14 @@ public interface SchoolDao {
     LiveData<List<SchoolData>> get();
 
     @Transaction
+    @Query("SELECT * FROM School")
+    List<School> getSchoolList();
+
+    @Transaction
+    @Query("SELECT * FROM Course")
+    List<Course> getCourseList();
+
+    @Transaction
     @Query("SELECT * FROM School WHERE idTrainer = (:idTrainer)")
     LiveData<List<SchoolData>> getSchoolTrained(long idTrainer);
 

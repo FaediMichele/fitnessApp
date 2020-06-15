@@ -29,4 +29,11 @@ public interface CourseBoughtDao {
     @Transaction
     @Query("SELECT * FROM CourseBought")
     LiveData<List<CourseBoughtWithCourse>> getCourseBought();
+
+    @Transaction
+    @Query("SELECT * FROM CourseBought")
+    List<CourseBoughtWithCourse> getCourseBoughtList();
+
+    @Query("SELECT * FROM CourseBought")
+    List<CourseBought> getCouseBoughtList();
 }

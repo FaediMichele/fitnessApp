@@ -46,11 +46,11 @@ public interface MyCommitmentDao {
 
     @Transaction
     @Query("SELECT * FROM MyCommitment")
-    LiveData<List<CommitmentWithMyStep>> getCommitments();
+    LiveData<List<CommitmentWithMyStep>> getCommitmentWithMyStep();
 
     @Transaction
     @Query("SELECT * FROM MyCommitment")
-    List<CommitmentWithMyStep> getCommitmentsList();
+    List<CommitmentWithMyStep> getCommitmentWithMyStepList();
 
     @Query("SELECT * FROM MyStep WHERE idCommitment = (:idCommitment)")
     List<MyStep> getStepByIdCommitment(long idCommitment);
@@ -66,4 +66,14 @@ public interface MyCommitmentDao {
     @Transaction
     @Query("SELECT * FROM MyStepDone WHERE idMyStep = (:idMyStep) ORDER BY dateStart DESC LIMIT 1")
     LiveData<MyStepDoneWithMyStep> getLastMyStepDoneWithMyStep(long idMyStep);
+
+
+    @Query("SELECT * FROM MyCommitment")
+    List<MyCommitment> getCommitmentList();
+
+    @Query("SELECT * FROM MyStep")
+    List<MyStep> getMyStepList();
+
+    @Query("SELECT * FROM MyStepDone")
+    List<MyStepDone> getMyStepDoneList();
 }

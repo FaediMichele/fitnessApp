@@ -1,8 +1,6 @@
 package com.example.crinaed.database.repository;
 
-import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
@@ -22,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class ExerciseAndStepRepository implements Repository{
+public class ExerciseAndStepRepository extends Repository{
     private ExerciseAndStepDao exerciseAndStepDao;
 
     public ExerciseAndStepRepository(Context context){
@@ -63,17 +61,12 @@ public class ExerciseAndStepRepository implements Repository{
         final List<Exercise> exercises = new ArrayList<>();
         final List<Step> steps = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
-            JSONObject obj = array.getJSONObject(i);
-            Exercise exercise = new Exercise(obj.getLong("idExercise"), obj.getInt("level"), obj.getInt("PE"),
-                    obj.getInt("duration"), obj.getString("name"), obj.getString("desc"), obj.getLong("idCourse"));
             /* TODO DatabaseUtil.getInstance().downloadVideo(obj.getLong("idExercise"), (urlSavedVideo) -> exercise.video = urlSavedVideo); */
-            exercises.add(exercise);
+            exercises.add(new Exercise(array.getJSONObject(i)));
         }
         array = data.getJSONArray("Step");
         for(int i = 0; i < array.length(); i++){
-            JSONObject obj = array.getJSONObject(i);
-            Step step = new Step(obj.getLong("idExercise"), obj.getInt("num"), obj.getString("name"),
-                    obj.getString("desc"), obj.getDouble("incVal"), obj.getString("unitMeasure"), obj.getDouble("max"));
+            steps.add(new Step(array.getJSONObject(i)));
             /* TODO DatabaseUtil.getInstance().downloadVideo(obj.getLong("idExercise"), (urlSavedVideo) -> step.video = urlSavedVideo); */
         }
         return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
@@ -81,6 +74,22 @@ public class ExerciseAndStepRepository implements Repository{
             public void run() {
                 exerciseAndStepDao.insert(exercises.toArray(new Exercise[0]));
                 exerciseAndStepDao.insert(steps.toArray(new Step[0]));
+            }
+        });
+    }
+
+    @Override
+    public Future<?> extractData(final JSONObject root) {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    root.put("Exercise", listToJSONArray(exerciseAndStepDao.getExerciseList()));
+                    root.put("Step", listToJSONArray(exerciseAndStepDao.getStepList()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
     }

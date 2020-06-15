@@ -18,8 +18,14 @@ import java.util.List;
 
 @Dao
 public interface UserDao {
-    @Query("SELECT * FROM user")
-    List<User> getAll();
+    @Query("SELECT * FROM User")
+    List<User> getUsersList();
+
+    @Query("SELECT * FROM UserLevel")
+    List<UserLevel> getLevelList();
+
+    @Query("SELECT * FROM UserSchoolCrossRef")
+    List<UserSchoolCrossRef> getInscriptionList();
 
     @Insert
     Long[] insert(User... users);

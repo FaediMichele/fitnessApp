@@ -1,8 +1,6 @@
 package com.example.crinaed.database.repository;
 
-import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -11,7 +9,6 @@ import com.example.crinaed.database.dao.SchoolDao;
 import com.example.crinaed.database.entity.Course;
 import com.example.crinaed.database.entity.School;
 import com.example.crinaed.database.entity.join.SchoolData;
-import com.example.crinaed.util.Lambda;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,7 +19,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class SchoolRepository implements Repository {
+public class SchoolRepository extends Repository {
     private SchoolDao schoolDao;
     private LiveData<List<SchoolData>> data;
 
@@ -101,23 +98,33 @@ public class SchoolRepository implements Repository {
         final List<School> schools = new ArrayList<>();
         final List<Course> courses = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
-            JSONObject obj = array.getJSONObject(i);
-            School school = new School(obj.getLong("idSchool"), obj.getString("name"),
-                    obj.getString("email"), obj.getString("address"),  obj.getLong("idTrainer"));
-            schools.add(school);
+            schools.add(new School(array.getJSONObject(i)));
         }
         array = data.getJSONArray("Course");
         for(int i = 0; i < array.length(); i++) {
-            JSONObject obj = array.getJSONObject(i);
-            Course course = new Course(obj.getLong("idCourse"), obj.getString("cat"),
-                    obj.getString("name"), obj.getString("desc"), obj.getInt("minimumLevel"),  obj.getLong("idSchool"));
-            courses.add(course);
+            courses.add(new Course(array.getJSONObject(i)));
         }
         return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 schoolDao.insert(schools.toArray(new School[0]));
                 schoolDao.insert(courses.toArray(new Course[0]));
+            }
+        });
+    }
+
+    @Override
+    public Future<?> extractData(final JSONObject root) {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    root.put("School", listToJSONArray(schoolDao.getSchoolList()));
+                    root.put("Course", listToJSONArray(schoolDao.getCourseList()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
     }

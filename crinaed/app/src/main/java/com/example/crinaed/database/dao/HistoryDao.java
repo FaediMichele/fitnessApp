@@ -28,4 +28,7 @@ public interface HistoryDao {
     @Transaction
     @Query("SELECT * FROM History")
     LiveData<List<HistoryWithExercise>> getUserHistory();
+
+    @Query("SELECT * FROM History")
+    List<History> getHistoryList();
 }
