@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -75,10 +76,10 @@ public class DatabaseTest {
     public void testServerLoad(){
         ApplicationProvider.getApplicationContext().getApplicationContext().deleteDatabase(AppDatabase.DATABASE_NAME);
         try{
-            ServerManager.getInstance(application).login("ciaobello", "p");
+            ServerManager.getInstance(application).login("ciaobello", "p").get(3,TimeUnit.SECONDS);
             AppDatabase.databaseWriteExecutor.awaitTermination(1, TimeUnit.SECONDS);
             assertTrue(true);
-        } catch (JSONException | InterruptedException e) {
+        } catch (ExecutionException | TimeoutException | JSONException | InterruptedException e) {
             e.printStackTrace();
             fail();
         }
@@ -184,9 +185,8 @@ public class DatabaseTest {
 
     @AfterClass
     public static void clearDatabase(){
-/*
         ApplicationProvider.getApplicationContext().getApplicationContext().deleteDatabase(AppDatabase.DATABASE_NAME);
-        Log.d("DatabaseTest", "database formatted");*/
+        Log.d("DatabaseTest", "database formatted");
     }
 
     @BeforeClass

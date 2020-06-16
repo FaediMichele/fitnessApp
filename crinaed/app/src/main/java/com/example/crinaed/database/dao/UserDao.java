@@ -31,7 +31,7 @@ public interface UserDao {
     Long[] insert(User... users);
 
     @Insert
-    Long insert(UserSchoolCrossRef subscription);
+    Long[] insert(UserSchoolCrossRef... subscriptions);
 
     @Insert
     Long[] insert(UserLevel... levels);

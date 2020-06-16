@@ -28,6 +28,10 @@ import java.util.concurrent.Future;
 public class CommitmentRepository extends Repository{
     private MyCommitmentDao commitmentDao;
 
+    // used for the insert. (the data created by the app must have negative ids)
+    private long lastCommitmentId = -1;
+    private long lastStepId = -1;
+
     public CommitmentRepository(Context context){
         AppDatabase db = AppDatabase.getDatabase(context);
         commitmentDao = db.commitmentDao();
@@ -45,7 +49,12 @@ public class CommitmentRepository extends Repository{
         return AppDatabase.databaseWriteExecutor.submit(new Callable<Pair<Long, Long[]>>() {
                         @Override
                         public Pair<Long, Long[]> call() {
+                commitment.idCommitment = lastCommitmentId--;
                 long id = commitmentDao.insert(commitment)[0];
+                for(MyStep s : steps){
+                    s.idMyStep = lastStepId--;
+                    s.idCommitment = commitment.idCommitment;
+                }
                 final Pair<Long, Long[]> ret = new Pair<>(id, commitmentDao.insert(steps));
                 final long now = new Date().getTime();
                 final MyStepDone[] myStepsDone = new MyStepDone[ret.second.length];

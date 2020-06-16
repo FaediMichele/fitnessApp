@@ -27,6 +27,8 @@ public class UserRepository extends Repository{
     private LiveData<List<UserData>> userData;
     private LiveData<List<UserInscription>> inscriptions;
 
+    private long lastId = -1;
+
     public UserRepository(Context context){
         AppDatabase db = AppDatabase.getDatabase(context);
         userDao = db.userDao();
@@ -45,6 +47,7 @@ public class UserRepository extends Repository{
         return AppDatabase.databaseWriteExecutor.submit(new Callable<Pair<Long, Long[]>>() {
             @Override
             public Pair<Long, Long[]> call() {
+                user.idUser = lastId--;
                 long idUser = userDao.insert(user)[0];
                 return new Pair<>(idUser, userDao.insert(levels));
             }
@@ -92,6 +95,7 @@ public class UserRepository extends Repository{
         JSONArray array = data.getJSONArray("User");
         final List<User> users = new ArrayList<>();
         final List<UserLevel> userLevels = new ArrayList<>();
+        final List<UserSchoolCrossRef> inscription = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
             users.add(new User( array.getJSONObject(i)));
         }
@@ -99,11 +103,17 @@ public class UserRepository extends Repository{
         for(int i = 0; i < array.length(); i++){
             userLevels.add(new UserLevel(array.getJSONObject(i)));
         }
+
+        array = data.getJSONArray("School");
+        for(int i = 0; i < array.length(); i++){
+            inscription.add(new UserSchoolCrossRef(userLevels.get(0).idUser, array.getJSONObject(i).getLong("idSchool")));
+        }
         return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 userDao.insert(users.toArray(new User[0]));
                 userDao.insert(userLevels.toArray(new UserLevel[0]));
+                userDao.insert(inscription.toArray(new UserSchoolCrossRef[0]));
             }
         });
     }

@@ -22,6 +22,8 @@ import java.util.concurrent.Future;
 public class SchoolRepository extends Repository {
     private SchoolDao schoolDao;
     private LiveData<List<SchoolData>> data;
+    private long lastSchoolId=-1;
+    private long lastCourseId=-1;
 
     public SchoolRepository(Context context){
         AppDatabase db = AppDatabase.getDatabase(context);
@@ -42,6 +44,9 @@ public class SchoolRepository extends Repository {
         return AppDatabase.databaseWriteExecutor.submit(new Callable<Long[]>() {
             @Override
             public Long[] call() {
+                for(School s : school){
+                    s.idSchool = lastSchoolId--;
+                }
                 return schoolDao.insert(school);
             }
         });
@@ -51,6 +56,9 @@ public class SchoolRepository extends Repository {
         return AppDatabase.databaseWriteExecutor.submit(new Callable<Long[]>() {
             @Override
             public Long[] call() {
+                for(Course c : courses){
+                    c.idCourse = lastCourseId--;
+                }
                 return schoolDao.insert(courses);
             }
         });

@@ -19,7 +19,11 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.Semaphore;
 
 public class ServerManager {
     private static final String SERVER = "http://192.168.1.111:8080/";
@@ -49,7 +53,6 @@ public class ServerManager {
                 if(onResponseMethod != null) {
                     onResponseMethod.run(response);
                 }
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -76,7 +79,7 @@ public class ServerManager {
     }
 
 
-    public void login(String username, String password) throws JSONException {
+    public Future<?> login(String username, String password) throws JSONException {
         final JSONObject data = new JSONObject();
         final JSONObject param = new JSONObject();
         final Context context= this.context;
@@ -86,6 +89,19 @@ public class ServerManager {
 
         param.put("to", "login");
         param.put("data", data);
+
+        // used to wait for the login or interrupt the operation if the server is not available
+        final Semaphore s = new Semaphore(0);
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    s.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
         managePost(param, new Lambda() {
             @Override
             public Object[] run(final Object... paramether) {
@@ -94,9 +110,9 @@ public class ServerManager {
                     public void run() {
                         try {
                             DatabaseUtil.getInstance().getRepositoryManager().loadNewData(AppDatabase.getDatabase(context), paramether[0].toString());
-                        } catch (JSONException | ExecutionException | InterruptedException e) {
-                            e.printStackTrace();
+                        } catch (JSONException | ExecutionException | InterruptedException ignore) {
                         }
+                        s.release();
                     }
                 });
                 return null;
@@ -104,9 +120,10 @@ public class ServerManager {
         }, new Lambda() {
             @Override
             public Object[] run(Object... paramether) {
-                Log.d("login", "error"+ paramether[0].toString());
+                s.release();
                 return null;
             }
         });
+        return AppDatabase.databaseWriteExecutor.submit(r);
     }
 }

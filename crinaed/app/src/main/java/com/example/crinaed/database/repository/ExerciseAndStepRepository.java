@@ -22,6 +22,7 @@ import java.util.concurrent.Future;
 
 public class ExerciseAndStepRepository extends Repository{
     private ExerciseAndStepDao exerciseAndStepDao;
+    private long lastExerciseId=-1;
 
     public ExerciseAndStepRepository(Context context){
         AppDatabase db = AppDatabase.getDatabase(context);
@@ -36,6 +37,7 @@ public class ExerciseAndStepRepository extends Repository{
         return AppDatabase.databaseWriteExecutor.submit(new Callable<Pair<Long, Long[]>>() {
             @Override
             public Pair<Long, Long[]> call() {
+                exercise.idExercise = lastExerciseId--;
                 Long id = exerciseAndStepDao.insert(exercise)[0];
                 for (Step s: steps) {
                     s.idExercise = id;
