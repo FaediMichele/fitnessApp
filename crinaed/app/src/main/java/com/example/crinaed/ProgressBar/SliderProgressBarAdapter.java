@@ -4,8 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
@@ -15,19 +13,16 @@ import com.smarteist.autoimageslider.SliderViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BinaryOperator;
-import java.util.function.DoubleBinaryOperator;
-import java.util.function.ToDoubleFunction;
 
 public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBarAdapter.SliderProgressBarVH> {
 
 
-    private Context context;
+//    private Context context;
     private List<SliderProgressBarModel> progressBarModelList = new ArrayList<>();
 
-    public SliderProgressBarAdapter(Context context) {
-        this.context = context;
-    }
+//    public SliderProgressBarAdapter(Context context) {
+//        this.context = context;
+//    }
 
     public void renewItems(List<SliderProgressBarModel> sliderItems) {
         this.progressBarModelList = sliderItems;
@@ -51,7 +46,6 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
     }
 
 
-    @SuppressWarnings("SyntaxError")
     @Override
     public void onBindViewHolder(final SliderProgressBarVH viewHolder, final int position) {
         SliderProgressBarModel progressBarModel = progressBarModelList.get(position);
@@ -59,20 +53,20 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
         int secondaryColor;
         switch(progressBarModel.getCategory()){
             case SliderProgressBarModel.SOCIAL:
-                primaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.colorGreenPrimary);
-                secondaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.colorGreenSecondary);
+                primaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.greenPrimary);
+                secondaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.greenSecondary);
                 break;
             case SliderProgressBarModel.MENTAL:
-                primaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.colorBluPrimary);
-                secondaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.colorBluSecondary);
+                primaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.bluPrimary);
+                secondaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.bluSecondary);
                 break;
             case SliderProgressBarModel.PHYSICAL:
-                primaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.colorRedPrimary);
-                secondaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.colorRedSecondary);
+                primaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.redPrimary);
+                secondaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.redSecondary);
                 break;
             default:
-                primaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.colorRedPrimary);
-                secondaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.colorRedSecondary);
+                primaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.redPrimary);
+                secondaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.redSecondary);
                 break;
         }
         viewHolder.progressBarView.setForegroundColor(primaryColor);

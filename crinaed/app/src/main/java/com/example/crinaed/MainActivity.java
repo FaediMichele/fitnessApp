@@ -28,10 +28,13 @@ public class MainActivity extends AppCompatActivity {
 
         sliderView = findViewById(R.id.progressBarSlider);
 
-        adapter = new SliderProgressBarAdapter(this);
+        adapter = new SliderProgressBarAdapter();
         sliderView.setSliderAdapter(adapter);// da guardare
 
-        sliderView.setIndicatorAnimation(IndicatorAnimations.THIN_WORM); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+        //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM
+        // or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN
+        // or SLIDE and SWAP!!
+        sliderView.setIndicatorAnimation(IndicatorAnimations.THIN_WORM);
         sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
         sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
         sliderView.setIndicatorSelectedColor(Color.WHITE);
@@ -57,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         mental.setCategory(SliderProgressBarModel.MENTAL);
         mental.setDescription("Test desccrizione mentale");
         mental.setTitle("Test title");
-
         Step stepMental1 = new Step();
         stepMental1.setChecklist(false);
         stepMental1.setProgressPercentage(30.0);
@@ -66,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         stepMental2.setChecklist(false);
         stepMental2.setProgressPercentage(50.0);
         stepMental2.setDescription("Test stepMental2");
-
         mental.getStepList().add(stepMental1);
         mental.getStepList().add(stepMental2);
 
@@ -75,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         physical.setCategory(SliderProgressBarModel.PHYSICAL);
         physical.setDescription("Test desccrizione mentale");
         physical.setTitle("Test title");
-
         Step stepPhysical1 = new Step();
         stepPhysical1.setChecklist(false);
         stepPhysical1.setProgressPercentage(30.0);
@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         stepPhysical2.setChecklist(false);
         stepPhysical2.setProgressPercentage(50.0);
         stepPhysical2.setDescription("Test stepMental2");
-
         physical.getStepList().add(stepPhysical1);
         physical.getStepList().add(stepPhysical2);
 
@@ -93,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         social.setCategory(SliderProgressBarModel.SOCIAL);
         social.setDescription("Test desccrizione mentale");
         social.setTitle("Test title");
-
         Step stepSocial1 = new Step();
         stepSocial1.setChecklist(false);
         stepSocial1.setProgressPercentage(30.0);
@@ -102,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         stepSocial2.setChecklist(false);
         stepSocial2.setProgressPercentage(80.0);
         stepSocial2.setDescription("Test stepMental2");
-
         social.getStepList().add(stepSocial1);
         social.getStepList().add(stepSocial2);
 
@@ -131,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         stepMental1.setDescription("Test stepMental1");
         Step stepMental2 = new Step();
         stepMental2.setChecklist(false);
-        stepMental2.setProgressPercentage(50.0);
+        stepMental2.setProgressPercentage(70.0);
         stepMental2.setDescription("Test stepMental2");
 
         mental.getStepList().add(stepMental1);
