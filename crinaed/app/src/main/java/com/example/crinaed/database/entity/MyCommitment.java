@@ -36,7 +36,7 @@ public class MyCommitment  implements MyEntity{
     public JSONObject toJson() throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("idCommitment", idCommitment);
-        obj.put("date", Util.timestampToIso(creationDate));
+        obj.put("creationDate", Util.timestampToIso(creationDate));
         obj.put("name", name);
         obj.put("desc", desc);
         obj.put("idUser", idUser);

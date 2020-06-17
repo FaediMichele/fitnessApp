@@ -4,6 +4,8 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.test.core.app.ApplicationProvider;
 
@@ -16,8 +18,10 @@ import com.example.crinaed.database.entity.MyStep;
 import com.example.crinaed.database.entity.MyStepDone;
 import com.example.crinaed.database.entity.join.CommitmentWithMyStep;
 import com.example.crinaed.database.entity.join.CourseBoughtWithCourse;
+import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.database.repository.RepositoryManager;
 import com.example.crinaed.util.Lambda;
+import com.example.crinaed.util.Single;
 import com.example.crinaed.util.Util;
 
 import org.json.JSONException;
@@ -36,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -55,119 +60,32 @@ public class DatabaseTest {
         repositoryManager = DatabaseUtil.getInstance().getRepositoryManager();
     }
 
-    // Using the server.
-    public void testLoadJson(final String json){
-        AppDatabase.databaseWriteExecutor.submit(new Runnable() {
-            @Override
-            public void run() {
-                AppDatabase db = AppDatabase.getDatabase(application);
-                try {
-                    repositoryManager.loadNewData(db, json);
-                } catch (JSONException | ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Log.d("DatabaseTest", "Database loaded");
-            }
-        });
-
-    }
+    private String sessionId;
 
     @Test
     public void testServerLoad(){
         ApplicationProvider.getApplicationContext().getApplicationContext().deleteDatabase(AppDatabase.DATABASE_NAME);
         try{
-            ServerManager.getInstance(application).login("ciaobello", "p").get(3,TimeUnit.SECONDS);
-            AppDatabase.databaseWriteExecutor.awaitTermination(1, TimeUnit.SECONDS);
+            // check the connection with the server and the parse of the results.
+            sessionId = ServerManager.getInstance(application).login("ciaobello", "p").get(3,TimeUnit.SECONDS);
+            assertNotEquals("", sessionId);
             assertTrue(true);
         } catch (ExecutionException | TimeoutException | JSONException | InterruptedException e) {
             e.printStackTrace();
             fail();
         }
-        testCorrectLoadJsonCommitment();
-        testCorrectLoadJsonCourseBoughtRepository();
-        testCommitment();
-        addCommitment();
+        //addCommitment();
+        changeStepDone();
         checkExtract();
 
     }
 
-    // there is no need for deep test
-    private void testCorrectLoadJsonCommitment(){
-        repositoryManager.getCommitmentRepository().getCommitmentWithSteps().observeForever(new Observer<List<CommitmentWithMyStep>>() {
-            @Override
-            public void onChanged(List<CommitmentWithMyStep> commits) {
-                assertNotNull(commits);
-                CommitmentWithMyStep commitment = commits.get(0);
-                assertEquals(commitment.commitment.idCommitment, 73);
-                assertEquals(commitment.commitment.name, "studiare mobile");
-                assertEquals(commitment.commitment.desc, "Fare il progetto in android");
-                assertEquals(commitment.commitment.creationDate, Util.isoFormatToTimestamp("2020-05-02T20:25:43Z"));
-                assertEquals(commitment.commitment.idUser, 123);
-                assertEquals(commitment.steps.size(), 1);
-                final MyStep st1 = commitment.steps.get(0);
-                assertNotNull(st1);
-                assertEquals(st1.idCommitment, commitment.commitment.idCommitment);
-                assertEquals(st1.name, "fare database sql");
-                assertEquals(st1.unitMeasure, "minuti");
-                assertEquals(300, st1.max, 0.0);
-            }
-        });
-    }
 
-    private void testCorrectLoadJsonCourseBoughtRepository(){
-        repositoryManager.getCourseBoughtRepository().getCourses().observeForever(new Observer<List<CourseBoughtWithCourse>>() {
-            @Override
-            public void onChanged(List<CourseBoughtWithCourse> courses) {
-                assertNotNull(courses);
-                assertEquals(courses.size(), 2);
-                CourseBought us = courses.get(0).courseBought;
-                assertNotNull(us);
-                assertEquals(us.idUser, 123);
-                assertEquals(us.idCourse, 420);
-                assertEquals(us.level, 1);
-                assertEquals(us.purchaseDate, Util.isoFormatToTimestamp("2020-05-01T18:25:43Z"));
-            }
-        });
-    }
-
-
-    private void testCommitment(){
-        final Integer[] status = new Integer[]{0};
-        repositoryManager.getCommitmentRepository().getCommitmentWithSteps().observeForever(new Observer<List<CommitmentWithMyStep>>() {
-            @Override
-            public void onChanged(List<CommitmentWithMyStep> commits) {
-                List<MyStep> steps = commits.get(0).steps;
-                assertEquals(steps.size(), 1);
-                steps = commits.get(1).steps;
-                assertEquals(steps.size(), 2);
-                try {
-                   /*repositoryManager.getCommitmentRepository().getCommitmentWithSteps().observeForever(new Observer<List<CommitmentWithMyStep>>() {
-                        @Override
-                        public void onChanged(List<CommitmentWithMyStep> commitmentWithMySteps) {
-                            Log.d("testCommitment", "out: "+commitmentWithMySteps.toString());
-                        }
-                    });*/
-                   if(status[0] == 0){
-                       assertEquals(repositoryManager.getCommitmentRepository().updateMyStepDone().get().size(), 2);
-                       assertEquals(0, repositoryManager.getCommitmentRepository().updateMyStepDone().get().size());
-                       status[0]++;
-                   }
-
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-    }
-
-    // also test the correct connection with the server
     private void addCommitment(){
-        final MyCommitment mc = new MyCommitment(-1, "Dimagrire", "Dimagrire 10kg prima dell'estate", new Date().getTime(), repositoryManager.getIdUser());
-        final MyStep[] steps = new MyStep[3];
-        steps[0] = new MyStep(-1, -1, "Mangiare mele", "mele", 5, 1, "progression");
-        steps[1] = new MyStep(-1, -1, "Corsa", "km", 2, 1, "progression");
-        steps[2] = new MyStep(-1, -1, "Studiare", "ore", 12, 2, "progression");
+        final MyCommitment mc = new MyCommitment(-1, "Studiare", "Studiare per la sessione di giugno", new Date().getTime(), repositoryManager.getIdUser());
+        final MyStep[] steps = new MyStep[2];
+        steps[0] = new MyStep(-1, -1, "Studiare mobile", "ore", 6, 1, "progression");
+        steps[1] = new MyStep(-1, -1, "Studiare metodi numerici", "ore", 6, 1, "progression");
 
         repositoryManager.getCommitmentRepository().insert(new Lambda() {
             @Override
@@ -178,9 +96,30 @@ public class DatabaseTest {
         }, mc, steps);
     }
 
+    private void changeStepDone(){
+        final LiveData<MyStepDoneWithMyStep> s = repositoryManager.getCommitmentRepository().getStepOnGoing(42L);
+        final Single<Boolean> b = new Single<>(true);
+        s.observeForever(new Observer<MyStepDoneWithMyStep>() {
+            @Override
+            public void onChanged(MyStepDoneWithMyStep step) {
+                if(b.getVal()) {
+                    step.stepDone.result = 100;
+                    repositoryManager.getCommitmentRepository().updateMyStepDone(step.stepDone);
+                    b.setVal(false);
+                }
+            }
+        });
+
+    }
+
     private void checkExtract(){
         Log.d("database-out", repositoryManager.getData().toString());
-        //testLoadJson(repositoryManager.getData().toString());
+        try {
+            assertTrue(ServerManager.getInstance(application).logout(sessionId).get(1, TimeUnit.SECONDS));
+        } catch (JSONException | InterruptedException | ExecutionException | TimeoutException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @AfterClass

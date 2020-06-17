@@ -105,10 +105,11 @@ public class CommitmentRepository extends Repository{
         });
     }
 
-    public Future<List<MyStepDone>> updateMyStepDone(){
+    public Future<List<MyStepDone>> updateMyStepDone(final MyStepDone... stepsDone){
         return AppDatabase.databaseWriteExecutor.submit(new Callable<List<MyStepDone>>() {
             @Override
             public List<MyStepDone> call() {
+                commitmentDao.update(stepsDone);
                 List<CommitmentWithMyStep> l = commitmentDao.getCommitmentWithMyStepList();
                 List<MyStepDone> ret = new ArrayList<>();
                 long now = new Date().getTime();
