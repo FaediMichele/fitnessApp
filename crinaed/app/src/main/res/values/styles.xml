@@ -1,12 +1,13 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme. -->
+<!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@color/background</item>
+        <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
 
     </style>
 
@@ -38,7 +39,22 @@
         <item name="cornerFamily">cut</item>
         <item name="cornerSize">4dp</item>
     </style>
+    
+    <!--presonalizazioni-->
+    <style name="Widget.MaterialComponents.CardView" parent="CardView">
+        <item name="cardBackgroundColor">@color/redSecondary</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MyApp.MaterialCardView</item>
+        <item name="shapeAppearance">@style/ShapeAppearanceOverlay.MyApp.MaterialCardView</item>
 
+
+    </style>
+
+
+    <style name="ShapeAppearanceOverlay.MyApp.MaterialCardView" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">1600mm</item>
+    </style>
+    <!--fine personalizazioni-->
 
 
 </resources>
