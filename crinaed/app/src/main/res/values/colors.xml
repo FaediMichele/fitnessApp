@@ -9,8 +9,7 @@
     <!--colori della nostra app-->
     <color name="settingIcon">#949494</color>
     <color name="background">#f0f0f0</color>
-<!--    <color name="backgroundItem">#f8f8f8</color>-->
-    <color name="backgroundItem">#ff0000</color>
+    <color name="backgroundItem">#fff</color>
     <color name="redPrimary">#FF8599 </color>
     <color name="redSecondary">#FF7DC2</color>
     <color name="greenPrimary">#7DFF7D</color>

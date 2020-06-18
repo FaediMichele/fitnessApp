@@ -12,12 +12,12 @@ import com.example.crinaed.view.ProgressBarView;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBarAdapter.SliderProgressBarVH> {
 
-
-//    private Context context;
+    //    private Context context;
     private List<SliderProgressBarModel> progressBarModelList = new ArrayList<>();
 
 //    public SliderProgressBarAdapter(Context context) {
@@ -37,6 +37,10 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
     public void addItem(SliderProgressBarModel sliderItem) {
         this.progressBarModelList.add(sliderItem);
         notifyDataSetChanged();
+    }
+
+    public List<SliderProgressBarModel> getProgressBarModelList() {
+        return Collections.unmodifiableList(progressBarModelList);
     }
 
     @Override

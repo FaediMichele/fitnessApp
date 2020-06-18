@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
+import com.example.crinaed.ProgressBar.SliderProgressBar;
 import com.example.crinaed.ProgressBar.SliderProgressBarAdapter;
 import com.example.crinaed.ProgressBar.SliderProgressBarModel;
 import com.example.crinaed.ProgressBar.Step;
@@ -18,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    SliderView sliderView;
+    SliderProgressBar sliderView;
     private SliderProgressBarAdapter adapter;
 
     @Override
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         sliderView.setIndicatorAnimation(IndicatorAnimations.THIN_WORM);
         sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
         sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
-        sliderView.setIndicatorSelectedColor(Color.WHITE);
+        //sliderView.setIndicatorSelectedColor(ContextCompat.getColor(this, R.color.redPrimary));
         sliderView.setIndicatorUnselectedColor(Color.GRAY);
         sliderView.setScrollTimeInSec(3);
         sliderView.setAutoCycle(false);

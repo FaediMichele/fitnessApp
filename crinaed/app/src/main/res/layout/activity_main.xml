@@ -10,11 +10,12 @@
         android:id="@+id/cardSlider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.smarteist.autoimageslider.SliderView
+        <com.example.crinaed.ProgressBar.SliderProgressBar
             android:id="@+id/progressBarSlider"
             android:layout_width="match_parent"
             android:layout_height="300dp"
@@ -29,10 +30,8 @@
             app:sliderIndicatorOrientation="horizontal"
             app:sliderIndicatorPadding="3dp"
             app:sliderIndicatorRadius="2dp"
-            app:sliderIndicatorSelectedColor="#5A5A5A"
-            app:sliderIndicatorUnselectedColor="#FFF"
             app:sliderScrollTimeInSec="1">
-        </com.smarteist.autoimageslider.SliderView>
+        </com.example.crinaed.ProgressBar.SliderProgressBar>
 
     </com.google.android.material.card.MaterialCardView>
 
