@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         sliderView.setIndicatorAnimation(IndicatorAnimations.THIN_WORM);
         sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
         sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
-        //sliderView.setIndicatorSelectedColor(ContextCompat.getColor(this, R.color.redPrimary));
         sliderView.setIndicatorUnselectedColor(Color.GRAY);
         sliderView.setScrollTimeInSec(3);
         sliderView.setAutoCycle(false);

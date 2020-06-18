@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.example.crinaed.DetailsProgressBarFragment;
 import com.example.crinaed.R;
 import com.example.crinaed.view.ProgressBarView;
 import com.smarteist.autoimageslider.SliderViewAdapter;
@@ -17,12 +19,12 @@ import java.util.List;
 
 public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBarAdapter.SliderProgressBarVH> {
 
-    //    private Context context;
+    private Context context;
     private List<SliderProgressBarModel> progressBarModelList = new ArrayList<>();
 
-//    public SliderProgressBarAdapter(Context context) {
-//        this.context = context;
-//    }
+    public SliderProgressBarAdapter(Context context) {
+        this.context = context;
+    }
 
     public void renewItems(List<SliderProgressBarModel> sliderItems) {
         this.progressBarModelList = sliderItems;
@@ -82,6 +84,15 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
                 Float progress = viewHolder.progressBarView.getProgress();
                 progress = (progress+10)%100;
                 viewHolder.progressBarView.setProgress(progress);
+
+                AppCompatActivity activity = (AppCompatActivity) context;
+                DetailsProgressBarFragment detailsProgressBarFragment = new DetailsProgressBarFragment();
+//                activity.getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.frameLayoutMaps, myFragment)
+//                        .addToBackStack(null)
+//                        .attach(myFragment)
+//                        .commit();
+
             }
         });
     }
