@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         sliderView = findViewById(R.id.progressBarSlider);
 
-        adapter = new SliderProgressBarAdapter();
+        adapter = new SliderProgressBarAdapter(this);
         sliderView.setSliderAdapter(adapter);// da guardare
 
         //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM
