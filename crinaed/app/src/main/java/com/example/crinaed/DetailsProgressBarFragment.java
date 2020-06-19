@@ -25,9 +25,9 @@ public class DetailsProgressBarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_details_progress_bar, container, false);
+        View view = inflater.inflate(R.layout.fragment_details_progress_bar, container, false);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle("Dialog title");
 
 
@@ -41,7 +41,7 @@ public class DetailsProgressBarFragment extends Fragment {
             actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
         }
         setHasOptionsMenu(true);
-        return rootView;
+        return view;
     }
 
 /*    @NonNull
