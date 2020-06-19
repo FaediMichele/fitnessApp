@@ -3,6 +3,17 @@
     <style name="Theme.App" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowBackground">@color/background</item>
         <item name="materialCardViewStyle">@style/MyCard</item>
+<!--        <item name="colorAccent">#ff8800</item>-->
+        <item name="colorPrimary">#ff8800</item>
+        <item name="colorPrimaryVariant">#ffb944</item>
+<!--        color status bar-->
+        <item name="colorPrimaryDark">#fff</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+
+        <item name="colorOnPrimary">#000</item>
+        <item name="colorSecondary">#ff470d</item>
+        <item name="colorSecondaryVariant">#c30000</item>
+        <item name="colorOnSecondary">#fff</item>
     </style>
 
     <style name="MyCard" parent="Widget.MaterialComponents.CardView">
@@ -15,6 +26,5 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">20dp</item>
     </style>
-
 
 </resources>
