@@ -28,7 +28,7 @@ public class DetailsProgressBarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_details_progress_bar, container, false);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Dialog title");
+        toolbar.setTitle("pippo paperino e pluto");
 
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
