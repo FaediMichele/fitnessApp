@@ -2,6 +2,8 @@ package com.example.crinaed.ProgressBar;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.crinaed.DetailsProgressBarFragment;
+import com.example.crinaed.MainActivity;
 import com.example.crinaed.MenuProvaFragment;
 import com.example.crinaed.R;
 import com.example.crinaed.view.ProgressBarView;
@@ -104,10 +107,17 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
 //                AppCompatActivity activity = (AppCompatActivity) context;
 //                DetailsProgressBarFragment detailsProgressBarFragment = new DetailsProgressBarFragment();
 //
-                Dialog dialog = new Dialog(context,R.style.DialogSlideTheme);
-                dialog.setContentView(R.layout.fragment_details_progress_bar);
-                dialog.getWindow().setGravity(Gravity.BOTTOM);
-                dialog.show();
+
+//                Dialog dialog = new Dialog(context,R.style.DialogSlideTheme);
+//                dialog.setContentView(R.layout.fragment_details_progress_bar);
+//                dialog.getWindow().setGravity(Gravity.BOTTOM);
+//                dialog.show();
+
+                DetailsProgressBarFragment cdd = new DetailsProgressBarFragment((AppCompatActivity) context);
+                cdd.setContentView(R.layout.fragment_details_progress_bar);
+                cdd.getWindow().setGravity(Gravity.BOTTOM);
+                cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                cdd.show();
 
 //                activity.getSupportFragmentManager().beginTransaction()
 //                        .replace(R.id.frameLayoutMaps, myFragment)
