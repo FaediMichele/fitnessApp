@@ -2,9 +2,11 @@ package com.example.crinaed.ProgressBar;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -102,10 +104,10 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
 //                AppCompatActivity activity = (AppCompatActivity) context;
 //                DetailsProgressBarFragment detailsProgressBarFragment = new DetailsProgressBarFragment();
 //
-                Dialog dialog = new Dialog(context,R.style.DialogSlideAnim);
+                Dialog dialog = new Dialog(context,R.style.DialogSlideTheme);
                 dialog.setContentView(R.layout.fragment_details_progress_bar);
+                dialog.getWindow().setGravity(Gravity.BOTTOM);
                 dialog.show();
-
 
 //                activity.getSupportFragmentManager().beginTransaction()
 //                        .replace(R.id.frameLayoutMaps, myFragment)

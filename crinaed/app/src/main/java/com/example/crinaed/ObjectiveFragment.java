@@ -44,7 +44,6 @@ public class ObjectiveFragment  extends Fragment {
         sliderView.setScrollTimeInSec(3);
         sliderView.setAutoCycle(false);
         sliderView.startAutoCycle();
-
         sliderView.setOnIndicatorClickListener(new DrawController.ClickListener() {
             @Override
             public void onIndicatorClicked(int position) {
@@ -58,22 +57,18 @@ public class ObjectiveFragment  extends Fragment {
                 renewItems(view);
             }
         });
-
         view.findViewById(R.id.addNewItem).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addNewItem(view);
             }
         });
-
         view.findViewById(R.id.removeLastItem).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 removeLastItem(view);
             }
         });
-
-
         return view;
     }
 
