@@ -50,6 +50,6 @@ public class SliderProgressBar extends SliderView {
                 secondaryColor = ContextCompat.getColor(getContext(),R.color.redSecondary);
                 break;
         }
-        super.setIndicatorSelectedColor(primaryColor);
+        super.setIndicatorSelectedColor(secondaryColor);
     }
 }
