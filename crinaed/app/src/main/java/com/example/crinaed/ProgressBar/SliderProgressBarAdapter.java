@@ -91,19 +91,20 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
                 viewHolder.progressBarView.setProgress(progress);
 
                 final AppCompatActivity activity= (AppCompatActivity) context;
-                DetailsProgressBarFragment detailsProgressBarFragment = new DetailsProgressBarFragment();
-                FragmentManager manager = activity.getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.container,detailsProgressBarFragment,TAG);
-                transaction.addToBackStack(null);
-                transaction.commit();
+
+//                DetailsProgressBarFragment detailsProgressBarFragment = new DetailsProgressBarFragment();
+//                FragmentManager manager = activity.getSupportFragmentManager();
+//                FragmentTransaction transaction = manager.beginTransaction();
+//                transaction.replace(R.id.container,detailsProgressBarFragment,TAG);
+//                transaction.addToBackStack(null);
+//                transaction.commit();
 
 //                AppCompatActivity activity = (AppCompatActivity) context;
 //                DetailsProgressBarFragment detailsProgressBarFragment = new DetailsProgressBarFragment();
 //
-//                Dialog dialog = new Dialog(context,R.style.Theme_App);
-//                dialog.setContentView(R.layout.fragment_details_progress_bar);
-//                dialog.show();
+                Dialog dialog = new Dialog(context,R.style.DialogSlideAnim);
+                dialog.setContentView(R.layout.fragment_details_progress_bar);
+                dialog.show();
 
 
 //                activity.getSupportFragmentManager().beginTransaction()
