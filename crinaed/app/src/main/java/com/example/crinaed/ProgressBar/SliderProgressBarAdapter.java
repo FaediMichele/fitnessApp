@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.crinaed.DetailsProgressBarFragment;
+import com.example.crinaed.MenuProvaFragment;
 import com.example.crinaed.R;
 import com.example.crinaed.view.ProgressBarView;
 import com.smarteist.autoimageslider.SliderViewAdapter;
