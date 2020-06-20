@@ -36,9 +36,9 @@ public class DetailsProgressBarFragment extends Fragment {
 
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
-            //actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
            // actionBar.setHomeButtonEnabled(true);
-//            actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
         }
         setHasOptionsMenu(true);
         return view;
@@ -62,6 +62,11 @@ public class DetailsProgressBarFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        Log.d("cri","hai cliccato " + (id == android.R.id.home));
+
+        if(id == android.R.id.home){
+            Log.d("cri", "hai cliccato la X sono: com.example.crinaed.DetailsProgressBarFragment method: onOptionsItemSelected");
+        }
 
 //        if (id == R.id.help) {
 //            // handle confirmation button click here
