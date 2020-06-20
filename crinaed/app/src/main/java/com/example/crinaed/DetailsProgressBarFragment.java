@@ -28,7 +28,7 @@ public class DetailsProgressBarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_details_progress_bar, container, false);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        toolbar.setTitle("pippo paperino e pluto");
+        toolbar.setTitle("titolo in java");
 
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -36,9 +36,9 @@ public class DetailsProgressBarFragment extends Fragment {
 
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
+            //actionBar.setDisplayHomeAsUpEnabled(true);
+           // actionBar.setHomeButtonEnabled(true);
+//            actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
         }
         setHasOptionsMenu(true);
         return view;
@@ -63,13 +63,13 @@ public class DetailsProgressBarFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.help) {
-            // handle confirmation button click here
-            return true;
-        } else if (id == android.R.id.home) {
-            // handle close button click here
-            return true;
-        }
+//        if (id == R.id.help) {
+//            // handle confirmation button click here
+//            return true;
+//        } else if (id == android.R.id.home) {
+//            // handle close button click here
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
