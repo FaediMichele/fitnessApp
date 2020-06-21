@@ -1,10 +1,6 @@
 package com.example.crinaed.ProgressBar;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,34 +85,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
                 Float progress = viewHolder.progressBarView.getProgress();
                 progress = (progress+10)%100;
                 viewHolder.progressBarView.setProgress(progress);
-
-                final AppCompatActivity activity= (AppCompatActivity) context;
-
-//                DetailsProgressBarFragment detailsProgressBarFragment = new DetailsProgressBarFragment();
-//                FragmentManager manager = activity.getSupportFragmentManager();
-//                FragmentTransaction transaction = manager.beginTransaction();
-//                transaction.replace(R.id.container,detailsProgressBarFragment,TAG);
-//                transaction.addToBackStack(null);
-//                transaction.commit();
-
-//                AppCompatActivity activity = (AppCompatActivity) context;
-//                DetailsProgressBarFragment detailsProgressBarFragment = new DetailsProgressBarFragment();
-//
-
-//                Dialog dialog = new Dialog(context,R.style.DialogSlideTheme);
-//                dialog.setContentView(R.layout.fragment_details_progress_bar);
-//                dialog.getWindow().setGravity(Gravity.BOTTOM);
-//                dialog.show();
-
                 new DetailsProgressBarDialog((AppCompatActivity) context).show();
-
-//                activity.getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.frameLayoutMaps, myFragment)
-//                        .addToBackStack(null)
-//                        .attach(myFragment)
-//                        .commit();
-
-
             }
         });
     }
