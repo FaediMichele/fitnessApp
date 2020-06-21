@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -115,6 +117,8 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
 
                 DetailsProgressBarFragment cdd = new DetailsProgressBarFragment((AppCompatActivity) context);
                 cdd.setContentView(R.layout.fragment_details_progress_bar);
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                cdd.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
                 cdd.getWindow().setGravity(Gravity.BOTTOM);
                 cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 cdd.show();
