@@ -1,5 +1,7 @@
 package com.example.crinaed.ProgressBar;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 public class Step {
 
     /**
@@ -36,5 +38,14 @@ public class Step {
 
     public void setProgressPercentage(Double progressPercentage) {
         this.progressPercentage = progressPercentage;
+    }
+
+    @Override
+    public String toString() {
+        return "Step{" +
+                "description='" + description + '\'' +
+                ", isChecklist=" + isChecklist +
+                ", progressPercentage=" + progressPercentage +
+                '}';
     }
 }

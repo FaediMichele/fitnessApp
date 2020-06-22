@@ -1,6 +1,7 @@
 package com.example.crinaed.ProgressBar;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.crinaed.DetailsProgressBarDialog;
+import com.example.crinaed.ProgressBarTest.TestModel.ProgressBarModel;
 import com.example.crinaed.R;
 import com.example.crinaed.view.ProgressBarView;
 import com.smarteist.autoimageslider.SliderViewAdapter;
@@ -24,6 +26,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
     private List<SliderProgressBarModel> progressBarModelList = new ArrayList<>();
 
     public SliderProgressBarAdapter(Context context) {
+        this.progressBarModelList = SliderProgressBarModel.EXAMPLE_MODEL;
         this.context = context;
     }
 
@@ -55,7 +58,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
 
     @Override
     public void onBindViewHolder(final SliderProgressBarVH viewHolder, final int position) {
-        SliderProgressBarModel progressBarModel = progressBarModelList.get(position);
+        final SliderProgressBarModel progressBarModel = progressBarModelList.get(position);
         int primaryColor;
         int secondaryColor;
         switch(progressBarModel.getCategory()){
@@ -85,7 +88,10 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
                 Float progress = viewHolder.progressBarView.getProgress();
                 progress = (progress+10)%100;
                 viewHolder.progressBarView.setProgress(progress);
-                new DetailsProgressBarDialog((AppCompatActivity) context).show();
+                //build data for dialog
+                //TO DO
+                new DetailsProgressBarDialog((AppCompatActivity) context, progressBarModel).show();
+                Log.d("cioa","sono dopo la dialog");
             }
         });
     }
