@@ -44,27 +44,27 @@ public class DetailsProgressBarDialog extends Dialog implements android.view.Vie
         TextView valueTry = findViewById(R.id.value_try);
         valueTry.setText(this.progressBarModel.getStepList().get(0).getDescription());
 
-        yes = (Button) findViewById(R.id.btn_yes);
-        no = (Button) findViewById(R.id.btn_no);
-        yes.setOnClickListener(this);
-        no.setOnClickListener(this);
+//        yes = (Button) findViewById(R.id.btn_yes);
+//        no = (Button) findViewById(R.id.btn_no);
+//        yes.setOnClickListener(this);
+//        no.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_yes:
-                c.finish();
-                break;
-            case R.id.btn_no:
-                EditText editText = findViewById(R.id.edit_text_try);
-                this.progressBarModel.getStepList().get(0).setProgressPercentage(Double.parseDouble(editText.getText().toString()));
-                Log.d("cri", "sono qui");
-                dismiss();
-                break;
-            default:
-                break;
-        }
+//        switch (v.getId()) {
+//            case R.id.btn_yes:
+//                c.finish();
+//                break;
+//            case R.id.btn_no:
+//                EditText editText = findViewById(R.id.edit_text_try);
+//                this.progressBarModel.getStepList().get(0).setProgressPercentage(Double.parseDouble(editText.getText().toString()));
+//                Log.d("cri", "sono qui");
+//                dismiss();
+//                break;
+//            default:
+//                break;
+//        }
         dismiss();
     }
 }
