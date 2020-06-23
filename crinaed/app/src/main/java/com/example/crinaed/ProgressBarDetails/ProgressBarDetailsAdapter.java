@@ -1,5 +1,6 @@
 package com.example.crinaed.ProgressBarDetails;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,11 @@ public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarD
     public final static int CHECKED = 0;
     public final static int PROGRESS = 1;
 
-    List<Step> stepList;
+    private List<Step> stepList;
 
+    public ProgressBarDetailsAdapter(List<Step> stepList) {
+        this.stepList = stepList;
+    }
 
     @NonNull
     @Override
@@ -39,6 +43,7 @@ public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarD
                 itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progressive_progress_bar, parent, false);
                 break;
         }
+        Log.d("cri","onCreateViewHolder ");
         return new ProgressBarDetailsViewHolder(itemView);
     }
 
@@ -51,6 +56,7 @@ public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarD
         }else {
             holder.editText.setText(currentStep.getProgressPercentage().toString());
         }
+        Log.d("cri","onBindViewHolder");
     }
 
     @Override
@@ -63,7 +69,7 @@ public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarD
 
     @Override
     public int getItemCount() {
-        return 0;
+        return this.stepList.size();
     }
 
     class ProgressBarDetailsViewHolder extends RecyclerView.ViewHolder {

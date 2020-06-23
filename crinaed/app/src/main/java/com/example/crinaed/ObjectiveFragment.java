@@ -81,11 +81,11 @@ public class ObjectiveFragment  extends Fragment {
         mental.setDescription("Test desccrizione mentale");
         mental.setTitle("Test title");
         Step stepMental1 = new Step();
-        stepMental1.setChecklist(false);
+        stepMental1.setIsChecklist(false);
         stepMental1.setProgressPercentage(30.0);
         stepMental1.setDescription("Test stepMental1");
         Step stepMental2 = new Step();
-        stepMental2.setChecklist(false);
+        stepMental2.setIsChecklist(false);
         stepMental2.setProgressPercentage(50.0);
         stepMental2.setDescription("Test stepMental2");
         mental.getStepList().add(stepMental1);
@@ -97,11 +97,11 @@ public class ObjectiveFragment  extends Fragment {
         physical.setDescription("Test desccrizione mentale");
         physical.setTitle("Test title");
         Step stepPhysical1 = new Step();
-        stepPhysical1.setChecklist(false);
+        stepPhysical1.setIsChecklist(false);
         stepPhysical1.setProgressPercentage(30.0);
         stepPhysical1.setDescription("Test stepMental1");
         Step stepPhysical2 = new Step();
-        stepPhysical2.setChecklist(false);
+        stepPhysical2.setIsChecklist(false);
         stepPhysical2.setProgressPercentage(50.0);
         stepPhysical2.setDescription("Test stepMental2");
         physical.getStepList().add(stepPhysical1);
@@ -113,11 +113,11 @@ public class ObjectiveFragment  extends Fragment {
         social.setDescription("Test desccrizione mentale");
         social.setTitle("Test title");
         Step stepSocial1 = new Step();
-        stepSocial1.setChecklist(false);
+        stepSocial1.setIsChecklist(false);
         stepSocial1.setProgressPercentage(30.0);
         stepSocial1.setDescription("Test stepMental1");
         Step stepSocial2 = new Step();
-        stepSocial2.setChecklist(false);
+        stepSocial2.setIsChecklist(false);
         stepSocial2.setProgressPercentage(80.0);
         stepSocial2.setDescription("Test stepMental2");
         social.getStepList().add(stepSocial1);
@@ -143,11 +143,11 @@ public class ObjectiveFragment  extends Fragment {
         mental.setTitle("Test title");
 
         Step stepMental1 = new Step();
-        stepMental1.setChecklist(false);
+        stepMental1.setIsChecklist(false);
         stepMental1.setProgressPercentage(30.0);
         stepMental1.setDescription("Test stepMental1");
         Step stepMental2 = new Step();
-        stepMental2.setChecklist(false);
+        stepMental2.setIsChecklist(false);
         stepMental2.setProgressPercentage(70.0);
         stepMental2.setDescription("Test stepMental2");
 

@@ -15,23 +15,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.crinaed.ProgressBar.SliderProgressBarModel;
+import com.example.crinaed.ProgressBarDetails.ProgressBarDetailsAdapter;
 import com.example.crinaed.ProgressBarTest.TestModel.ProgressBarModel;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class DetailsProgressBarDialog extends Dialog implements android.view.View.OnClickListener {
 
-    public Activity c;
+    public Activity activity;
     public Dialog d;
     public Button yes, no;
     public SliderProgressBarModel progressBarModel;
+    private ProgressBarDetailsAdapter adapter;
 
     public DetailsProgressBarDialog(Context a, SliderProgressBarModel progressBarModel) {
         super(a,R.style.DialogSlideTheme);
         // TODO Auto-generated constructor stub
-        this.c = (Activity) a;
+        this.activity = (Activity) a;
         this.progressBarModel = progressBarModel;
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +48,21 @@ public class DetailsProgressBarDialog extends Dialog implements android.view.Vie
         getWindow().setGravity(Gravity.BOTTOM);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        TextView valueTry = findViewById(R.id.value_try);
-        valueTry.setText(this.progressBarModel.getStepList().get(0).getDescription());
+
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new ProgressBarDetailsAdapter(this.progressBarModel.getStepList());
+        recyclerView.setAdapter(adapter);
+
+//        TextView valueTry = findViewById(R.id.value_try);
+//        valueTry.setText(this.progressBarModel.getStepList().get(0).getDescription());
 
 //        yes = (Button) findViewById(R.id.btn_yes);
-//        no = (Button) findViewById(R.id.btn_no);
+        no = (Button) findViewById(R.id.cancella);
 //        yes.setOnClickListener(this);
-//        no.setOnClickListener(this);
+        no.setOnClickListener(this);
     }
 
     @Override
