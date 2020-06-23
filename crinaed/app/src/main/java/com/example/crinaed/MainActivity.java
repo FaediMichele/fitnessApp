@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentTransaction;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MAIN_ACTIVITY_TO_OBJECTIVE_FRAGMENT";
-    private ObjectiveFragment objectiveFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,11 +17,19 @@ public class MainActivity extends AppCompatActivity {
         //delete status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        objectiveFragment = new ObjectiveFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, objectiveFragment, TAG);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        PagerFragment pagerFragment = new PagerFragment();
+        FragmentTransaction transaction0 = getSupportFragmentManager().beginTransaction();
+        transaction0.replace(R.id.container, pagerFragment, "AG");
+        transaction0.addToBackStack(null);
+        transaction0.commit();
+
+
+
+        ObjectiveFragment objectiveFragment = new ObjectiveFragment();
+        FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
+        transaction1.replace(R.id.container_page, objectiveFragment, TAG);
+        transaction1.addToBackStack(null);
+        transaction1.commit();
     }
 
 }
