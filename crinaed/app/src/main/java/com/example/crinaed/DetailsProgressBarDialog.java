@@ -6,13 +6,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,21 +17,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.ProgressBar.SliderProgressBarModel;
 import com.example.crinaed.ProgressBarDetails.ProgressBarDetailsAdapter;
-import com.example.crinaed.ProgressBarTest.TestModel.ProgressBarModel;
-import com.google.android.material.textfield.TextInputEditText;
 
 public class DetailsProgressBarDialog extends Dialog implements android.view.View.OnClickListener {
 
     public Activity activity;
     public Dialog d;
-    public Button yes, no;
+    public Button conferma, cancella;
     public SliderProgressBarModel progressBarModel;
     private ProgressBarDetailsAdapter adapter;
 
-    public DetailsProgressBarDialog(Context a, SliderProgressBarModel progressBarModel) {
-        super(a,R.style.DialogSlideTheme);
-        // TODO Auto-generated constructor stub
-        this.activity = (Activity) a;
+    public DetailsProgressBarDialog(Context context, SliderProgressBarModel progressBarModel) {
+        super(context,R.style.DialogSlideTheme);
+        this.activity = (Activity) context;
         this.progressBarModel = progressBarModel;
     }
 
@@ -42,13 +36,16 @@ public class DetailsProgressBarDialog extends Dialog implements android.view.Vie
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //gestione interfaccia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_details_progress_bar);
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         getWindow().setGravity(Gravity.BOTTOM);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        TextView title = findViewById(R.id.title_details);
+        title.setText(this.progressBarModel.getTitle());
 
-
+        //setto la recycle view
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
@@ -56,13 +53,11 @@ public class DetailsProgressBarDialog extends Dialog implements android.view.Vie
         adapter = new ProgressBarDetailsAdapter(this.progressBarModel.getStepList());
         recyclerView.setAdapter(adapter);
 
-//        TextView valueTry = findViewById(R.id.value_try);
-//        valueTry.setText(this.progressBarModel.getStepList().get(0).getDescription());
-
-//        yes = (Button) findViewById(R.id.btn_yes);
-        no = (Button) findViewById(R.id.cancella);
-//        yes.setOnClickListener(this);
-        no.setOnClickListener(this);
+        //gestione bottoni
+        conferma = (Button) findViewById(R.id.conferma);
+        cancella = (Button) findViewById(R.id.cancella);
+        conferma.setOnClickListener(this);
+        cancella.setOnClickListener(this);
     }
 
     @Override

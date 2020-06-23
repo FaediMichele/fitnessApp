@@ -8,13 +8,11 @@
     android:background="@drawable/curve_shap"
     android:padding="10dp">
 
-
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/title_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Interest Rates on Domestic Term Deposits (w.e.f. 26th Septemr, 2013)"
         android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,11 +20,11 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_dettail"
+            android:layout_height="234dp"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_dettails"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView1">
+            app:layout_constraintTop_toBottomOf="@+id/title_details">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
@@ -41,7 +39,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottom_dettail"
+        android:id="@+id/bottom_dettails"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         app:layout_constraintBottom_toBottomOf="parent"
