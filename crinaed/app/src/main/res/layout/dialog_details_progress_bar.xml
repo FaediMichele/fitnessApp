@@ -22,73 +22,36 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="80dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/value_try"
-                        android:text="@string/ciao"
-                        android:textSize="24sp"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".70" />
-
-                    <EditText
-                        android:id="@+id/edit_text_try"
-                        android:inputType="textPersonName"
-                        android:text="Name"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".30" />
 
 
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/textView4"
-                        android:text="@string/ciao"
-                        android:textSize="24sp"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".70" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="1dp"/>
 
-                    <EditText
-                        android:id="@+id/editTextTextPersonName5"
-                        android:inputType="textPersonName"
-                        android:text="Name"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".30" />
-                </LinearLayout>
-            </LinearLayout>
         </ScrollView>
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
-
+        android:layout_height="match_parent">
         <Button
             android:id="@+id/conferma"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:text="conferma"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent" />
 
-
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.50"/>
 
         <Button
             android:id="@+id/cancella"
@@ -96,8 +59,8 @@
             android:layout_height="50dp"
             android:text="cancella"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>

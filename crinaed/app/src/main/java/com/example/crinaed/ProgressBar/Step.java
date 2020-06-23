@@ -24,11 +24,11 @@ public class Step {
         this.description = description;
     }
 
-    public Boolean getChecklist() {
+    public Boolean isChecklist() {
         return isChecklist;
     }
 
-    public void setChecklist(Boolean checklist) {
+    public void setIsChecklist(Boolean checklist) {
         isChecklist = checklist;
     }
 
