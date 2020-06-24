@@ -1,7 +1,8 @@
-package com.example.crinaed.view;
+package com.example.crinaed;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -25,12 +26,17 @@ public class NestedScrollableHost extends FrameLayout {
 
     public NestedScrollableHost(@NonNull Context context) {
         super(context);
-        this.init();
     }
 
     public NestedScrollableHost(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        this.init();
+    }
+
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        init();
     }
 
     private void init() {
@@ -51,6 +57,8 @@ public class NestedScrollableHost extends FrameLayout {
         switch (orientation){
             case 0:
                 result = child != null ? child.canScrollHorizontally(direction): false;
+                result = true;
+                Log.d("cri","case " + result);
                 break;
             case 1:
                 result = child != null ? child.canScrollVertically(direction): false;
@@ -68,6 +76,7 @@ public class NestedScrollableHost extends FrameLayout {
     private void handleInterceptTouchEvent(MotionEvent e){
         int orientation = this.parentViewPager.getOrientation();
         if(!canChildScroll(orientation,-1f) && !canChildScroll(orientation,1f)){
+            Log.d("cri","non faccio niente");
             return;
         }
 
@@ -75,6 +84,7 @@ public class NestedScrollableHost extends FrameLayout {
             this.initialX = e.getX();
             this.initialY = e.getY();
             getParent().requestDisallowInterceptTouchEvent(true);
+            Log.d("cri","true ACTION_DOWN");
 
         }else if(e.getAction() == MotionEvent.ACTION_MOVE) {
             float dx = e.getX() - initialX;
@@ -91,15 +101,17 @@ public class NestedScrollableHost extends FrameLayout {
                 scaledDy = Math.abs(dy) * 5f;
             }
 
-
             if (scaledDx > touchSlop || scaledDy > touchSlop) {
                 if (isVpHorizontal == (scaledDy > scaledDx)) {
                     getParent().requestDisallowInterceptTouchEvent(false);
+                    Log.d("cri","false touchSlop");
                 } else {
                     if (canChildScroll(orientation, isVpHorizontal ? dx: dy)){
                         getParent().requestDisallowInterceptTouchEvent(true);
+                        Log.d("cri","true canChildScroll");
                     }else{
                         getParent().requestDisallowInterceptTouchEvent(false);
+                        Log.d("cri","false canChildScroll");
 
                     }
                 }

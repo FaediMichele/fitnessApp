@@ -43,7 +43,6 @@ public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarD
                 itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progressive_progress_bar, parent, false);
                 break;
         }
-        Log.d("cri","onCreateViewHolder ");
         return new ProgressBarDetailsViewHolder(itemView);
     }
 
@@ -56,7 +55,6 @@ public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarD
         }else {
             holder.editText.setText(currentStep.getProgressPercentage().toString());
         }
-        Log.d("cri","onBindViewHolder");
     }
 
     @Override
