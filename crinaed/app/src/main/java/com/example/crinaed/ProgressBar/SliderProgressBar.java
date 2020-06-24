@@ -3,6 +3,7 @@ package com.example.crinaed.ProgressBar;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import androidx.core.content.ContextCompat;
 
@@ -10,6 +11,9 @@ import com.example.crinaed.R;
 import com.smarteist.autoimageslider.SliderView;
 
 public class SliderProgressBar extends SliderView {
+
+
+    private SliderProgressBarAdapter sliderProgressBarAdapter;
 
     public SliderProgressBar(Context context) {
         super(context);
@@ -29,7 +33,7 @@ public class SliderProgressBar extends SliderView {
     @Override
     public void onPageSelected(int position) {
         super.onPageSelected(position);
-        SliderProgressBarAdapter sliderProgressBarAdapter = (SliderProgressBarAdapter) super.getSliderAdapter();
+        this.sliderProgressBarAdapter = (SliderProgressBarAdapter) super.getSliderAdapter();
         int primaryColor;
         int secondaryColor;
         switch(sliderProgressBarAdapter.getProgressBarModelList().get(position).getCategory()){
@@ -52,4 +56,13 @@ public class SliderProgressBar extends SliderView {
         }
         super.setIndicatorSelectedColor(secondaryColor);
     }
+
+    @Override
+    public boolean onTouchEvent(final MotionEvent ev) {
+        Log.d("cri","funzioni ??");
+        this.getParent().requestDisallowInterceptTouchEvent(false);
+        super.onTouchEvent(ev);
+        return true;
+    }
+
 }

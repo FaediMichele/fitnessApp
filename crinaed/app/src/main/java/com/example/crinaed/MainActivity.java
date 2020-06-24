@@ -26,11 +26,11 @@ public class MainActivity extends AppCompatActivity {
         transaction0.addToBackStack(null);
         transaction0.commit();
 
-        ObjectiveFragment objectiveFragment = new ObjectiveFragment();
-        FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
-        transaction1.replace(R.id.container_page, objectiveFragment, TAG_CONTAINER);
-        transaction1.addToBackStack(null);
-        transaction1.commit();
+//        ObjectiveFragment objectiveFragment = new ObjectiveFragment();
+//        FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
+//        transaction1.replace(R.id.container_page, objectiveFragment, TAG_CONTAINER);
+//        transaction1.addToBackStack(null);
+//        transaction1.commit();
     }
 
 }

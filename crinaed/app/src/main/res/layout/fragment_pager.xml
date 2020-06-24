@@ -31,7 +31,7 @@
     </com.google.android.material.tabs.TabLayout>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/container_page"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
