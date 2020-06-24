@@ -8,7 +8,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "MAIN_ACTIVITY_TO_OBJECTIVE_FRAGMENT";
+    public static final String TAG_CONTAINER = "MAIN_ACTIVITY_TO_OBJECTIVE_FRAGMENT";
+    public static final String TAG_PAGER = "MAIN_ACTIVITY_TO_OBJECTIVE_FRAGMENT";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,15 +22,13 @@ public class MainActivity extends AppCompatActivity {
 
         PagerFragment pagerFragment = new PagerFragment();
         FragmentTransaction transaction0 = getSupportFragmentManager().beginTransaction();
-        transaction0.replace(R.id.container, pagerFragment, "AG");
+        transaction0.replace(R.id.container, pagerFragment, TAG_PAGER);
         transaction0.addToBackStack(null);
         transaction0.commit();
 
-
-
         ObjectiveFragment objectiveFragment = new ObjectiveFragment();
         FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
-        transaction1.replace(R.id.container_page, objectiveFragment, TAG);
+        transaction1.replace(R.id.container_page, objectiveFragment, TAG_CONTAINER);
         transaction1.addToBackStack(null);
         transaction1.commit();
     }
