@@ -23,7 +23,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
 
     public final static String TAG = "LAUNCH_DETAIL_FRAGMENT";
     private Context context;
-    private List<SliderProgressBarModel> progressBarModelList = new ArrayList<>();
+    private List<SliderProgressBarModel> progressBarModelList;
 
     public SliderProgressBarAdapter(Context context) {
         this.progressBarModelList = SliderProgressBarModel.EXAMPLE_MODEL;

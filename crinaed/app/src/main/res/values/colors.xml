@@ -7,13 +7,14 @@
     <color name="colorPrimaryDarkb">#0f0</color>
     <color name="colorAccentb">#00f</color>
     <!--colori della nostra app-->
+    <color name="grey">#BABABA</color>
     <color name="settingIcon">#949494</color>
     <color name="background">#f0f0f0</color>
     <color name="backgroundItem">#fff</color>
-    <color name="redPrimary">#FF8095 </color>
+    <color name="redPrimary">#F26179 </color>
     <color name="redSecondary">#FF7DC2</color>
-    <color name="greenPrimary">#73E673</color>
-    <color name="greenSecondary">#85FFC6</color>
+    <color name="greenPrimary">#6cd96c</color>
+    <color name="greenSecondary">#87ff9f</color>
     <color name="bluPrimary">#8080FF</color>
     <color name="bluSecondary">#85C6FF</color>
 </resources>
