@@ -58,7 +58,6 @@ public class NestedScrollableHost extends FrameLayout {
             case 0:
                 result = child != null ? child.canScrollHorizontally(direction): false;
                 result = true;
-                Log.d("cri","case " + result);
                 break;
             case 1:
                 result = child != null ? child.canScrollVertically(direction): false;
