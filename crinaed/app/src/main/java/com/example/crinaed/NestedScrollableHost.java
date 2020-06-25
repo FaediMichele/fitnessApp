@@ -76,7 +76,6 @@ public class NestedScrollableHost extends FrameLayout {
     private void handleInterceptTouchEvent(MotionEvent e){
         int orientation = this.parentViewPager.getOrientation();
         if(!canChildScroll(orientation,-1f) && !canChildScroll(orientation,1f)){
-            Log.d("cri","non faccio niente");
             return;
         }
 
@@ -84,7 +83,6 @@ public class NestedScrollableHost extends FrameLayout {
             this.initialX = e.getX();
             this.initialY = e.getY();
             getParent().requestDisallowInterceptTouchEvent(true);
-            Log.d("cri","true ACTION_DOWN");
 
         }else if(e.getAction() == MotionEvent.ACTION_MOVE) {
             float dx = e.getX() - initialX;
@@ -104,15 +102,11 @@ public class NestedScrollableHost extends FrameLayout {
             if (scaledDx > touchSlop || scaledDy > touchSlop) {
                 if (isVpHorizontal == (scaledDy > scaledDx)) {
                     getParent().requestDisallowInterceptTouchEvent(false);
-                    Log.d("cri","false touchSlop");
                 } else {
                     if (canChildScroll(orientation, isVpHorizontal ? dx: dy)){
                         getParent().requestDisallowInterceptTouchEvent(true);
-                        Log.d("cri","true canChildScroll");
                     }else{
                         getParent().requestDisallowInterceptTouchEvent(false);
-                        Log.d("cri","false canChildScroll");
-
                     }
                 }
             }
