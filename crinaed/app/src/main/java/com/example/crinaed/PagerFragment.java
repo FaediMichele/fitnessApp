@@ -80,7 +80,7 @@ public class PagerFragment extends Fragment {
             FloatingActionButton fab = getActivity().findViewById(R.id.floating_action_button);
             switch (position) {
                 case OBJECTIVE_FRAGMENT:
-                    fabAnimation(R.drawable.setting,R.color.bluSecondary);
+                    fabAnimation(R.drawable.setting,R.color.bluPrimary);
                     break;
                 case SOCIAL_FRAGMENT:
                     fabAnimation(R.drawable.ic_baseline_person_add_24,R.color.greenPrimary);

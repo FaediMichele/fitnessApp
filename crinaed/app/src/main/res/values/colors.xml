@@ -10,10 +10,10 @@
     <color name="settingIcon">#949494</color>
     <color name="background">#f0f0f0</color>
     <color name="backgroundItem">#fff</color>
-    <color name="redPrimary">#FA8296 </color>
+    <color name="redPrimary">#FF8599 </color>
     <color name="redSecondary">#FF7DC2</color>
-    <color name="greenPrimary">#11D687</color>
+    <color name="greenPrimary">#70E670</color>
     <color name="greenSecondary">#85FFC6</color>
-    <color name="bluPrimary">#85C6FF</color>
-    <color name="bluSecondary">#7D7DFF</color>
+    <color name="bluPrimary">#7D7DFF</color>
+    <color name="bluSecondary">#85C6FF</color>
 </resources>
