@@ -1,7 +1,6 @@
 package com.example.crinaed.database.repository;
 
-import android.app.Application;
-import android.util.Log;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
@@ -21,13 +20,13 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class FriendRepository implements Repository{
+public class FriendRepository extends Repository{
 
     private FriendshipDao friendshipDao;
     private FriendMessageDao friendMessageDao;
 
-    public FriendRepository(Application application){
-        AppDatabase db = AppDatabase.getDatabase(application);
+    public FriendRepository(Context context){
+        AppDatabase db = AppDatabase.getDatabase(context);
         friendshipDao = db.friendshipDao();
         friendMessageDao = db.friendMessageDao();
     }
@@ -92,22 +91,33 @@ public class FriendRepository implements Repository{
         final List<Friendship> friendships = new ArrayList<>();
         final List<FriendMessage> messages = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
-            JSONObject obj = array.getJSONObject(i);
-            Friendship friendship = new Friendship(obj.getLong("idFriendship"), obj.getLong("idUser1"), obj.getLong("idUser2"));
-            friendships.add(friendship);
+            friendships.add(new Friendship(array.getJSONObject(i)));
         }
         array = data.getJSONArray("Message");
         for(int i = 0; i < array.length(); i++){
-            JSONObject obj = array.getJSONObject(i);
-            FriendMessage message = new FriendMessage(obj.getLong("idFriendship"), Util.isoFormatToTimestamp(obj.getString("date")),
-                    obj.getLong("idSender"), obj.getLong("idReceiver"), obj.getString("message"));
-            messages.add(message);
+            messages.add(new FriendMessage(array.getJSONObject(i)));
         }
         return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 friendshipDao.insert(friendships.toArray(new Friendship[0]));
                 friendMessageDao.insert(messages.toArray(new FriendMessage[0]));
+            }
+        });
+    }
+
+    @Override
+    public Future<?> extractData(final JSONObject root) {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    root.put("Friendship", listToJSONArray(friendshipDao.getFriendshipList()));
+                    root.put("Message", listToJSONArray(friendMessageDao.getMessageList()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
     }

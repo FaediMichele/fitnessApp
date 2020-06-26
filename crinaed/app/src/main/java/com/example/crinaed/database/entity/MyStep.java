@@ -1,26 +1,52 @@
 package com.example.crinaed.database.entity;
 
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-@Entity(primaryKeys = {"idCommitment", "num"})
-public class MyStep {
+import com.example.crinaed.util.Util;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+@Entity
+public class MyStep  implements MyEntity{
+    @PrimaryKey  public long idMyStep;
     public long idCommitment;
-    public int num;
     public String name;
-    public double incVal;
     public String unitMeasure;
     public double max;
-    public double progression;
-    //lista di string // nome dei vari check 200g insalata, 3k di corsa
-    //
+    public int repetitionDay; // day to reset the progression and save progress
+    public String type;
 
-    public MyStep(long idCommitment, int num, String name, double incVal, String unitMeasure, double max, double progression) {
+    public MyStep(long idMyStep, long idCommitment, String name, String unitMeasure, double max, int repetitionDay, String type) {
+        this.idMyStep = idMyStep;
         this.idCommitment = idCommitment;
-        this.num = num;
         this.name = name;
-        this.incVal = incVal;
         this.unitMeasure = unitMeasure;
         this.max = max;// il valore di fine scala
-        this.progression = progression;
+        this.repetitionDay = repetitionDay;
+        this.type = type;
+    }
+    public MyStep(JSONObject obj) throws JSONException {
+        this.idMyStep = obj.getLong("idMyStep");
+        this.idCommitment = obj.getLong("idCommitment");
+        this.name = obj.getString("name");
+        this.unitMeasure = obj.getString("unitMeasure");
+        this.max = obj.getDouble("max");
+        this.repetitionDay = obj.getInt("repetitionDay");
+        this.type = obj.getString("type");
+    }
+
+    @Override
+    public JSONObject toJson() throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("idMyStep", idMyStep);
+        obj.put("idCommitment", idCommitment);
+        obj.put("name", name);
+        obj.put("unitMeasure", unitMeasure);
+        obj.put("max", max);
+        obj.put("repetitionDay", repetitionDay);
+        obj.put("type", type);
+        return obj;
     }
 }

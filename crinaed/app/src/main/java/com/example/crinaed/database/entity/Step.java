@@ -2,8 +2,11 @@ package com.example.crinaed.database.entity;
 
 import androidx.room.Entity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 @Entity(primaryKeys = {"idExercise", "num"})
-public class Step {
+public class Step implements MyEntity {
     public long idExercise;
     public int num; // num of step for this exercise
     public String name;
@@ -20,5 +23,26 @@ public class Step {
         this.incVal = incVal;
         this.unitMeasure = unitMeasure;
         this.max = max;
+    }
+    public Step(JSONObject obj) throws JSONException {
+        this.idExercise = obj.getLong("idExercise");
+        this.num = obj.getInt("num");
+        this.name = obj.getString("name");
+        this.desc = obj.getString("desc");
+        this.incVal = obj.getDouble("incVal");
+        this.unitMeasure = obj.getString("unitMeasure");
+        this.max = obj.getDouble("max");
+    }
+    @Override
+    public JSONObject toJson() throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("idExercise", idExercise);
+        obj.put("num", num);
+        obj.put("name", name);
+        obj.put("desc", desc);
+        obj.put("incVal", incVal);
+        obj.put("unitMeasure", unitMeasure);
+        obj.put("max", max);
+        return obj;
     }
 }
