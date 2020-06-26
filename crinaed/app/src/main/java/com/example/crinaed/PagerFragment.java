@@ -1,5 +1,6 @@
 package com.example.crinaed;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -81,12 +82,33 @@ public class PagerFragment extends Fragment {
             switch (position) {
                 case OBJECTIVE_FRAGMENT:
                     fabAnimation(R.drawable.setting,R.color.bluPrimary);
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent objectiveIntent = new Intent(getContext(),ObjectiveActivity.class);
+                            startActivity(objectiveIntent);
+                        }
+                    });
                     break;
                 case SOCIAL_FRAGMENT:
                     fabAnimation(R.drawable.ic_baseline_person_add_24,R.color.greenPrimary);
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent socialIntent = new Intent(getContext(),SocialActivity.class);
+                            startActivity(socialIntent);
+                        }
+                    });
                     break;
                 case LEARNING_FRAGMENT:
                     fabAnimation(R.drawable.ic_baseline_search_24,R.color.redPrimary);
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent learningIntent = new Intent(getContext(),LearningActivity.class);
+                            startActivity(learningIntent);
+                        }
+                    });
                     break;
             }
         }

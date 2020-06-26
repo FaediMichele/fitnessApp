@@ -18,6 +18,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ObjectiveActivity">
+        </activity>
+        <activity android:name=".SocialActivity">
+        </activity>
+        <activity android:name=".LearningActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -8,10 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG_CONTAINER = "MAIN_ACTIVITY_TO_OBJECTIVE_FRAGMENT";
     public static final String TAG_PAGER = "MAIN_ACTIVITY_TO_OBJECTIVE_FRAGMENT";
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
