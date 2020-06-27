@@ -91,7 +91,7 @@ public class PagerFragment extends Fragment {
                     });
                     break;
                 case SOCIAL_FRAGMENT:
-                    fabAnimation(R.drawable.ic_baseline_person_add_24,R.color.greenPrimary);
+                    fabAnimation(R.drawable.ic_baseline_search_24,R.color.greenPrimary);
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

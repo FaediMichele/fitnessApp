@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="5dp"
+        android:paddingBottom="12dp"
+        android:paddingTop="10dp"
         android:background="@drawable/text_bottom_line"
-        android:paddingVertical="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
