@@ -40,4 +40,10 @@ public interface ExerciseAndStepDao {
 
     @Query("SELECT * FROM Step WHERE idExercise = (:idExercise)")
     List<Step> getStepByIdExercise(long idExercise);
+
+    @Query("SELECT * FROM Step")
+    List<Step> getStepList();
+
+    @Query("SELECT * FROM Exercise")
+    List<Exercise> getExerciseList();
 }

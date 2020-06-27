@@ -1,7 +1,6 @@
 package com.example.crinaed.database.repository;
 
-import android.app.Application;
-import android.util.Log;
+import android.content.Context;
 import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
@@ -13,7 +12,6 @@ import com.example.crinaed.database.entity.UserLevel;
 import com.example.crinaed.database.entity.UserSchoolCrossRef;
 import com.example.crinaed.database.entity.join.user.UserData;
 import com.example.crinaed.database.entity.join.user.UserInscription;
-import com.example.crinaed.util.Category;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,13 +22,15 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class UserRepository implements Repository{
+public class UserRepository extends Repository{
     private UserDao userDao;
     private LiveData<List<UserData>> userData;
     private LiveData<List<UserInscription>> inscriptions;
 
-    public UserRepository(Application application){
-        AppDatabase db = AppDatabase.getDatabase(application);
+    private long lastId = -1;
+
+    public UserRepository(Context context){
+        AppDatabase db = AppDatabase.getDatabase(context);
         userDao = db.userDao();
         userData = userDao.getData();
         inscriptions = userDao.getInscription();
@@ -47,6 +47,7 @@ public class UserRepository implements Repository{
         return AppDatabase.databaseWriteExecutor.submit(new Callable<Pair<Long, Long[]>>() {
             @Override
             public Pair<Long, Long[]> call() {
+                user.idUser = lastId--;
                 long idUser = userDao.insert(user)[0];
                 return new Pair<>(idUser, userDao.insert(levels));
             }
@@ -94,23 +95,42 @@ public class UserRepository implements Repository{
         JSONArray array = data.getJSONArray("User");
         final List<User> users = new ArrayList<>();
         final List<UserLevel> userLevels = new ArrayList<>();
+        final List<UserSchoolCrossRef> inscription = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
-            JSONObject obj = array.getJSONObject(i);
-            User user = new User(obj.getLong("idUser"), obj.getString("firstname"), obj.getString("surname"),
-                    obj.getString("email"), obj.getString("hashPassword"));
-            users.add(user);
+            users.add(new User( array.getJSONObject(i)));
         }
         array = data.getJSONArray("Level");
         for(int i = 0; i < array.length(); i++){
-            JSONObject obj = array.getJSONObject(i);
-            UserLevel userLevel = new UserLevel(obj.getLong("idUser"), obj.getString("cat"), obj.getInt("PE"), obj.getInt("level"));
-            userLevels.add(userLevel);
+            userLevels.add(new UserLevel(array.getJSONObject(i)));
+        }
+
+        array = data.getJSONArray("School");
+        for(int i = 0; i < array.length(); i++){
+            inscription.add(new UserSchoolCrossRef(userLevels.get(0).idUser, array.getJSONObject(i).getLong("idSchool")));
         }
         return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
                 userDao.insert(users.toArray(new User[0]));
                 userDao.insert(userLevels.toArray(new UserLevel[0]));
+                userDao.insert(inscription.toArray(new UserSchoolCrossRef[0]));
+            }
+        });
+    }
+
+
+    @Override
+    public Future<?> extractData(final JSONObject root) {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    root.put("User", listToJSONArray(userDao.getUsersList()));
+                    root.put("Level", listToJSONArray(userDao.getLevelList()));
+                    root.put("Inscription", listToJSONArray(userDao.getInscriptionList()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

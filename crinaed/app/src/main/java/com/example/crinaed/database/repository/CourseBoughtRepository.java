@@ -1,14 +1,13 @@
 package com.example.crinaed.database.repository;
 
-import android.app.Application;
-import android.util.Log;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.dao.CourseBoughtDao;
 import com.example.crinaed.database.entity.CourseBought;
-import com.example.crinaed.database.entity.join.user.UserCourseBought;
+import com.example.crinaed.database.entity.join.CourseBoughtWithCourse;
 import com.example.crinaed.util.Util;
 
 import org.json.JSONArray;
@@ -20,16 +19,16 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class CourseBoughtRepository implements Repository{
+public class CourseBoughtRepository extends Repository{
 
     private CourseBoughtDao courseBoughtDao;
 
-    public CourseBoughtRepository(Application application){
-        AppDatabase db = AppDatabase.getDatabase(application);
+    public CourseBoughtRepository(Context context){
+        AppDatabase db = AppDatabase.getDatabase(context);
         courseBoughtDao = db.courseBoughtDao();
     }
 
-    public LiveData<List<UserCourseBought>> getCourses() {
+    public LiveData<List<CourseBoughtWithCourse>> getCourses() {
         return courseBoughtDao.getCourseBought();
     }
 
@@ -61,15 +60,26 @@ public class CourseBoughtRepository implements Repository{
     }
 
     @Override
-    public Future<?> loadData(JSONObject data) throws JSONException {
+    public Future<?> loadData(final JSONObject data) throws JSONException {
         JSONArray array = data.getJSONArray("CourseBought");
         final List<CourseBought> courseBoughts = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
-            JSONObject obj = array.getJSONObject(i);
-            CourseBought courseBought = new CourseBought(obj.getLong("idUser"), obj.getLong("idCourse"),
-                    obj.getInt("level"), Util.isoFormatToTimestamp(obj.getString("purchaseDate")));
-            courseBoughts.add(courseBought);
+            courseBoughts.add(new CourseBought(array.getJSONObject(i)));
         }
-        return insert((CourseBought[]) courseBoughts.toArray(new CourseBought[0]));
+        return insert(courseBoughts.toArray(new CourseBought[0]));
+    }
+
+    @Override
+    public Future<?> extractData(final JSONObject root) {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    root.put("CourseBought", listToJSONArray(courseBoughtDao.getCouseBoughtList()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

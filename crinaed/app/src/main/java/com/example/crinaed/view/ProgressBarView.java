@@ -142,7 +142,10 @@ public class ProgressBarView extends View {
     }
 
     public void setProgress(float progress) {
-        this.progress = Float.valueOf(new DecimalFormat("#.##").format(progress));
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        String stringDecimal = decimalFormat.format(progress);
+        stringDecimal = stringDecimal.replace(",",".");
+        this.progress = Float.parseFloat(stringDecimal);
 
         if (this.progress > getMax()) {
             Log.d("ProgressBarView", "progress: "+ this.progress  + ", max: " + getMax());

@@ -28,4 +28,7 @@ public interface ExerciseInProgressDao {
     @Transaction
     @Query("SELECT * FROM ExerciseInProgress")
     LiveData<List<ExerciseInProgressWithExercise>> get();
+
+    @Query("SELECT * FROM ExerciseInProgress")
+    List<ExerciseInProgress> getExerciseList();
 }

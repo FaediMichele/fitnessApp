@@ -1,7 +1,6 @@
 package com.example.crinaed.database.repository;
 
-import android.app.Application;
-import android.util.Log;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
@@ -20,12 +19,12 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class ExerciseInProgressRepository implements Repository {
+public class ExerciseInProgressRepository extends Repository {
     private ExerciseInProgressDao exerciseInProgressDao;
     private LiveData<List<ExerciseInProgressWithExercise>>  exercise;
 
-    public ExerciseInProgressRepository(Application application){
-        AppDatabase db = AppDatabase.getDatabase(application);
+    public ExerciseInProgressRepository(Context context){
+        AppDatabase db = AppDatabase.getDatabase(context);
         exerciseInProgressDao = db.exerciseInProgressDao();
         exercise = exerciseInProgressDao.get();
     }
@@ -65,13 +64,24 @@ public class ExerciseInProgressRepository implements Repository {
         JSONArray array = data.getJSONArray("ExerciseInProgress");
         final List<ExerciseInProgress> exercises = new ArrayList<>();
         for(int i = 0; i < array.length(); i++) {
-            JSONObject obj = array.getJSONObject(i);
-            ExerciseInProgress exerciseInProgress = new ExerciseInProgress(obj.getLong("idUser"),  obj.getLong("idExercise"),
-                    obj.getDouble("progression"), obj.getInt("numStep"),  Util.isoFormatToTimestamp(obj.getString("lastEdit")));
-            exercises.add(exerciseInProgress);
+            exercises.add(new ExerciseInProgress(array.getJSONObject(i)));
         }
 
         return insert(exercises.toArray(new ExerciseInProgress[0]));
 
+    }
+
+    @Override
+    public Future<?> extractData(final JSONObject root){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    root.put("ExerciseInProgress", listToJSONArray(exerciseInProgressDao.getExerciseList()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

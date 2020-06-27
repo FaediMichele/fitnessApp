@@ -30,6 +30,10 @@ public interface ReviewDao {
     LiveData<List<UserReview>> getUserReview();
 
     @Transaction
+    @Query("SELECT * FROM Review")
+    List<Review> getUserReviewList();
+
+    @Transaction
     @Query("SELECT * FROM Review WHERE idSchool = (:idSchool)")
     LiveData<List<Review>> getSchoolReview(long idSchool);
 }

@@ -1,7 +1,6 @@
 package com.example.crinaed.database.repository;
 
-import android.app.Application;
-import android.util.Log;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
@@ -20,10 +19,10 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class HistoryRepository implements Repository{
+public class HistoryRepository extends Repository{
     private HistoryDao historyDao;
-    public HistoryRepository(Application application){
-        AppDatabase db = AppDatabase.getDatabase(application);
+    public HistoryRepository(Context context){
+        AppDatabase db = AppDatabase.getDatabase(context);
         historyDao = db.historyDao();
     }
 
@@ -63,10 +62,22 @@ public class HistoryRepository implements Repository{
         JSONArray array = data.getJSONArray("History");
         final List<History> histories = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
-            JSONObject obj = array.getJSONObject(i);
-            History history = new History(obj.getLong("idUser"), Util.isoFormatToTimestamp(obj.getString("date")), obj.getLong("idExercise"));
-            histories.add(history);
+            histories.add(new History(array.getJSONObject(i)));
         }
         return insert(histories.toArray(new History[0]));
+    }
+
+    @Override
+    public Future<?> extractData(final JSONObject root) {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    root.put("History", listToJSONArray(historyDao.getHistoryList()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }
