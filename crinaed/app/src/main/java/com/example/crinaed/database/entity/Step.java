@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 @Entity(primaryKeys = {"idExercise", "num"})
 public class Step implements MyEntity {
     public long idExercise;
@@ -44,5 +46,24 @@ public class Step implements MyEntity {
         obj.put("unitMeasure", unitMeasure);
         obj.put("max", max);
         return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Step step = (Step) o;
+        return idExercise == step.idExercise &&
+                num == step.num &&
+                Double.compare(step.incVal, incVal) == 0 &&
+                Double.compare(step.max, max) == 0 &&
+                Objects.equals(name, step.name) &&
+                Objects.equals(desc, step.desc) &&
+                Objects.equals(unitMeasure, step.unitMeasure);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idExercise, num, name, desc, incVal, unitMeasure, max);
     }
 }

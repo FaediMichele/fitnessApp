@@ -7,6 +7,8 @@ import androidx.room.ForeignKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(primaryKeys = {"idUser", "cat"})
@@ -37,5 +39,21 @@ public class UserLevel implements MyEntity {
         obj.put("PE", PE);
         obj.put("level", level);
         return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserLevel userLevel = (UserLevel) o;
+        return idUser == userLevel.idUser &&
+                PE == userLevel.PE &&
+                level == userLevel.level &&
+                cat.equals(userLevel.cat);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idUser, cat, PE, level);
     }
 }

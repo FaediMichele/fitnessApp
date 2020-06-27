@@ -12,6 +12,7 @@ import com.example.crinaed.database.entity.MyStep;
 import com.example.crinaed.database.entity.MyStepDone;
 import com.example.crinaed.database.entity.join.CommitmentWithMyStep;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
+import com.example.crinaed.util.Category;
 import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Util;
 
@@ -41,8 +42,14 @@ public class CommitmentRepository extends Repository{
         return commitmentDao.getCommitmentWithMyStep();
     }
 
-    public LiveData<MyStepDoneWithMyStep> getStepOnGoing(long idMyStep){
-        return commitmentDao.getLastMyStepDoneWithMyStep(idMyStep);
+    public LiveData<List<MyStepDoneWithMyStep>> getStepOnGoing(Category category){
+        updateMyStepDone();
+        return commitmentDao.getLastMyStepDoneWithMyStep(category.ordinal());
+    }
+
+    public List<MyStepDoneWithMyStep> getStepOnGoingList(Category category){
+        updateMyStepDone();
+        return commitmentDao.getLastMyStepDoneWithMyStepList(category.ordinal());
     }
 
     public Future<Pair<Long, Long[]>> insert(final Lambda l, final MyCommitment commitment, final MyStep... steps){

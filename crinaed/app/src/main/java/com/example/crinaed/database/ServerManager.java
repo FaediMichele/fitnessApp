@@ -1,11 +1,13 @@
 package com.example.crinaed.database;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.example.crinaed.R;
 import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Single;
 import com.example.crinaed.util.Util;
@@ -111,6 +113,7 @@ public class ServerManager {
             public String call() {
                 try {
                     s.acquire();
+                    Log.d("naed", "confirmed");
                     return result.getVal();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -121,12 +124,21 @@ public class ServerManager {
         managePost(param, new Lambda() {
             @Override
             public Object[] run(final Object... paramether) {
+                Log.d("naed", "thread launched");
                 AppDatabase.databaseWriteExecutor.submit(new Runnable() {
                     @Override
                     public void run() {
+                        Log.d("naed", "login thread launched confirmed");
                         try {
                             DatabaseUtil.getInstance().getRepositoryManager().loadNewData(AppDatabase.getDatabase(context), paramether[0].toString());
                             JSONObject obj = new JSONObject(paramether[0].toString());
+
+                            // Save in the sharedPreferences the sessionid
+                            SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.sessionId), Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor= preferences.edit();
+                            editor.putString("value", obj.getString("SessionId"));
+                            editor.apply();
+
                             result.setVal(obj.getString("SessionId"));
                             Log.d("sessionID", obj.getString("SessionId"));
                         } catch (JSONException | ExecutionException | InterruptedException e) {
@@ -135,6 +147,7 @@ public class ServerManager {
                             Log.d("sessionID", "here1");
                         }
                         s.release();
+                        Log.d("naed", "login released");
                     }
                 });
                 return null;

@@ -6,6 +6,8 @@ import androidx.room.PrimaryKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 @Entity(tableName = "User")
 public class User implements MyEntity {
     @PrimaryKey
@@ -40,5 +42,22 @@ public class User implements MyEntity {
         obj.put("email", email);
         obj.put("hashPassword", hashPassword);
         return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return idUser == user.idUser &&
+                Objects.equals(firstname, user.firstname) &&
+                Objects.equals(surname, user.surname) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(hashPassword, user.hashPassword);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idUser, firstname, surname, email, hashPassword);
     }
 }

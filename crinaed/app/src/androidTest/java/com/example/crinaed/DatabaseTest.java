@@ -1,6 +1,7 @@
 package com.example.crinaed;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
@@ -20,6 +21,7 @@ import com.example.crinaed.database.entity.join.CommitmentWithMyStep;
 import com.example.crinaed.database.entity.join.CourseBoughtWithCourse;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.database.repository.RepositoryManager;
+import com.example.crinaed.util.Category;
 import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Single;
 import com.example.crinaed.util.Util;
@@ -66,13 +68,14 @@ public class DatabaseTest {
     public void testServerLoad(){
         ApplicationProvider.getApplicationContext().getApplicationContext().deleteDatabase(AppDatabase.DATABASE_NAME);
         try{
+            /* TODO add the session id in the shared preferences on the login */
             // check the connection with the server and the parse of the results.
             sessionId = ServerManager.getInstance(application).login("ciaobello", "p").get(3,TimeUnit.SECONDS);
             assertNotEquals("", sessionId);
             assertTrue(true);
         } catch (ExecutionException | TimeoutException | JSONException | InterruptedException e) {
             e.printStackTrace();
-            fail();
+            fail(); // maybe sever offline
         }
         //addCommitment();
         changeStepDone();
@@ -84,8 +87,8 @@ public class DatabaseTest {
     private void addCommitment(){
         final MyCommitment mc = new MyCommitment(-1, "Studiare", "Studiare per la sessione di giugno", new Date().getTime(), repositoryManager.getIdUser());
         final MyStep[] steps = new MyStep[2];
-        steps[0] = new MyStep(-1, -1, "Studiare mobile", "ore", 6, 1, "progression");
-        steps[1] = new MyStep(-1, -1, "Studiare metodi numerici", "ore", 6, 1, "progression");
+        steps[0] = new MyStep(-1, -1, "Studiare mobile", "ore", 6, 1, "progression" , Category.MENTAL);
+        steps[1] = new MyStep(-1, -1, "Studiare metodi numerici", "ore", 6, 1, "progression", Category.MENTAL);
 
         repositoryManager.getCommitmentRepository().insert(new Lambda() {
             @Override
@@ -97,11 +100,12 @@ public class DatabaseTest {
     }
 
     private void changeStepDone(){
-        final LiveData<MyStepDoneWithMyStep> s = repositoryManager.getCommitmentRepository().getStepOnGoing(42L);
+        final LiveData<List<MyStepDoneWithMyStep>> s = repositoryManager.getCommitmentRepository().getStepOnGoing();
         final Single<Boolean> b = new Single<>(true);
-        s.observeForever(new Observer<MyStepDoneWithMyStep>() {
+        s.observeForever(new Observer<List<MyStepDoneWithMyStep>>() {
             @Override
-            public void onChanged(MyStepDoneWithMyStep step) {
+            public void onChanged(List<MyStepDoneWithMyStep> steps) {
+                MyStepDoneWithMyStep step=steps.get(0);
                 if(b.getVal()) {
                     step.stepDone.result = 100;
                     repositoryManager.getCommitmentRepository().updateMyStepDone(step.stepDone);

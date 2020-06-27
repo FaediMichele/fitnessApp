@@ -1,7 +1,11 @@
 package com.example.crinaed.util;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+
+import com.example.crinaed.R;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -14,6 +18,17 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Util {
+    private static Util instance = new Util();
+    private String sessionId="";
+
+    public String getSessionId(){
+        return sessionId;
+    }
+
+    public static Util getInstance() {
+        return Util.instance;
+    }
+
     public static long isoFormatToTimestamp(String string){
         return isoFormatToTimestamp(string, Locale.ITALY);
     }
@@ -27,6 +42,7 @@ public class Util {
                 return dateFormat.parse(string).getTime();
             }catch (Exception ex){
                 ex.printStackTrace();
+                Log.d("error", string);
             }
             e.printStackTrace();
             return 0;
@@ -58,4 +74,12 @@ public class Util {
         }
         return s;
     }
+
+    public boolean checkData(Context context){
+        /* TODO maybe is wrong */
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.sessionId), Context.MODE_PRIVATE);
+        Log.d("naed", "checkData "+preferences.contains("value"));
+        return preferences.contains("value");
+    }
+
 }

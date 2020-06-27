@@ -8,6 +8,8 @@ import com.example.crinaed.util.Util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 @Entity(primaryKeys = {"idMyStep", "dateStart"},
         foreignKeys = {@ForeignKey(entity = MyStep.class, childColumns = "idMyStep", parentColumns = "idMyStep")})
 public class MyStepDone  implements MyEntity{
@@ -32,5 +34,20 @@ public class MyStepDone  implements MyEntity{
         obj.put("dateStart", Util.timestampToIso(dateStart));
         obj.put("result", result);
         return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MyStepDone that = (MyStepDone) o;
+        return idMyStep == that.idMyStep &&
+                dateStart == that.dateStart &&
+                result == that.result;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idMyStep, dateStart, result);
     }
 }

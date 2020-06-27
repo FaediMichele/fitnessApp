@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.Objects;
 
 import static androidx.room.ForeignKey.CASCADE;
 import static androidx.room.ForeignKey.NO_ACTION;
@@ -50,5 +51,22 @@ public class FriendMessage  implements MyEntity{
         obj.put("idReceiver", idReceiver);
         obj.put("message", message);
         return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FriendMessage that = (FriendMessage) o;
+        return idFriendship == that.idFriendship &&
+                date == that.date &&
+                idSender == that.idSender &&
+                idReceiver == that.idReceiver &&
+                Objects.equals(message, that.message);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idFriendship, date, idSender, idReceiver, message);
     }
 }

@@ -9,60 +9,126 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.crinaed.ProgressBar.Step;
 import com.example.crinaed.R;
-import com.example.crinaed.view.ProgressBarView;
+import com.example.crinaed.database.entity.MyStepDone;
+import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
+import com.example.crinaed.util.Pair;
+import com.example.crinaed.util.TypeOfStep;
 
+import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * This is the Adapter for the collection of MyStepDone that is on going with one specific {@link com.example.crinaed.util.Category}
+ * It allows the user to change the value for the steps then save it.
+ */
 public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarDetailsAdapter.ProgressBarDetailsViewHolder> {
 
-    public final static int CHECKED = 0;
-    public final static int PROGRESS = 1;
+    private List<MyStepDoneWithMyStep> stepList;
+    private List<ProgressBarDetailsViewHolder> holderList;
 
-    private List<Step> stepList;
+    public ProgressBarDetailsAdapter(List<MyStepDoneWithMyStep> steps) {
+        this.stepList = steps;
+        this.holderList = new ArrayList<>(steps.size());
+    }
 
-    public ProgressBarDetailsAdapter(List<Step> stepList) {
-        this.stepList = stepList;
+    public void update(final List<MyStepDoneWithMyStep> newSteps){
+        DiffUtil.DiffResult result =  DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return stepList.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return newSteps.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                MyStepDoneWithMyStep old =stepList.get(oldItemPosition);
+                MyStepDoneWithMyStep newI =stepList.get(newItemPosition);
+                return old.stepDone.idMyStep==newI.stepDone.idMyStep && old.stepDone.dateStart == newI.stepDone.dateStart;
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                MyStepDoneWithMyStep old =stepList.get(oldItemPosition);
+                MyStepDoneWithMyStep newI =stepList.get(newItemPosition);
+                return old.equals(newI);
+            }
+        });
+        result.dispatchUpdatesTo(this);
     }
 
     @NonNull
     @Override
     public ProgressBarDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView;
-        switch (viewType){
-            case CHECKED:
+        TypeOfStep type=TypeOfStep.values()[viewType];
+        switch (type){
+            case CHECKLIST:
                 itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_checked_progress_bar, parent, false);
                 break;
-            case PROGRESS:
+            case PROGRESSION:
                 itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progressive_progress_bar, parent, false);
                 break;
             default:
                 itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progressive_progress_bar, parent, false);
                 break;
         }
-        return new ProgressBarDetailsViewHolder(itemView);
+        ProgressBarDetailsViewHolder ret = new ProgressBarDetailsViewHolder(itemView);
+        holderList.add(ret);
+        return ret;
+    }
+
+    // is optimized to use return only the data that has been changed.
+    public Pair<Boolean, MyStepDone[]> getDataToSave(){
+        MyStepDone[] ret = new MyStepDone[stepList.size()];
+        for(int i=0; i< ret.length; i++){
+            ret[i] = stepList.get(i).stepDone;
+            if(stepList.get(i).step.getType() == TypeOfStep.CHECKLIST){
+                if(ret[i].result == (int) (holderList.get(i).checkBox.isChecked()?stepList.get(i).step.max:0)){
+                    ret[i]=null;
+                    continue;
+                }
+                ret[i].result = (int) (holderList.get(i).checkBox.isChecked()?stepList.get(i).step.max:0);
+            } else{
+                if(holderList.get(i).editText.getText().toString().equals(Integer.valueOf(ret[i].result).toString())){
+                    ret[i]=null;
+                    continue;
+                }
+                try{
+                    ret[i].result = Integer.parseInt(holderList.get(i).editText.getText().toString());
+                } catch (NumberFormatException e) {
+                    return new Pair<>(false, null);
+                }
+            }
+        }
+        return new Pair<>(true, ret);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProgressBarDetailsViewHolder holder, int position) {
-        Step currentStep = this.stepList.get(position);
-        holder.description.setText(currentStep.getDescription());
-        if(currentStep.isChecklist()){
-            holder.checkBox.setActivated(currentStep.isChecklist());
-        }else {
-            holder.editText.setText(currentStep.getProgressPercentage().toString());
+        MyStepDoneWithMyStep currentStep = this.stepList.get(position);
+        holder.description.setText(currentStep.step.name);
+        switch (currentStep.step.getType()){
+            case CHECKLIST:
+                holder.checkBox.setChecked(currentStep.stepDone.result == currentStep.step.max);
+                break;
+            case PROGRESSION:
+                holder.editText.setText(String.valueOf(currentStep.stepDone.result), TextView.BufferType.EDITABLE);
+                break;
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(this.stepList.get(position).isChecklist()){
-            return CHECKED;
-        }
-        return  PROGRESS;
+        return this.stepList.get(position).step.getType().ordinal();
     }
 
     @Override
@@ -70,7 +136,7 @@ public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarD
         return this.stepList.size();
     }
 
-    class ProgressBarDetailsViewHolder extends RecyclerView.ViewHolder {
+    static class ProgressBarDetailsViewHolder extends RecyclerView.ViewHolder {
 
         View itemView;
         TextView description;
@@ -87,9 +153,5 @@ public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarD
             }
             this.itemView = itemView;;
         }
-    }
-
-    enum LayoutType{
-        CHECKED,  PROGRESS
     }
 }

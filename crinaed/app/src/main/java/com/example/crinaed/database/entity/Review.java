@@ -7,6 +7,8 @@ import com.example.crinaed.util.Util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 @Entity(primaryKeys = {"idSchool", "idUser"})
 public class Review  implements MyEntity{
     public long idSchool;
@@ -35,5 +37,21 @@ public class Review  implements MyEntity{
         obj.put("val", val);
         obj.put("comment", comment);
         return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Review review = (Review) o;
+        return idSchool == review.idSchool &&
+                idUser == review.idUser &&
+                val == review.val &&
+                Objects.equals(comment, review.comment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idSchool, idUser, val, comment);
     }
 }

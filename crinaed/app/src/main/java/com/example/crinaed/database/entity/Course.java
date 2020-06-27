@@ -6,6 +6,8 @@ import androidx.room.PrimaryKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 @Entity
 public class Course implements MyEntity{
     @PrimaryKey public long idCourse;
@@ -13,7 +15,6 @@ public class Course implements MyEntity{
     public String name;
     public String desc;
     public int minimumLevel;
-
     public long idSchool;
 
     public Course(long idCourse, String cat, String name, String desc, int minimumLevel, long idSchool){
@@ -43,4 +44,24 @@ public class Course implements MyEntity{
         obj.put("minimumLevel", minimumLevel);
         return obj;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return idCourse == course.idCourse &&
+                minimumLevel == course.minimumLevel &&
+                idSchool == course.idSchool &&
+                Objects.equals(cat, course.cat) &&
+                Objects.equals(name, course.name) &&
+                Objects.equals(desc, course.desc);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idCourse);
+    }
+
 }

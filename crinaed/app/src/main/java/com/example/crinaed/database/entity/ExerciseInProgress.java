@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity(primaryKeys = {"idUser", "idExercise"})
 public class ExerciseInProgress  implements MyEntity{
@@ -40,5 +41,22 @@ public class ExerciseInProgress  implements MyEntity{
         obj.put("numStep", numStep);
         obj.put("lastEdit", Util.timestampToIso(lastEdit));
         return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExerciseInProgress that = (ExerciseInProgress) o;
+        return idUser == that.idUser &&
+                idExercise == that.idExercise &&
+                Double.compare(that.progression, progression) == 0 &&
+                numStep == that.numStep &&
+                lastEdit == that.lastEdit;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idUser, idExercise, progression, numStep, lastEdit);
     }
 }

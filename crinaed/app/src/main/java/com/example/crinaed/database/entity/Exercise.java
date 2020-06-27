@@ -8,6 +8,8 @@ import com.example.crinaed.util.Util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 @Entity
 public class Exercise  implements MyEntity{
     @PrimaryKey public long idExercise;
@@ -50,5 +52,24 @@ public class Exercise  implements MyEntity{
         obj.put("desc", desc);
         obj.put("idCourse", idCourse);
         return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Exercise exercise = (Exercise) o;
+        return idExercise == exercise.idExercise &&
+                level == exercise.level &&
+                PE == exercise.PE &&
+                duration == exercise.duration &&
+                idCourse == exercise.idCourse &&
+                Objects.equals(name, exercise.name) &&
+                Objects.equals(desc, exercise.desc);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idExercise, level, PE, duration, name, desc, idCourse);
     }
 }

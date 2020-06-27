@@ -8,6 +8,8 @@ import com.example.crinaed.util.Util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 @Entity
 public class MyCommitment  implements MyEntity{
     @PrimaryKey public long idCommitment;
@@ -41,5 +43,22 @@ public class MyCommitment  implements MyEntity{
         obj.put("desc", desc);
         obj.put("idUser", idUser);
         return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MyCommitment that = (MyCommitment) o;
+        return idCommitment == that.idCommitment &&
+                creationDate == that.creationDate &&
+                idUser == that.idUser &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(desc, that.desc);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idCommitment, name, desc, creationDate, idUser);
     }
 }

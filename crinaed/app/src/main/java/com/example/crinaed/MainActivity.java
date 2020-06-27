@@ -1,10 +1,22 @@
 package com.example.crinaed;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.ServerManager;
+import com.example.crinaed.util.Util;
+
+import org.json.JSONException;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +34,22 @@ public class MainActivity extends AppCompatActivity {
         transaction0.replace(R.id.container, pagerFragment, TAG_PAGER);
         transaction0.addToBackStack(null);
         transaction0.commit();
+
+        DatabaseUtil.getInstance().setApplication(this);
+
+        /* TODO Change the following code with the page of the login */
+        if(true){ // delete shared preferences ONLY FOR DEBUG
+            SharedPreferences settings = getSharedPreferences(getString(R.string.sessionId), Context.MODE_PRIVATE);
+            settings.edit().clear().commit();
+        }
+
+        if(!Util.getInstance().checkData(this)){
+            try {
+                ServerManager.getInstance(this).login("ciaobello", "p");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
 //        ObjectiveFragment objectiveFragment = new ObjectiveFragment();
 //        FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();

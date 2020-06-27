@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity(primaryKeys = {"idUser", "date"})
 public class History  implements MyEntity{
@@ -34,5 +35,20 @@ public class History  implements MyEntity{
         obj.put("date", Util.timestampToIso(date));
         obj.put("idExercise", idExercise);
         return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        History history = (History) o;
+        return idUser == history.idUser &&
+                date == history.date &&
+                idExercise == history.idExercise;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idUser, date, idExercise);
     }
 }

@@ -8,6 +8,8 @@ import androidx.room.PrimaryKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 import static androidx.room.ForeignKey.NO_ACTION;
 
 @Entity(foreignKeys =
@@ -43,5 +45,20 @@ public class Friendship  implements MyEntity{
         obj.put("idUser1", idUser1);
         obj.put("idUser2", idUser2);
         return obj;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Friendship that = (Friendship) o;
+        return idFriendship == that.idFriendship &&
+                idUser1 == that.idUser1 &&
+                idUser2 == that.idUser2;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idFriendship, idUser1, idUser2);
     }
 }

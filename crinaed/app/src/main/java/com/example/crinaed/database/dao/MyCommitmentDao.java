@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import androidx.room.TypeConverter;
 import androidx.room.Update;
 
 import com.example.crinaed.database.entity.MyCommitment;
@@ -63,9 +64,14 @@ public interface MyCommitmentDao {
     MyStepDone getLastStepDone(long idMyStep);
 
 
+
     @Transaction
-    @Query("SELECT * FROM MyStepDone WHERE idMyStep = (:idMyStep) ORDER BY dateStart DESC LIMIT 1")
-    LiveData<MyStepDoneWithMyStep> getLastMyStepDoneWithMyStep(long idMyStep);
+    @Query("SELECT * FROM MyStepDone WHERE dateStart IN(SELECT MAX(dateStart) FROM MyStepDone GROUP BY idMyStep) AND idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category))")
+    LiveData<List<MyStepDoneWithMyStep>> getLastMyStepDoneWithMyStep(int category);
+
+    @Transaction
+    @Query("SELECT * FROM MyStepDone WHERE dateStart IN(SELECT MAX(dateStart) FROM MyStepDone GROUP BY idMyStep) AND idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category))")
+    List<MyStepDoneWithMyStep> getLastMyStepDoneWithMyStepList(int category);
 
 
     @Query("SELECT * FROM MyCommitment")

@@ -36,16 +36,16 @@ public class SliderProgressBar extends SliderView {
         this.sliderProgressBarAdapter = (SliderProgressBarAdapter) super.getSliderAdapter();
         int primaryColor;
         int secondaryColor;
-        switch(sliderProgressBarAdapter.getProgressBarModelList().get(position).getCategory()){
-            case SliderProgressBarModel.SOCIAL:
+        switch(sliderProgressBarAdapter.getCategoryForPosition(position)){
+            case SOCIAL:
                 primaryColor = ContextCompat.getColor(getContext(), R.color.greenPrimary);
                 secondaryColor = ContextCompat.getColor(getContext(),R.color.greenSecondary);
                 break;
-            case SliderProgressBarModel.MENTAL:
+            case MENTAL:
                 primaryColor = ContextCompat.getColor(getContext(),R.color.bluPrimary);
                 secondaryColor = ContextCompat.getColor(getContext(),R.color.bluSecondary);
                 break;
-            case SliderProgressBarModel.PHYSICAL:
+            case SPORT:
                 primaryColor = ContextCompat.getColor(getContext(),R.color.redPrimary);
                 secondaryColor = ContextCompat.getColor(getContext(),R.color.redSecondary);
                 break;
