@@ -13,7 +13,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
 import com.example.crinaed.DetailsProgressBarDialog;
-import com.example.crinaed.ProgressBarTest.TestModel.ProgressBarModel;
 import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
