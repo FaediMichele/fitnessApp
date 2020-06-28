@@ -44,7 +44,7 @@ public class GraphUtil {
 
         for(int i=0; i<data.size(); i++){
             float f= (float) Math.floor(100*(data.get(i).stepDone.result/data.get(i).step.max));
-            int index = t.getDay() - (int) TimeUnit.MILLISECONDS.toDays(now.getTime() - data.get(i).stepDone.dateStart ) -1;
+            int index = t.getDay() - (int) TimeUnit.MILLISECONDS.toDays(now.getTime() - data.get(i).stepDone.dateStart);
 
             if(sum[index]==null){
                 sum[index]=f;
@@ -56,7 +56,7 @@ public class GraphUtil {
         }
 
         for(int i=0; i < data.size(); i++){
-            int index = t.getDay() - (int) TimeUnit.MILLISECONDS.toDays(now.getTime() - data.get(i).stepDone.dateStart ) -1;
+            int index = t.getDay() - (int) TimeUnit.MILLISECONDS.toDays(now.getTime() - data.get(i).stepDone.dateStart) ;
             ret.get(index).setY(sum[index]/count[index]);
         }
 

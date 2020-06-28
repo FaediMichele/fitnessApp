@@ -83,8 +83,8 @@ public interface MyCommitmentDao {
     List<MyStepDoneWithMyStep> getMyStepDoneWithMyStepWithCategoryAndDataList(int category, long date);
 
     @Transaction
-    @Query("SELECT * FROM MyStepDone WHERE idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category) AND repetitionDay=(:repetitionDay)) AND dateStart >= (:date) ORDER BY dateStart")
-    List<MyStepDoneWithMyStep> getMyStepDoneWithMyStepWithCategoryAndDataList(int category, long date, int repetitionDay);
+    @Query("SELECT * FROM MyStepDone WHERE idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category) AND repetitionDay=(:repetitionDay)) AND dateStart >= (:dateStart)  AND dateStart < (:dateEnd)ORDER BY dateStart")
+    List<MyStepDoneWithMyStep> getMyStepDoneWithMyStepWithCategoryAndDataList(int category, long dateStart, long dateEnd, int repetitionDay);
 
     @Transaction
     @Query("SELECT * FROM MyStepDone WHERE idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category) AND repetitionDay=(:repetitionDay)) AND dateStart >= (:date) ORDER BY dateStart")

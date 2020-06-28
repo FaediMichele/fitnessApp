@@ -1,6 +1,7 @@
 package com.example.crinaed.database.repository;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
@@ -20,8 +21,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -95,7 +100,13 @@ public class CommitmentRepository extends Repository{
             future=AppDatabase.databaseWriteExecutor.submit(new Callable<List<MyStepDoneWithMyStep>>() {
                 @Override
                 public List<MyStepDoneWithMyStep> call() throws Exception {
-                    return commitmentDao.getMyStepDoneWithMyStepWithCategoryAndDataList(category.ordinal(), date.getTime(), repetition.getDay());
+                    Calendar midnight=new GregorianCalendar();
+                    midnight.set(Calendar.HOUR_OF_DAY, 0);
+                    midnight.set(Calendar.MINUTE, 0);
+                    midnight.set(Calendar.SECOND, 0);
+                    midnight.set(Calendar.MILLISECOND, 0);
+                    Log.d("naed", "midnight: " + midnight.getTime());
+                    return commitmentDao.getMyStepDoneWithMyStepWithCategoryAndDataList(category.ordinal(), date.getTime(), midnight.getTime().getTime(), repetition.getDay());
                 }
             });
             ret=future.get();
