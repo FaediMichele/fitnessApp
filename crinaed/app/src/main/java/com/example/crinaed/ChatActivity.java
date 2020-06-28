@@ -35,8 +35,8 @@ public class ChatActivity extends AppCompatActivity {
         //delete status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        this.name = findViewById(R.id.name);
-        this.lastName = findViewById(R.id.last_name);
+        this.name = findViewById(R.id.name_and_last_name);
+        this.lastName = findViewById(R.id.name_last_name);
         this.imageProfile = findViewById(R.id.image_profile);
 
         Bundle dataForChatActivity = getIntent().getExtras();

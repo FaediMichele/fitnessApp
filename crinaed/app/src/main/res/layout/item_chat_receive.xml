@@ -7,11 +7,11 @@
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="10dp"
         app:cardCornerRadius="20dp"
         android:layout_marginTop="10dp"
-        app:cardBackgroundColor="@color/white">
+        app:cardBackgroundColor="@color/orange">
         <TextView
             android:id="@+id/chat_text_sent_receive"
             android:layout_width="wrap_content"
