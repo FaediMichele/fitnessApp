@@ -13,11 +13,15 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.example.crinaed.util.Category;
 import com.example.crinaed.util.Period;
 import com.example.crinaed.view.GraphUtil;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.renderer.YAxisRenderer;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import androidx.fragment.app.Fragment;
 
@@ -150,8 +154,11 @@ public class ChartFragment extends Fragment {
         line.setData(lineData);
         line.animateXY(1000,1000);
         line.animate();
-        line.setVisibleYRangeMinimum(100, YAxis.AxisDependency.LEFT);
         line.setMinimumHeight(200);
+        Description d= new Description();
+        d.setTextColor(Color.argb(0,0,0,0)); // hide description
+        line.setDescription(d);
+        line.setVisibleYRange(0,120, YAxis.AxisDependency.LEFT);
     }
 
     private void setLineDataSet(LineData lineData, LineDataSet lineDataSet){
@@ -162,6 +169,8 @@ public class ChartFragment extends Fragment {
         lineDataSet.setValueTextColor(Color.argb(0,0,0,0)); // invisible value
         lineDataSet.setCircleRadius(lineDataSet.getLineWidth()/2); // invisible circle
         lineDataSet.setCircleColor(lineDataSet.getColor());        // invisible circle
+        lineDataSet.setLabel("");                                  // hide legend text
+        lineDataSet.setForm(Legend.LegendForm.NONE);               // hide legend color
     }
 
 

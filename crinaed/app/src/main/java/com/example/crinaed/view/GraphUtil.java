@@ -31,15 +31,14 @@ public class GraphUtil {
         List<MyStepDoneWithMyStep> data = repo.getStepHistory(c, periodToDate(t), dayForStep);
         List<Entry> ret = new ArrayList<>();
 
-        if(data.size()==0){
-            ret.add(new Entry(0,0));
-            ret.add(new Entry(1,0));
-            return ret;
-        }
-
         for(int i =0; i< t.getDay();i++){
             ret.add(new Entry(i+1,0));
         }
+        if(data.size()==0){
+            return ret;
+        }
+
+
 
         Date now = new Date();
 
@@ -48,19 +47,15 @@ public class GraphUtil {
 
         for(int i=0; i<data.size(); i++){
             float f= (float) Math.floor(100*(data.get(i).stepDone.result/data.get(i).step.max));
-            // Log.d("naed", "float: " +f);
-            Log.d("naed", "graph: " + c.name()+ " | " + Util.timestampToIso(data.get(i).stepDone.dateStart) + " || " +data.get(i).step.name + " || " + (float) (data.get(i).stepDone.result/data.get(i).step.max));
-
             int index = t.getDay() - (int) TimeUnit.MILLISECONDS.toDays(now.getTime() - data.get(i).stepDone.dateStart ) -1;
 
-            Log.d("naed", "graph index: "+ index);
-
             if(sum[index]==null){
-                sum[index]=0f;
-                count[index]=0;
+                sum[index]=f;
+                count[index]=1;
+            } else {
+                sum[index] = sum[index] + f;
+                count[index] = count[index] + 1;
             }
-            sum[index] = sum[index]+f;
-            count[index] = count[index]+1;
         }
 
         for(int i=0; i < data.size(); i++){
