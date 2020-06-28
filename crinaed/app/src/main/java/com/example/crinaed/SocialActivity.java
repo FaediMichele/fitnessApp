@@ -64,12 +64,12 @@ public class SocialActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("id",modelloFittizio.id);
-                    bundle.putString("nome",modelloFittizio.nome);
-                    bundle.putString("lastName",modelloFittizio.cognome);
-                    bundle.putString("email",modelloFittizio.email);
-                    bundle.putString("titleObjective",modelloFittizio.titoloObbiettivo);
-                    bundle.putString("titleStep",modelloFittizio.nome);
+                    bundle.putString(ChatActivity.SOCIAL_KEY_ID,modelloFittizio.id);
+                    bundle.putString(ChatActivity.SOCIAL_KEY_NAME,modelloFittizio.nome);
+                    bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME,modelloFittizio.cognome);
+                    bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL,modelloFittizio.email);
+                    bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE,modelloFittizio.titoloObbiettivo);
+                    bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP,modelloFittizio.nome);
                     Intent chatIntent = new Intent(getApplicationContext(),ChatActivity.class);
                     chatIntent.putExtras(bundle);
                     startActivity(chatIntent);

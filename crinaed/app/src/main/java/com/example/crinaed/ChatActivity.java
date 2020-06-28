@@ -21,9 +21,6 @@ public class ChatActivity extends AppCompatActivity {
     public static final String SOCIAL_KEY_TITLE_OBJECTIVE = "TITLE_OBJECTIVE";
     public static final String SOCIAL_KEY_TITLE_STEP = "TITLE_STEP";
 
-
-
-
     String id;
     TextView name;
     TextView lastName;
@@ -42,9 +39,9 @@ public class ChatActivity extends AppCompatActivity {
         this.lastName = findViewById(R.id.last_name);
         this.imageProfile = findViewById(R.id.image_profile);
 
-        this.id = savedInstanceState.getString(ChatActivity.SOCIAL_KEY_ID);
-        this.name.setText(savedInstanceState.getString(SOCIAL_KEY_NAME));
-        this.lastName.setText(savedInstanceState.getString(SOCIAL_KEY_LAST_NAME));
-
+        Bundle dataForChatActivity = getIntent().getExtras();
+        this.id = dataForChatActivity.getString(ChatActivity.SOCIAL_KEY_ID);
+        this.name.setText(dataForChatActivity.getString(SOCIAL_KEY_NAME));
+        this.lastName.setText(dataForChatActivity.getString(SOCIAL_KEY_LAST_NAME));
     }
 }
