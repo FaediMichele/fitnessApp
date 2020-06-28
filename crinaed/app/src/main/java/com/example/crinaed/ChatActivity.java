@@ -41,7 +41,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {//macna il back e le informazioni dell'utente
         super.onCreate(savedInstanceState);
         setTheme(R.style.Theme_Social);
         setContentView(R.layout.activity_chat);
@@ -70,7 +70,7 @@ public class ChatActivity extends AppCompatActivity {
         private List<ModelloFittizioMessage> listChatModel;
 
         public ChatAdapter(List<ModelloFittizioMessage> listChatModel) {
-            this.listChatModel = listChatModel;//la lista deve essere ordinata dal messaggio meno recente a quello più recente in posizione 0 c'è quello meno recente 
+            this.listChatModel = listChatModel;//la lista deve essere ordinata dal messaggio meno recente a quello più recente in posizione 0 c'è quello meno recente
         }
 
         @NonNull
