@@ -2,13 +2,14 @@ package com.example.crinaed;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
+import com.example.crinaed.database.repository.CommitmentRepository;
 import com.github.mikephil.charting.charts.LineChart;
 import com.example.crinaed.util.Category;
 import com.example.crinaed.util.Period;
@@ -19,18 +20,16 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.renderer.YAxisRenderer;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 
+/**
+ * Test fragment of the graph. use the livedata to view the data. and allow to choose the period of time to visualize and the type of repetition for the steps
+ */
 public class ChartFragment extends Fragment {
     private LineChart social;
     private LineChart sport;
@@ -38,6 +37,7 @@ public class ChartFragment extends Fragment {
 
     private Period repetition;
     private Period period;
+    CommitmentRepository repo = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository();
 
 
     @Override
@@ -63,7 +63,12 @@ public class ChartFragment extends Fragment {
         repetition=Period.DAY;
         period=Period.WEEK;
 
-        updatePeriod();
+
+
+        setLine(mental, Category.MENTAL, period, getString(R.string.mental));
+        setLine(social, Category.SOCIAL, period, getString(R.string.social));
+        setLine(sport, Category.SPORT, period, getString(R.string.sport));
+
 
         repetition_day.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,34 +148,36 @@ public class ChartFragment extends Fragment {
 
     private void updatePeriod(){
         setLine(social, Category.SOCIAL, period, getString(R.string.social));
-        setLine(sport, Category.SPORT, period, getString(R.string.sport));
-        setLine(mental, Category.MENTAL, period, getString(R.string.mental));
+        setLine(sport,  Category.SPORT, period, getString(R.string.sport));
+        setLine(mental,  Category.MENTAL, period, getString(R.string.mental));
     }
 
     private void setLine(LineChart line, Category c, Period t, String label){
-        List<Entry> entries =GraphUtil.getGraphData(c, t, repetition);
+        List<MyStepDoneWithMyStep> data = repo.getStepHistoryList(c, period.daysAgo(), repetition);
+        List<Entry> entries = GraphUtil.getGraphData(data, t);
         LineData lineData = new LineData();
-        setLineDataSet(lineData, new LineDataSet(entries, label));
+        setLineDataSet(lineData, new LineDataSet(entries, label), c);
         line.setData(lineData);
-        line.animateXY(1000,1000);
+        line.animateY(300);
         line.animate();
         line.setMinimumHeight(200);
         Description d= new Description();
         d.setTextColor(Color.argb(0,0,0,0)); // hide description
         line.setDescription(d);
         line.setVisibleYRange(0,120, YAxis.AxisDependency.LEFT);
+        line.setScaleXEnabled(false);
     }
 
-    private void setLineDataSet(LineData lineData, LineDataSet lineDataSet){
-        lineDataSet.setColor(Color.rgb(255, 0, 100));
+    private void setLineDataSet(LineData lineData, LineDataSet lineDataSet, Category c){
+        lineDataSet.setColor(c.toColor(getActivity()).getX());
         lineDataSet.setCubicIntensity(0.5f);
         lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
         lineData.addDataSet(lineDataSet);
-        lineDataSet.setValueTextColor(Color.argb(0,0,0,0)); // invisible value
-        lineDataSet.setCircleRadius(lineDataSet.getLineWidth()/2); // invisible circle
-        lineDataSet.setCircleColor(lineDataSet.getColor());        // invisible circle
-        lineDataSet.setLabel("");                                  // hide legend text
-        lineDataSet.setForm(Legend.LegendForm.NONE);               // hide legend color
+        lineDataSet.setValueTextColor(Color.argb(0,0,0,0));  // invisible value
+        lineDataSet.setCircleRadius(lineDataSet.getLineWidth());                    // invisible circle
+        lineDataSet.setCircleColor(c.toColor(getActivity()).getY());                // invisible circle
+        lineDataSet.setLabel("");                                                   // hide legend text
+        lineDataSet.setForm(Legend.LegendForm.NONE);                                // hide legend color
     }
 
 

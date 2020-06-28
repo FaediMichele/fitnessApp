@@ -15,7 +15,6 @@ import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.util.Category;
 import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Period;
-import com.example.crinaed.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class CommitmentRepository extends Repository{
@@ -45,7 +43,7 @@ public class CommitmentRepository extends Repository{
     }
 
 
-    public List<MyStepDoneWithMyStep> getStepHistory(final Category category){
+    public List<MyStepDoneWithMyStep> getStepHistoryList(final Category category){
         updateMyStepDone();
         Future<List<MyStepDoneWithMyStep>> future;
         List<MyStepDoneWithMyStep> ret=null;
@@ -65,7 +63,7 @@ public class CommitmentRepository extends Repository{
     }
 
 
-    public List<MyStepDoneWithMyStep> getStepHistory(final Category category, final Date date){
+    public List<MyStepDoneWithMyStep> getStepHistoryList(final Category category, final Date date){
         updateMyStepDone();
         Future<List<MyStepDoneWithMyStep>> future;
         List<MyStepDoneWithMyStep> ret=null;
@@ -73,7 +71,7 @@ public class CommitmentRepository extends Repository{
             future=AppDatabase.databaseWriteExecutor.submit(new Callable<List<MyStepDoneWithMyStep>>() {
                 @Override
                 public List<MyStepDoneWithMyStep> call() throws Exception {
-                    return commitmentDao.getMyStepDoneWithMyStepWithCategoryAndData(category.ordinal(), date.getTime());
+                    return commitmentDao.getMyStepDoneWithMyStepWithCategoryAndDataList(category.ordinal(), date.getTime());
                 }
             });
             ret=future.get();
@@ -83,7 +81,13 @@ public class CommitmentRepository extends Repository{
         return ret;
     }
 
-    public List<MyStepDoneWithMyStep> getStepHistory(final Category category, final Date date, final Period repetition){
+    public LiveData<List<MyStepDoneWithMyStep>> getStepHistory(final Category category, final Date date, final Period repetition){
+        updateMyStepDone();
+        return commitmentDao.getMyStepDoneWithMyStepWithCategoryAndData(category.ordinal(), date.getTime(), repetition.getDay());
+
+    }
+
+    public List<MyStepDoneWithMyStep> getStepHistoryList(final Category category, final Date date, final Period repetition){
         updateMyStepDone();
         Future<List<MyStepDoneWithMyStep>> future;
         List<MyStepDoneWithMyStep> ret=null;
@@ -91,7 +95,7 @@ public class CommitmentRepository extends Repository{
             future=AppDatabase.databaseWriteExecutor.submit(new Callable<List<MyStepDoneWithMyStep>>() {
                 @Override
                 public List<MyStepDoneWithMyStep> call() throws Exception {
-                    return commitmentDao.getMyStepDoneWithMyStepWithCategoryAndData(category.ordinal(), date.getTime(), repetition.getDay());
+                    return commitmentDao.getMyStepDoneWithMyStepWithCategoryAndDataList(category.ordinal(), date.getTime(), repetition.getDay());
                 }
             });
             ret=future.get();

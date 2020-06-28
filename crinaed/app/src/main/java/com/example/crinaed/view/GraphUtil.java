@@ -26,9 +26,8 @@ public class GraphUtil {
     private GraphUtil(){
     }
 
-    public static List<Entry> getGraphData(Category c, Period t, Period dayForStep){
-        CommitmentRepository repo = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository();
-        List<MyStepDoneWithMyStep> data = repo.getStepHistory(c, periodToDate(t), dayForStep);
+    // Period should not be too big. It will cause delay
+    public static List<Entry> getGraphData(List<MyStepDoneWithMyStep> data, Period t){
         List<Entry> ret = new ArrayList<>();
 
         for(int i =0; i< t.getDay();i++){
@@ -37,8 +36,6 @@ public class GraphUtil {
         if(data.size()==0){
             return ret;
         }
-
-
 
         Date now = new Date();
 
@@ -64,18 +61,5 @@ public class GraphUtil {
         }
 
         return ret;
-    }
-
-
-    private static Date periodToDate(Period p){
-        Date ret = new Date();
-        return decrementDays(ret, p.getDay());
-    }
-
-    private static Date decrementDays(Date d, int days){
-        Calendar cal= Calendar.getInstance();
-        cal.setTime(d);
-        cal.add(Calendar.DATE, -days);
-        return cal.getTime();
     }
 }
