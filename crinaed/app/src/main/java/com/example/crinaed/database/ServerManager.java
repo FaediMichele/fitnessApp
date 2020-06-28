@@ -33,7 +33,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.Semaphore;
 
 public class ServerManager {
-    private static final String SERVER = "http://192.168.1.210:8080/";
+    private static final String SERVER = "http://192.168.1.111:8080/";
     private static ServerManager instance;
     private Context context;
     private ServerManager(Context context){

@@ -82,6 +82,10 @@ public interface MyCommitmentDao {
     @Query("SELECT * FROM MyStepDone WHERE idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category)) AND dateStart >= (:date) ORDER BY dateStart")
     List<MyStepDoneWithMyStep> getMyStepDoneWithMyStepWithCategoryAndData(int category, long date);
 
+    @Transaction
+    @Query("SELECT * FROM MyStepDone WHERE idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category) AND repetitionDay=(:repetitionDay)) AND dateStart >= (:date) ORDER BY dateStart")
+    List<MyStepDoneWithMyStep> getMyStepDoneWithMyStepWithCategoryAndData(int category, long date, int repetitionDay);
+
 
     @Query("SELECT * FROM MyCommitment")
     List<MyCommitment> getCommitmentList();

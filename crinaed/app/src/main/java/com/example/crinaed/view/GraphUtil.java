@@ -8,9 +8,12 @@ import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.database.repository.CommitmentRepository;
 import com.example.crinaed.util.Category;
+import com.example.crinaed.util.Pair;
 import com.example.crinaed.util.Period;
 import com.example.crinaed.util.Util;
+import com.github.mikephil.charting.data.Entry;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,27 +26,46 @@ public class GraphUtil {
     private GraphUtil(){
     }
 
-    public static LinkedHashMap<String, Float> getGraphData(Category c, Period t){
+    public static List<Entry> getGraphData(Category c, Period t, Period dayForStep){
         CommitmentRepository repo = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository();
-        List<MyStepDoneWithMyStep> data = repo.getStepHistory(c, periodToDate(t));
-        LinkedHashMap<String, Float> ret = new LinkedHashMap<>();
+        List<MyStepDoneWithMyStep> data = repo.getStepHistory(c, periodToDate(t), dayForStep);
+        List<Entry> ret = new ArrayList<>();
 
-        if(data.size()==1){
-            int dayToCount = t==Period.EVER? 5: t.getDay();
-            ret.put("Start", 100f);
-            Date d= Util.timestampToDate(data.get(0).stepDone.dateStart) ;
-            d= decrementDays(d, dayToCount);
-            for(int i=0; i < dayToCount && d.getTime()<data.get(0).stepDone.dateStart; i++){
-
-                ret.put(Util.timestampToFormat(d.getTime(), "MM/dd"), 0f);
-                d=decrementDays(d, -i);
-            }
+        if(data.size()==0){
+            ret.add(new Entry(0,0));
+            ret.add(new Entry(1,0));
+            return ret;
         }
+
+        for(int i =0; i< t.getDay();i++){
+            ret.add(new Entry(i+1,0));
+        }
+
+        Date now = new Date();
+
+        Float[] sum= new Float[t.getDay()];
+        Integer[] count= new Integer[t.getDay()];
+
         for(int i=0; i<data.size(); i++){
             float f= (float) Math.floor(100*(data.get(i).stepDone.result/data.get(i).step.max));
-            Log.d("naed", "float: " +f);
-            // Log.d("naed", "graph: " + Util.timestampToIso(data.get(i).stepDone.dateStart) + " || " +data.get(i).step.name + " || " + (float) (data.get(i).stepDone.result/data.get(i).step.max));
-            ret.put(Util.timestampToFormat(data.get(i).stepDone.dateStart, "MM/dd"), f);
+            // Log.d("naed", "float: " +f);
+            Log.d("naed", "graph: " + c.name()+ " | " + Util.timestampToIso(data.get(i).stepDone.dateStart) + " || " +data.get(i).step.name + " || " + (float) (data.get(i).stepDone.result/data.get(i).step.max));
+
+            int index = t.getDay() - (int) TimeUnit.MILLISECONDS.toDays(now.getTime() - data.get(i).stepDone.dateStart ) -1;
+
+            Log.d("naed", "graph index: "+ index);
+
+            if(sum[index]==null){
+                sum[index]=0f;
+                count[index]=0;
+            }
+            sum[index] = sum[index]+f;
+            count[index] = count[index]+1;
+        }
+
+        for(int i=0; i < data.size(); i++){
+            int index = t.getDay() - (int) TimeUnit.MILLISECONDS.toDays(now.getTime() - data.get(i).stepDone.dateStart ) -1;
+            ret.get(index).setY(sum[index]/count[index]);
         }
 
         return ret;

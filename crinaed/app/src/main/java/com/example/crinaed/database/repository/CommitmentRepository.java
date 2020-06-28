@@ -14,6 +14,7 @@ import com.example.crinaed.database.entity.join.CommitmentWithMyStep;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.util.Category;
 import com.example.crinaed.util.Lambda;
+import com.example.crinaed.util.Period;
 import com.example.crinaed.util.Util;
 
 import org.json.JSONArray;
@@ -73,6 +74,24 @@ public class CommitmentRepository extends Repository{
                 @Override
                 public List<MyStepDoneWithMyStep> call() throws Exception {
                     return commitmentDao.getMyStepDoneWithMyStepWithCategoryAndData(category.ordinal(), date.getTime());
+                }
+            });
+            ret=future.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    public List<MyStepDoneWithMyStep> getStepHistory(final Category category, final Date date, final Period repetition){
+        updateMyStepDone();
+        Future<List<MyStepDoneWithMyStep>> future;
+        List<MyStepDoneWithMyStep> ret=null;
+        try{
+            future=AppDatabase.databaseWriteExecutor.submit(new Callable<List<MyStepDoneWithMyStep>>() {
+                @Override
+                public List<MyStepDoneWithMyStep> call() throws Exception {
+                    return commitmentDao.getMyStepDoneWithMyStepWithCategoryAndData(category.ordinal(), date.getTime(), repetition.getDay());
                 }
             });
             ret=future.get();
