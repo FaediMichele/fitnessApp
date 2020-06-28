@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class CommitmentRepository extends Repository{
@@ -42,14 +43,67 @@ public class CommitmentRepository extends Repository{
         return commitmentDao.getCommitmentWithMyStep();
     }
 
+
+    public List<MyStepDoneWithMyStep> getStepHistory(final Category category){
+        updateMyStepDone();
+        Future<List<MyStepDoneWithMyStep>> future;
+        List<MyStepDoneWithMyStep> ret=null;
+        try{
+            future=AppDatabase.databaseWriteExecutor.submit(new Callable<List<MyStepDoneWithMyStep>>() {
+                @Override
+                public List<MyStepDoneWithMyStep> call() throws Exception {
+                    return commitmentDao.getMyStepDoneWithMyStepWithCategory(category.ordinal());
+                }
+            });
+            ret=future.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+
+    }
+
+
+    public List<MyStepDoneWithMyStep> getStepHistory(final Category category, final Date date){
+        updateMyStepDone();
+        Future<List<MyStepDoneWithMyStep>> future;
+        List<MyStepDoneWithMyStep> ret=null;
+        try{
+            future=AppDatabase.databaseWriteExecutor.submit(new Callable<List<MyStepDoneWithMyStep>>() {
+                @Override
+                public List<MyStepDoneWithMyStep> call() throws Exception {
+                    return commitmentDao.getMyStepDoneWithMyStepWithCategoryAndData(category.ordinal(), date.getTime());
+                }
+            });
+            ret=future.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+
     public LiveData<List<MyStepDoneWithMyStep>> getStepOnGoing(Category category){
         updateMyStepDone();
         return commitmentDao.getLastMyStepDoneWithMyStep(category.ordinal());
     }
 
-    public List<MyStepDoneWithMyStep> getStepOnGoingList(Category category){
+    public List<MyStepDoneWithMyStep> getStepOnGoingList(final Category category){
         updateMyStepDone();
-        return commitmentDao.getLastMyStepDoneWithMyStepList(category.ordinal());
+        Future<List<MyStepDoneWithMyStep>> future;
+        List<MyStepDoneWithMyStep> ret=null;
+        try{
+            future=AppDatabase.databaseWriteExecutor.submit(new Callable<List<MyStepDoneWithMyStep>>() {
+                @Override
+                public List<MyStepDoneWithMyStep> call() throws Exception {
+                    return commitmentDao.getLastMyStepDoneWithMyStepList(category.ordinal());
+                }
+            });
+            ret=future.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
     }
 
     public Future<Pair<Long, Long[]>> insert(final Lambda l, final MyCommitment commitment, final MyStep... steps){

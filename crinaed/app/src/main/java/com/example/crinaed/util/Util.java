@@ -50,12 +50,29 @@ public class Util {
 
     }
 
+    public static String timestampToFormat(long l, String s){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(s, Locale.ITALY);
+        return dateFormat.format(new Date(l));
+    }
+
     public static String timestampToIso(long l){
         return timestampToIso(l, Locale.ITALY);
     }
     public static String timestampToIso(long lo, Locale l){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", l);
         return dateFormat.format(new Date(lo));
+    }
+
+    public static Date timestampToDate(long l){
+        return new Date(l);
+    }
+
+    public static String dateToTimestamp(Date l){
+        return dateToTimestamp(l, Locale.ITALY);
+    }
+
+    public static String dateToTimestamp(Date l, Locale lo){
+        return (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", lo)).format(l);
     }
 
 

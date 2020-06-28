@@ -74,6 +74,15 @@ public interface MyCommitmentDao {
     List<MyStepDoneWithMyStep> getLastMyStepDoneWithMyStepList(int category);
 
 
+    @Transaction
+    @Query("SELECT * FROM MyStepDone WHERE idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category)) ORDER BY dateStart")
+    List<MyStepDoneWithMyStep> getMyStepDoneWithMyStepWithCategory(int category);
+
+    @Transaction
+    @Query("SELECT * FROM MyStepDone WHERE idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category)) AND dateStart >= (:date) ORDER BY dateStart")
+    List<MyStepDoneWithMyStep> getMyStepDoneWithMyStepWithCategoryAndData(int category, long date);
+
+
     @Query("SELECT * FROM MyCommitment")
     List<MyCommitment> getCommitmentList();
 
