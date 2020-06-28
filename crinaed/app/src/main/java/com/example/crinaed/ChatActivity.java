@@ -70,7 +70,7 @@ public class ChatActivity extends AppCompatActivity {
         private List<ModelloFittizioMessage> listChatModel;
 
         public ChatAdapter(List<ModelloFittizioMessage> listChatModel) {
-            this.listChatModel = listChatModel;
+            this.listChatModel = listChatModel;//la lista deve essere ordinata dal messaggio meno recente a quello più recente in posizione 0 c'è quello meno recente 
         }
 
         @NonNull
@@ -101,14 +101,10 @@ public class ChatActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ChatVH holder, int position) {
             holder.text.setText(this.listChatModel.get(position).textMessage);
-            Log.d("cri","onBindViewHolder :" + this.listChatModel.get(position).textMessage);
-
         }
 
         @Override
         public int getItemCount() {
-            Log.d("cri","getItemCount :" +this.listChatModel.size());
-
             return this.listChatModel.size();
         }
     }
