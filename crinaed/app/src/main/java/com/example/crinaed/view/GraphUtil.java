@@ -1,23 +1,11 @@
 package com.example.crinaed.view;
 
-import android.util.Log;
-
-import androidx.lifecycle.LifecycleOwner;
-
-import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
-import com.example.crinaed.database.repository.CommitmentRepository;
-import com.example.crinaed.util.Category;
-import com.example.crinaed.util.Pair;
 import com.example.crinaed.util.Period;
-import com.example.crinaed.util.Util;
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 

@@ -16,8 +16,11 @@ public class Step implements MyEntity {
     public double incVal;
     public String unitMeasure;
     public double max;
+    public String video;
+    public boolean videoDownloaded=false;
 
-    public Step(long idExercise, int num, String name, String desc, double incVal, String unitMeasure, double max) {
+
+    public Step(long idExercise, int num, String name, String desc, double incVal, String unitMeasure, double max, String video) {
         this.idExercise = idExercise;
         this.num = num;
         this.name = name;
@@ -25,6 +28,7 @@ public class Step implements MyEntity {
         this.incVal = incVal;
         this.unitMeasure = unitMeasure;
         this.max = max;
+        this.video=video;
     }
     public Step(JSONObject obj) throws JSONException {
         this.idExercise = obj.getLong("idExercise");
@@ -34,6 +38,7 @@ public class Step implements MyEntity {
         this.incVal = obj.getDouble("incVal");
         this.unitMeasure = obj.getString("unitMeasure");
         this.max = obj.getDouble("max");
+        this.video = obj.getString("video");
     }
     @Override
     public JSONObject toJson() throws JSONException {

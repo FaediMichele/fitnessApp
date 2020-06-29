@@ -37,13 +37,4 @@ public class DatabaseUtil {
     public RepositoryManager getRepositoryManager() {
         return repositoryManager;
     }
-
-    /**
-     * TODO
-     * @param url url to download the video
-     * @param l the callback function to call when the video is downloaded and stored
-     */
-    public void downloadVideo(String url, Lambda l){
-        throw new UnsupportedOperationException();
-    }
 }

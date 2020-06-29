@@ -1,5 +1,6 @@
 package com.example.crinaed.database;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -22,8 +23,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -33,11 +42,13 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.Semaphore;
 
 public class ServerManager {
-    private static final String SERVER = "http://192.168.1.111:8080/";
+    private static final String SERVER = "http://192.168.1.111:8080";
     private static ServerManager instance;
     private Context context;
+    private FileManager fileManager;
     private ServerManager(Context context){
         this.context=context;
+        fileManager=new FileManager(context);
     }
 
     static public ServerManager getInstance(Context context){
@@ -52,8 +63,28 @@ public class ServerManager {
     }
 
 
-    public void managePost(final JSONObject body, final Lambda onResponseMethod, final Lambda onErrorMethod){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, SERVER, new Response.Listener<String>() {
+
+    public void manageGet(final String query, final Lambda onResponseMethod, final Lambda onErrorMethod){
+        Log.d("naed", "manage get");
+        StringRequest request = new StringRequest(Request.Method.GET, SERVER + (query.equals("") ? "" : "?" + query), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                onResponseMethod.run(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                onErrorMethod.run(error);
+            }
+        });
+        Volley.newRequestQueue(this.context).add(request);
+    }
+
+    public void managePost(final String body, final Lambda onResponseMethod, final Lambda onErrorMethod){
+        managePost(body, onResponseMethod, onErrorMethod, "");
+    }
+    public void managePost(final String body, final Lambda onResponseMethod, final Lambda onErrorMethod, final String query){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, SERVER+(query.equals("")?"":"?"+query), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("ServerManager", "*" + response+ "*");
@@ -72,7 +103,7 @@ public class ServerManager {
         }){
             @Override
             public byte[] getBody() throws AuthFailureError {
-                return body.toString().getBytes();
+                return body.getBytes();
             }
 
             @Override
@@ -113,7 +144,6 @@ public class ServerManager {
             public String call() {
                 try {
                     s.acquire();
-                    Log.d("naed", "confirmed");
                     return result.getVal();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -121,14 +151,12 @@ public class ServerManager {
                 }
             }
         };
-        managePost(param, new Lambda() {
+        managePost(param.toString(), new Lambda() {
             @Override
             public Object[] run(final Object... paramether) {
-                Log.d("naed", "thread launched");
                 AppDatabase.databaseWriteExecutor.submit(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d("naed", "login thread launched confirmed");
                         try {
                             DatabaseUtil.getInstance().getRepositoryManager().loadNewData(AppDatabase.getDatabase(context), paramether[0].toString());
                             JSONObject obj = new JSONObject(paramether[0].toString());
@@ -140,14 +168,11 @@ public class ServerManager {
                             editor.apply();
 
                             result.setVal(obj.getString("SessionId"));
-                            Log.d("sessionID", obj.getString("SessionId"));
                         } catch (JSONException | ExecutionException | InterruptedException e) {
                             e.printStackTrace();
                             result.setVal("");
-                            Log.d("sessionID", "here1");
                         }
                         s.release();
-                        Log.d("naed", "login released");
                     }
                 });
                 return null;
@@ -156,7 +181,7 @@ public class ServerManager {
             @Override
             public Object[] run(Object... paramether) {
                 result.setVal("");
-                Log.d("sessionID", "here2");
+                Log.d("login", "Error on login");
                 s.release();
                 return null;
             }
@@ -172,7 +197,7 @@ public class ServerManager {
         body.put("data", DatabaseUtil.getInstance().getRepositoryManager().getData());
         final Single<Boolean> result = new Single<>();
 
-        managePost(body, new Lambda() {
+        managePost(body.toString(), new Lambda() {
             @Override
             public Object[] run(Object... paramether) {
                 result.setVal(true);
@@ -201,6 +226,48 @@ public class ServerManager {
                 }
             }
         };
+        return AppDatabase.databaseWriteExecutor.submit(r);
+    }
+
+
+
+    public void downloadFile(final String filename, String directory, Lambda receiver){
+        final String query="?to=fileManager&method=getFile&filename="+filename;
+        fileManager.saveFile(SERVER+query, filename, directory, receiver);
+    }
+
+    public Future<Boolean> uploadFile(String filedata, long idResource, FileManager.FileType type, FileManager.Format format){
+        final String query="to=fileManager&method="+format.getMethod()+"&"+type.getKey()+"="+idResource;
+
+        final Semaphore s = new Semaphore(0);
+        final Single<Boolean> result = new Single<>();
+        Callable<Boolean> r = new Callable<Boolean>() {
+            @Override
+            public Boolean call() {
+                try {
+                    s.acquire();
+                    return result.getVal();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+        };
+        managePost(filedata, new Lambda() {
+            @Override
+            public Object[] run(Object... paramether) {
+                result.setVal(true);
+                s.release();
+                return null;
+            }
+        }, new Lambda() {
+            @Override
+            public Object[] run(Object... paramether) {
+                result.setVal(false);
+                s.release();
+                return null;
+            }
+        }, query);
         return AppDatabase.databaseWriteExecutor.submit(r);
     }
 

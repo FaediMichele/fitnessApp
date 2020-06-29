@@ -18,6 +18,8 @@ public class Exercise  implements MyEntity{
     public int duration; // minutes
     public String name;
     public String desc;
+    public String video;
+    public boolean videoDownloaded;
 
     public long idCourse;
 
@@ -29,6 +31,7 @@ public class Exercise  implements MyEntity{
         this.name = name;
         this.desc = desc;
         this.idCourse = idCourse;
+        videoDownloaded=false;
     }
 
     public Exercise(JSONObject obj) throws JSONException {
@@ -39,6 +42,8 @@ public class Exercise  implements MyEntity{
         this.name = obj.getString("name");
         this.desc = obj.getString("desc");
         this.idCourse = obj.getLong("idCourse");
+        this.video = obj.getString("video");
+        videoDownloaded=false;
     }
 
     @Override

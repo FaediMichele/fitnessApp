@@ -22,8 +22,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 
 import java.util.List;
 
@@ -60,8 +58,8 @@ public class ChartFragment extends Fragment {
 
         repetition_day.setChecked(true);
         day.setChecked(true);
-        repetition=Period.DAY;
-        period=Period.WEEK;
+        repetition= Period.DAY;
+        period= Period.WEEK;
 
 
 
@@ -75,12 +73,12 @@ public class ChartFragment extends Fragment {
             public void onClick(View v) {
                 if(!repetition_week.isChecked()){
                     repetition_day.setChecked(true);
-                    repetition=Period.DAY;
+                    repetition= Period.DAY;
                     updatePeriod();
                     return;
                 }
                 repetition_week.setChecked(false);
-                repetition=Period.DAY;
+                repetition= Period.DAY;
                 updatePeriod();
             }
         });
@@ -90,12 +88,12 @@ public class ChartFragment extends Fragment {
             public void onClick(View v) {
                 if(!repetition_day.isChecked()){
                     repetition_week.setChecked(true);
-                    repetition=Period.WEEK;
+                    repetition= Period.WEEK;
                     updatePeriod();
                     return;
                 }
                 repetition_day.setChecked(false);
-                repetition=Period.WEEK;
+                repetition= Period.WEEK;
                 updatePeriod();
             }
         });
@@ -106,7 +104,7 @@ public class ChartFragment extends Fragment {
                 week.setChecked(false);
                 year.setChecked(false);
                 month.setChecked(false);
-                period=Period.DAY;
+                period= Period.DAY;
                 updatePeriod();
             }
         });
@@ -117,7 +115,7 @@ public class ChartFragment extends Fragment {
                 day.setChecked(false);
                 year.setChecked(false);
                 month.setChecked(false);
-                period=Period.WEEK;
+                period= Period.WEEK;
                 updatePeriod();
             }
         });
@@ -127,7 +125,7 @@ public class ChartFragment extends Fragment {
                 week.setChecked(false);
                 day.setChecked(false);
                 month.setChecked(false);
-                period=Period.YEAR;
+                period= Period.YEAR;
                 updatePeriod();
             }
         });
@@ -137,7 +135,7 @@ public class ChartFragment extends Fragment {
                 week.setChecked(false);
                 year.setChecked(false);
                 day.setChecked(false);
-                period=Period.MONTH;
+                period= Period.MONTH;
                 updatePeriod();
             }
         });

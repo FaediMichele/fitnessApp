@@ -100,7 +100,7 @@ public class DatabaseTest {
     }
 
     private void changeStepDone(){
-        final LiveData<List<MyStepDoneWithMyStep>> s = repositoryManager.getCommitmentRepository().getStepOnGoing();
+        final LiveData<List<MyStepDoneWithMyStep>> s = repositoryManager.getCommitmentRepository().getStepOnGoing(Category.MENTAL);
         final Single<Boolean> b = new Single<>(true);
         s.observeForever(new Observer<List<MyStepDoneWithMyStep>>() {
             @Override

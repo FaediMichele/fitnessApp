@@ -46,4 +46,7 @@ public interface ExerciseAndStepDao {
 
     @Query("SELECT * FROM Exercise")
     List<Exercise> getExerciseList();
+
+    @Query("SELECT * FROM Exercise")
+    LiveData<List<Exercise>> getExercise();
 }
