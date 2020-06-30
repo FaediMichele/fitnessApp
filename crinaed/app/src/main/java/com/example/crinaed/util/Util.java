@@ -99,4 +99,8 @@ public class Util {
         return preferences.contains("value");
     }
 
+    public void setSessionId(String sessionId){
+        this.sessionId=sessionId;
+    }
+
 }

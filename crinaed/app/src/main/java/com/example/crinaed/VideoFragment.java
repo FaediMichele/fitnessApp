@@ -14,10 +14,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
+import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.database.entity.Exercise;
 import com.example.crinaed.database.repository.CommitmentRepository;
 import com.example.crinaed.database.repository.ExerciseAndStepRepository;
+import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Period;
 import com.github.mikephil.charting.charts.LineChart;
 
@@ -43,10 +46,28 @@ public class VideoFragment extends Fragment {
 
         exercise.observe(Objects.requireNonNull(getActivity()), new Observer<List<Exercise>>() {
             @Override
-            public void onChanged(List<Exercise> exercises) {
+            public void onChanged(final List<Exercise> exercises) {
                 for(int i=0; i < exercises.size(); i++){
                     if(exercises.get(i).videoDownloaded){
                         File f = new File(exercises.get(i).video);
+                        ServerManager.getInstance(getContext()).downloadFile("Exercise-912.mp4", Environment.DIRECTORY_DOWNLOADS, new Lambda() {
+                            @Override
+                            public Object[] run(Object... paramether) {
+                                if((Boolean)paramether[0]){
+                                    File f = (File) paramether[1];
+                                    ServerManager.getInstance(getContext()).uploadFile(f, 90, ServerManager.FileType.Exercise, new Lambda() {
+                                        @Override
+                                        public Object[] run(Object... paramether) {
+                                            Log.d("upload", "result: " + paramether[0].toString());
+                                            return new Object[0];
+                                        }
+                                    });
+                                } else{
+                                    Log.d("upload", "download failed");
+                                }
+                                return null;
+                            }
+                        });
                         /*try(BufferedReader reader = new BufferedReader(new FileReader(f))){
                             String s=reader.readLine();
                             while(s!=null){
@@ -62,8 +83,8 @@ public class VideoFragment extends Fragment {
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.setDataAndType(fileUri,
                                 URLConnection.guessContentTypeFromName(fileUri.toString()));*/
-                        video.setVideoPath(f.getAbsolutePath());
-                        video.start();
+                        /*video.setVideoPath(f.getAbsolutePath());
+                        video.start();*/
                     }
                 }
             }

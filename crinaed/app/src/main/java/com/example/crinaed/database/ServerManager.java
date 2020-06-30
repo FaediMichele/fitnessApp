@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -45,10 +46,20 @@ public class ServerManager {
     private static final String SERVER = "http://192.168.1.111:8080";
     private static ServerManager instance;
     private Context context;
-    private FileManager fileManager;
     private ServerManager(Context context){
         this.context=context;
-        fileManager=new FileManager(context);
+    }
+
+    public enum FileType{
+        Commitment("idCommitment"), Course("idCourse"), Exercise("idExercise");
+        private String key;
+        FileType(String key){
+            this.key=key;
+        }
+
+        public String getKey() {
+            return key;
+        }
     }
 
     static public ServerManager getInstance(Context context){
@@ -167,6 +178,7 @@ public class ServerManager {
                             editor.putString("value", obj.getString("SessionId"));
                             editor.apply();
 
+                            Util.getInstance().setSessionId(obj.getString("SessionId"));
                             result.setVal(obj.getString("SessionId"));
                         } catch (JSONException | ExecutionException | InterruptedException e) {
                             e.printStackTrace();
@@ -233,42 +245,27 @@ public class ServerManager {
 
     public void downloadFile(final String filename, String directory, Lambda receiver){
         final String query="?to=fileManager&method=getFile&filename="+filename;
-        fileManager.saveFile(SERVER+query, filename, directory, receiver);
+        File f = new File(context.getExternalFilesDir(directory), filename);
+        try {
+            f.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Could not download " + filename, Toast.LENGTH_SHORT).show();
+            Log.d("naed", "Could not download " + filename);
+        }
+
+        TransferFile.downloadFile(SERVER+query, f, receiver);
     }
 
-    public Future<Boolean> uploadFile(String filedata, long idResource, FileManager.FileType type, FileManager.Format format){
-        final String query="to=fileManager&method="+format.getMethod()+"&"+type.getKey()+"="+idResource;
+    public void uploadFile(final File file, long idResource, FileType type, Lambda receiver){
+        final String[] format = file.getAbsolutePath().split("\\.");
+        final String query="?to=fileManager&idSession="+Util.getInstance().getSessionId()+"&format="+format[format.length-1]+"&"+type.getKey()+"="+idResource;
 
-        final Semaphore s = new Semaphore(0);
-        final Single<Boolean> result = new Single<>();
-        Callable<Boolean> r = new Callable<Boolean>() {
-            @Override
-            public Boolean call() {
-                try {
-                    s.acquire();
-                    return result.getVal();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    return false;
-                }
-            }
-        };
-        managePost(filedata, new Lambda() {
-            @Override
-            public Object[] run(Object... paramether) {
-                result.setVal(true);
-                s.release();
-                return null;
-            }
-        }, new Lambda() {
-            @Override
-            public Object[] run(Object... paramether) {
-                result.setVal(false);
-                s.release();
-                return null;
-            }
-        }, query);
-        return AppDatabase.databaseWriteExecutor.submit(r);
+        if(file.exists()){
+            TransferFile.uploadFile(file, SERVER+query, receiver);
+        } else{
+            receiver.run(false);
+        }
     }
 
 

@@ -1,8 +1,6 @@
 package com.example.crinaed.database.repository;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 import android.util.Pair;
@@ -10,7 +8,6 @@ import android.util.Pair;
 import androidx.lifecycle.LiveData;
 
 import com.example.crinaed.database.AppDatabase;
-import com.example.crinaed.database.FileManager;
 import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.database.dao.ExerciseAndStepDao;
 import com.example.crinaed.database.entity.Exercise;
@@ -108,7 +105,7 @@ public class ExerciseAndStepRepository extends Repository{
                                 e.videoDownloaded = true;
                                 e.video = f.getAbsolutePath();
                                 update(e);
-                                Log.d("video", f.getAbsolutePath() + " file saved |" + f.length());
+                                Log.d("video", "Exercise "+f.getAbsolutePath() + " file saved |" + f.length());
                             } catch (JSONException ex) {
                                 ex.printStackTrace();
                             }
@@ -134,7 +131,7 @@ public class ExerciseAndStepRepository extends Repository{
                                 s.videoDownloaded = true;
                                 s.video = f.getAbsolutePath();
                                 update(s);
-                                Log.d("video", f.getAbsolutePath() + " file saved |" + f.getTotalSpace());
+                                Log.d("video", "step "+f.getAbsolutePath() + " file saved |" + f.getTotalSpace());
                             } catch (JSONException ex) {
                                 ex.printStackTrace();
                             }
