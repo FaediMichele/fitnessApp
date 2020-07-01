@@ -8,4 +8,5 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="tab_objective">obiettivi</string>
     <string name="tab_social">social</string>
     <string name="tab_learning">learning</string>
+    <string name="write_message">Scrivi un messaggio</string>
 </resources>

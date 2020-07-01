@@ -1,0 +1,4 @@
+- chat activitiy
+	- mettere un marine tra la tastirea e EditText della chat
+- social activity 
+	- da fra funzionare la ricerca
