@@ -18,7 +18,6 @@
 
     <style name="Theme.Social" parent="Theme.MyApp">
         <item name="colorAccent">#ff8800</item>
-        <item name="android:windowBackground">#fff</item>
         <item name="colorPrimary">@color/greenPrimary</item>
     </style>
 
