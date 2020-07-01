@@ -10,7 +10,7 @@
         android:layout_marginLeft="50dp"
         android:layout_marginRight="10dp"
         app:cardCornerRadius="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginVertical="5dp"
         app:cardBackgroundColor="@color/white">
         <TextView
             android:id="@+id/chat_text_sent_receive"

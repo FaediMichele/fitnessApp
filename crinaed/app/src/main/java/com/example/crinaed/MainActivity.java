@@ -18,10 +18,10 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         PagerFragment pagerFragment = new PagerFragment();
-        FragmentTransaction transaction0 = getSupportFragmentManager().beginTransaction();
-        transaction0.replace(R.id.container, pagerFragment, TAG_PAGER);
-        transaction0.addToBackStack(null);
-        transaction0.commit();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, pagerFragment, TAG_PAGER);
+        transaction.addToBackStack(null);
+        transaction.commit();
 
 //        ObjectiveFragment objectiveFragment = new ObjectiveFragment();
 //        FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();

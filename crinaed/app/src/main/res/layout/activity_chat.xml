@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_chat"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,21 +11,20 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginVertical="5dp"
         android:layout_marginHorizontal="10dp"
         app:cardCornerRadius="200dp"
         app:cardBackgroundColor="@color/greenPrimary">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginVertical="5dp"
-            android:orientation="horizontal"
-            android:paddingHorizontal="10dp">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="95dp"
-                android:layout_height="wrap_content">
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:id="@+id/back_chat">
 
                 <ImageView
                     android:id="@+id/back_icon"
@@ -40,10 +40,9 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/image_card"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginVertical="5dp"
-                    android:layout_marginLeft="45dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="40dp"
                     app:cardCornerRadius="500dp"
                     app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -99,6 +98,7 @@
 
 
         <EditText
+            android:id="@+id/text_send"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/write_message"

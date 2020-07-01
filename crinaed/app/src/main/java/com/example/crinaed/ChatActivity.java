@@ -1,15 +1,20 @@
 package com.example.crinaed;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +26,7 @@ public class ChatActivity extends AppCompatActivity {
 
     public static final String TAG_PAGER = "MAIN_ACTIVITY_TO_OBJECTIVE_FRAGMENT";
     public static final String SOCIAL_KEY_ID = "ID";
+    public static final String TAG_IDENTITY = "MAIN_ACTIVITY_TO_IDENTITY_FRAGMENT";
     public static final String SOCIAL_KEY_NAME = "NAME";
     public static final String SOCIAL_KEY_LAST_NAME = "LAST_NAME";
     public static final String SOCIAL_KEY_EMAIL = "EMAIL";
@@ -44,19 +50,49 @@ public class ChatActivity extends AppCompatActivity {
         //delete status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        this.nameAndLastName = findViewById(R.id.name_and_last_name);
+        this.nameAndLastName =  findViewById(R.id.name_and_last_name);
         this.imageProfile = findViewById(R.id.image_profile);
-
         Bundle dataForChatActivity = getIntent().getExtras();
         this.id = dataForChatActivity.getString(ChatActivity.SOCIAL_KEY_ID);
         this.nameAndLastName.setText(dataForChatActivity.getString(SOCIAL_KEY_NAME)+" "+dataForChatActivity.getString(SOCIAL_KEY_LAST_NAME) );
-
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        //set recycler view
+        final RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        ChatActivity.ChatAdapter adapter = new ChatActivity.ChatAdapter(ChatActivity.ModelloFittizioMessage.getListModelMessage());
+        final ChatActivity.ChatAdapter adapter = new ChatActivity.ChatAdapter(ChatActivity.ModelloFittizioMessage.getListModelMessage());
         recyclerView.setAdapter(adapter);
+        //set click listener
+        findViewById(R.id.back_chat).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        final EditText editText = findViewById(R.id.text_send);
+        findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ModelloFittizioMessage message = new ModelloFittizioMessage(true,editText.getText().toString(),Calendar.getInstance());
+                editText.setText("");
+                adapter.addItem(message);
+                adapter.notifyItemInserted(adapter.listChatModel.size()-1);
+                recyclerView.getLayoutManager().scrollToPosition(adapter.listChatModel.size()-1);
+            }
+        });
+
+        this.nameAndLastName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("cri","setOnClickListener");
+                IdentityFragment identityFragment = new IdentityFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.container_chat, identityFragment, TAG_IDENTITY);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
     }
 
@@ -68,6 +104,12 @@ public class ChatActivity extends AppCompatActivity {
         public ChatAdapter(List<ModelloFittizioMessage> listChatModel) {
             this.listChatModel = listChatModel;//la lista deve essere ordinata dal messaggio meno recente a quello più recente in posizione 0 c'è quello meno recente
         }
+
+        public void addItem(ModelloFittizioMessage message){
+            this.listChatModel.add(message);
+        }
+
+
 
         @NonNull
         @Override
