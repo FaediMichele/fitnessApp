@@ -24,6 +24,7 @@ import com.example.crinaed.database.entity.FriendMessage;
 import com.example.crinaed.database.entity.Friendship;
 import com.example.crinaed.database.entity.History;
 import com.example.crinaed.database.entity.MyCommitment;
+import com.example.crinaed.database.entity.MyMotivationalPhrase;
 import com.example.crinaed.database.entity.MyStep;
 import com.example.crinaed.database.entity.MyStepDone;
 import com.example.crinaed.database.entity.Review;
@@ -45,7 +46,7 @@ import java.util.function.Consumer;
 
 @Database(entities = {Course.class, CourseBought.class, Exercise.class, ExerciseInProgress.class, FriendMessage.class,
         Friendship.class, History.class, MyCommitment.class, MyStep.class, Review.class, School.class, Step.class, User.class,
-        UserLevel.class, UserSchoolCrossRef.class, MyStepDone.class}, version = 1, exportSchema = false)
+        UserLevel.class, UserSchoolCrossRef.class, MyStepDone.class, MyMotivationalPhrase.class}, version = 1, exportSchema = false)
 abstract public class AppDatabase extends RoomDatabase {
     abstract public FriendMessageDao friendMessageDao();
     abstract public FriendshipDao friendshipDao();

@@ -4,16 +4,15 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
-import androidx.room.TypeConverter;
 import androidx.room.Update;
 
 import com.example.crinaed.database.entity.MyCommitment;
 import com.example.crinaed.database.entity.MyStep;
 import com.example.crinaed.database.entity.MyStepDone;
 import com.example.crinaed.database.entity.join.CommitmentWithMyStep;
+import com.example.crinaed.database.entity.join.MyCommitmentWithMyMotivationalPhrase;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.database.entity.join.MyStepWithMyStepDone;
 
@@ -89,6 +88,11 @@ public interface MyCommitmentDao {
     @Transaction
     @Query("SELECT * FROM MyStepDone WHERE idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category) AND repetitionDay=(:repetitionDay)) AND dateStart >= (:date) ORDER BY dateStart")
     LiveData<List<MyStepDoneWithMyStep>> getMyStepDoneWithMyStepWithCategoryAndData(int category, long date, int repetitionDay);
+
+
+    @Transaction
+    @Query("SELECT * FROM MyCommitment")
+    LiveData<List<MyCommitmentWithMyMotivationalPhrase>> getMotivationalPhrase();
 
 
     @Query("SELECT * FROM MyCommitment")
