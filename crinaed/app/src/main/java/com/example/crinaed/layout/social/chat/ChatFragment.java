@@ -11,10 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
+import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.entity.Friendship;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,10 +31,10 @@ public class ChatFragment extends Fragment {
     static final public int SENT_LAYOUT = 0;
     static final public int RECEIVE_LAYOUT = 1;
 
-    String id;//questo è l'unico elemento che probabilmente rimarra perchè da questo si possono scaricare tutti gli altri dati
-    TextView nameAndLastName;
-    TextView lastName;
-    ImageView imageProfile;
+    private long id;//questo è l'unico elemento che probabilmente rimarra perchè da questo si possono scaricare tutti gli altri dati
+    private TextView nameAndLastName;
+    private TextView lastName;
+    private ImageView imageProfile;
 
 
     @Override
@@ -41,9 +44,19 @@ public class ChatFragment extends Fragment {
         //delete status bar
         this.nameAndLastName =  view.findViewById(R.id.name_and_last_name);
         this.imageProfile = view.findViewById(R.id.image_profile);
+
         final Bundle dataForChatActivity = getArguments();
+        this.id = Long.parseLong(dataForChatActivity.getString(ChatActivity.SOCIAL_KEY_ID));
+
+        DatabaseUtil.getInstance().getRepositoryManager().getFriendRepository().getFriendship(id).observe(getActivity(), new Observer<List<Friendship>>() {
+            @Override
+            public void onChanged(List<Friendship> friendships) {
+
+            }
+        });
         this.imageProfile.setImageDrawable(getActivity().getDrawable(R.drawable.simple_people));
-        this.id = dataForChatActivity.getString(ChatActivity.SOCIAL_KEY_ID);
+
+
         this.nameAndLastName.setText(dataForChatActivity.getString(ChatActivity.SOCIAL_KEY_NAME)+" "+dataForChatActivity.getString(ChatActivity.SOCIAL_KEY_LAST_NAME) );
         //set recycler view
         final RecyclerView recyclerView = view.findViewById(R.id.recycler_view);

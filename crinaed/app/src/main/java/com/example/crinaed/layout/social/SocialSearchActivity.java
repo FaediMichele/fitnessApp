@@ -2,6 +2,7 @@ package com.example.crinaed.layout.social;
 
 import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +13,26 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.crinaed.database.AppDatabase;
+import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.entity.User;
+import com.example.crinaed.database.entity.join.user.UserData;
 import com.example.crinaed.layout.social.chat.ChatActivity;
 import com.example.crinaed.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SocialSearchActivity extends AppCompatActivity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +46,23 @@ public class SocialSearchActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        SocialSearchAdapter adapter = new SocialSearchAdapter(ModelloFittizio.getListModel());
+        SocialSearchAdapter adapter = new SocialSearchAdapter(this);
         recyclerView.setAdapter(adapter);
+
     }
 
     private class SocialSearchAdapter extends RecyclerView.Adapter<SocialSearchViewHolder>{
 
-        private List<ModelloFittizio> modelloFittizio;
+        private List<UserData> newestData = null;
 
-        public SocialSearchAdapter(List<ModelloFittizio> modelloFittizio){
-            this.modelloFittizio = modelloFittizio;
+        public SocialSearchAdapter(LifecycleOwner owner){
+            DatabaseUtil.getInstance().getRepositoryManager().getUserRepository().getData().observe(owner, new Observer<List<UserData>>() {
+                @Override
+                public void onChanged(List<UserData> userData) {
+                    newestData=userData;
+                    notifyDataSetChanged();
+                }
+            });
         }
 
         @NonNull
@@ -55,37 +73,47 @@ public class SocialSearchActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull SocialSearchViewHolder holder, int position) {
-            holder.imageView.setImageDrawable(getDrawable(R.drawable.simple_people));
-            final ModelloFittizio modelloFittizio = this.modelloFittizio.get(position);
-            holder.nameLastName.setText(modelloFittizio.nome + " " + modelloFittizio.cognome);
-            holder.email.setText(modelloFittizio.email);
-            holder.objective.setText(modelloFittizio.titoloObbiettivo);
-            holder.step.setText(modelloFittizio.titoloStep);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(ChatActivity.SOCIAL_KEY_ID,modelloFittizio.id);
-                    bundle.putString(ChatActivity.SOCIAL_KEY_NAME,modelloFittizio.nome);
-                    bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME,modelloFittizio.cognome);
-                    bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL,modelloFittizio.email);
-                    bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE,modelloFittizio.titoloObbiettivo);
-                    bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP,modelloFittizio.nome);
-                    Intent chatIntent = new Intent(getApplicationContext(),ChatActivity.class);
-                    chatIntent.putExtras(bundle);
-                    startActivity(chatIntent);
+        public void onBindViewHolder(@NonNull final SocialSearchViewHolder holder, final int position) {
+
+            if(newestData != null) {
+                final UserData user = newestData.get(position);
+                if(user.user.imageDownloaded){
+                    holder.imageView.setImageURI(Uri.fromFile(new File(user.user.image)));
                 }
-            });
+
+                holder.nameLastName.setText(user.user.firstname + " " + user.user.surname);
+                holder.email.setText(user.user.email);
+                holder.objective.setText(user.levels.get(0).cat + ": " + user.levels.get(0).level);
+                holder.step.setText(user.levels.get(1).cat + ": " + user.levels.get(1).level);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(ChatActivity.SOCIAL_KEY_ID, String.valueOf(user.user.idUser));
+                        bundle.putString(ChatActivity.SOCIAL_KEY_NAME, user.user.firstname);
+                        bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME, user.user.surname);
+                        bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL, user.user.email);
+                        bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE, user.levels.get(0).cat + ": " + user.levels.get(0).level);
+                        bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP, user.levels.get(1).cat + ": " + user.levels.get(1).level);
+                        Intent chatIntent = new Intent(getApplicationContext(), ChatActivity.class);
+                        chatIntent.putExtras(bundle);
+                        startActivity(chatIntent);
+                    }
+                });
+            }
+
         }
 
         @Override
         public int getItemCount() {
-            return this.modelloFittizio.size();
+            if(this.newestData != null){
+                return this.newestData.size();
+            }
+            return 0;
         }
     }
 
-    private class SocialSearchViewHolder extends RecyclerView.ViewHolder{
+    private static class SocialSearchViewHolder extends RecyclerView.ViewHolder{
 
         ImageView imageView;
         TextView nameLastName;
@@ -102,74 +130,4 @@ public class SocialSearchActivity extends AppCompatActivity {
             this.step = itemView.findViewById(R.id.step);
         }
     }
-
-    //---------------da qui parte la classe del modello fitizzio che dovra essere sostituita con il db e quindi poi questa classe del modello fittizio verrà eliminata------------------------------------------
-    public static class ModelloFittizio {
-        String id;
-        String nome;
-        String cognome;
-        String email;
-        String titoloObbiettivo;
-        String titoloStep;
-
-        @Override
-        public String toString() {
-            return "ModelloFittizio{" +
-                    "nome='" + nome + '\'' +
-                    ", cognome='" + cognome + '\'' +
-                    ", email='" + email + '\'' +
-                    ", titoloObbiettivo='" + titoloObbiettivo + '\'' +
-                    ", titoloStep='" + titoloStep + '\'' +
-                    ", image=" + image +
-                    '}';
-        }
-
-        Image image; // bisognerebbe anche avere l'imagine profilo del utente da visualizare, e se no cel'ha crearne una randomica e assegnarliela alla creazione
-
-
-        public ModelloFittizio(String nome, String cognome, String email, String titoloObbiettivo, String titoloStep) {
-            this.nome = nome;
-            this.cognome = cognome;
-            this.email = email;
-            this.titoloObbiettivo = titoloObbiettivo;//titolo o descrizione
-            this.titoloStep = titoloStep;
-        }
-
-        static public List<ModelloFittizio> getListModel(){
-            List<ModelloFittizio> modelloFittizioList = new ArrayList<>();
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            return modelloFittizioList;
-        }
-    }
-
-
 }

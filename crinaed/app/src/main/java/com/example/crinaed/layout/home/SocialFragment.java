@@ -2,6 +2,7 @@ package com.example.crinaed.layout.home;
 
 import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +13,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.entity.join.user.UserData;
 import com.example.crinaed.layout.social.chat.ChatActivity;
 import com.example.crinaed.R;
 import com.example.crinaed.layout.social.SocialArchiveFragment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,17 +41,23 @@ public class SocialFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        SocialFragment.SocialSearchAdapter adapter = new SocialFragment.SocialSearchAdapter(SocialFragment.ModelloFittizio.getListModel());
+        SocialFragment.SocialSearchAdapter adapter = new SocialFragment.SocialSearchAdapter(this);
         recyclerView.setAdapter(adapter);
         return view;
     }
 
     private class SocialSearchAdapter extends RecyclerView.Adapter<SocialFragment.SocialSearchViewHolder>{
 
-        private List<SocialFragment.ModelloFittizio> modelloFittizio;
+        private List<UserData> newest;
 
-        public SocialSearchAdapter(List<SocialFragment.ModelloFittizio> modelloFittizio){
-            this.modelloFittizio = modelloFittizio;
+        public SocialSearchAdapter(LifecycleOwner owner){
+            DatabaseUtil.getInstance().getRepositoryManager().getUserRepository().getData().observe(owner, new Observer<List<UserData>>() {
+                @Override
+                public void onChanged(List<UserData> userData) {
+                    newest = userData;
+                    notifyDataSetChanged();
+                }
+            });
         }
 
         @NonNull
@@ -69,27 +81,34 @@ public class SocialFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull SocialFragment.SocialSearchViewHolder holder, int position) {
             if(position > 0) {
-                holder.imageView.setImageDrawable(getActivity().getDrawable(R.drawable.simple_people));
-                final SocialFragment.ModelloFittizio modelloFittizio = this.modelloFittizio.get(position);
-                holder.nameLastName.setText(modelloFittizio.nome + " " + modelloFittizio.cognome);
-                holder.email.setText(modelloFittizio.email);
-                holder.objective.setText(modelloFittizio.titoloObbiettivo);
-                holder.step.setText(modelloFittizio.titoloStep);
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString(ChatActivity.SOCIAL_KEY_ID, modelloFittizio.id);
-                        bundle.putString(ChatActivity.SOCIAL_KEY_NAME, modelloFittizio.nome);
-                        bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME, modelloFittizio.cognome);
-                        bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL, modelloFittizio.email);
-                        bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE, modelloFittizio.titoloObbiettivo);
-                        bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP, modelloFittizio.nome);
-                        Intent chatIntent = new Intent(getContext(), ChatActivity.class);
-                        chatIntent.putExtras(bundle);
-                        startActivity(chatIntent);
+                if(newest !=null){
+                    final UserData data = this.newest.get(position);
+
+                    if(data.user.imageDownloaded) {
+                        holder.imageView.setImageURI(Uri.fromFile(new File(data.user.image)));
                     }
-                });
+
+                    holder.nameLastName.setText(data.user.firstname + " " + data.user.surname);
+                    holder.email.setText(data.user.email);
+                    holder.objective.setText(data.levels.get(0).cat + ": " + data.levels.get(0).level);
+                    holder.step.setText(data.levels.get(1).cat + ": " + data.levels.get(1).level);
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString(ChatActivity.SOCIAL_KEY_ID, String.valueOf(data.user.idUser));
+                            bundle.putString(ChatActivity.SOCIAL_KEY_NAME, data.user.firstname);
+                            bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME, data.user.surname);
+                            bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL, data.user.email);
+                            bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE, data.levels.get(1).cat + ": " + data.levels.get(1).level);
+                            bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP, data.levels.get(1).cat + ": " + data.levels.get(1).level);
+                            Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                            chatIntent.putExtras(bundle);
+                            startActivity(chatIntent);
+                        }
+                    });
+                }
+
             }else{
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -112,7 +131,10 @@ public class SocialFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return this.modelloFittizio.size();
+            if(newest!=null){
+                return newest.size();
+            }
+            return 0;
         }
     }
 
@@ -135,72 +157,4 @@ public class SocialFragment extends Fragment {
             }
         }
     }
-
-    //---------------da qui parte la classe del modello fitizzio che dovra essere sostituita con il db e quindi poi questa classe del modello fittizio verrà eliminata------------------------------------------
-    public static class ModelloFittizio {
-        String id;
-        String nome;
-        String cognome;
-        String email;
-        String titoloObbiettivo;
-        String titoloStep;
-
-        @Override
-        public String toString() {
-            return "ModelloFittizio{" +
-                    "nome='" + nome + '\'' +
-                    ", cognome='" + cognome + '\'' +
-                    ", email='" + email + '\'' +
-                    ", titoloObbiettivo='" + titoloObbiettivo + '\'' +
-                    ", titoloStep='" + titoloStep + '\'' +
-                    ", image=" + image +
-                    '}';
-        }
-
-        Image image; // bisognerebbe anche avere l'imagine profilo del utente da visualizare, e se no cel'ha crearne una randomica e assegnarliela alla creazione
-
-        public ModelloFittizio(String nome, String cognome, String email, String titoloObbiettivo, String titoloStep) {
-            this.nome = nome;
-            this.cognome = cognome;
-            this.email = email;
-            this.titoloObbiettivo = titoloObbiettivo;//titolo o descrizione
-            this.titoloStep = titoloStep;
-        }
-
-        static public List<SocialFragment.ModelloFittizio> getListModel(){
-            List<SocialFragment.ModelloFittizio> modelloFittizioList = new ArrayList<>();
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            modelloFittizioList.add(new SocialFragment.ModelloFittizio("nome","cognome","email@dominio.com","obbiettivo","titolo step"));
-            return modelloFittizioList;
-        }
-    }
-
 }

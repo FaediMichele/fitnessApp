@@ -29,25 +29,21 @@ import java.util.concurrent.Future;
 
 public class UserRepository extends Repository{
     private UserDao userDao;
-    private LiveData<List<UserData>> userData;
-    private LiveData<List<UserInscription>> inscriptions;
     private Context context;
 
     private long lastId = -1;
 
     public UserRepository(Context context){
         AppDatabase db = AppDatabase.getDatabase(context);
-        userDao = db.userDao();
-        userData = userDao.getData();
-        inscriptions = userDao.getInscription();
+        userDao=db.userDao();
         this.context=context;
     }
 
     public LiveData<List<UserData>> getData() {
-        return userData;
+        return userDao.getData();
     }
     public LiveData<List<UserInscription>> getInscription(){
-        return inscriptions;
+        return  userDao.getInscription();
     }
 
     public Future<?> addUser(final User user, final UserLevel... levels){
