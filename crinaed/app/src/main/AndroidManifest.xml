@@ -20,7 +20,7 @@
         </activity>
         <activity android:name=".ObjectiveActivity">
         </activity>
-        <activity android:name=".SocialActivity">
+        <activity android:name=".SocialSearchActivity">
         </activity>
         <activity android:name=".LearningActivity">
         </activity>

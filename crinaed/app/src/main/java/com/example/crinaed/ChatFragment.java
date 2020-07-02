@@ -49,6 +49,7 @@ public class ChatFragment extends Fragment {
         this.nameAndLastName =  view.findViewById(R.id.name_and_last_name);
         this.imageProfile = view.findViewById(R.id.image_profile);
         Bundle dataForChatActivity = getArguments();
+        this.imageProfile.setImageDrawable(getActivity().getDrawable(R.drawable.simple_people));
         this.id = dataForChatActivity.getString(ChatActivity.SOCIAL_KEY_ID);
         this.nameAndLastName.setText(dataForChatActivity.getString(SOCIAL_KEY_NAME)+" "+dataForChatActivity.getString(SOCIAL_KEY_LAST_NAME) );
         //set recycler view

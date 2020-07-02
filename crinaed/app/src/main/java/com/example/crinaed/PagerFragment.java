@@ -2,7 +2,6 @@ package com.example.crinaed;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +15,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.adapter.FragmentViewHolder;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-import java.util.List;
 
 public class PagerFragment extends Fragment {
 
@@ -95,7 +91,7 @@ public class PagerFragment extends Fragment {
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent socialIntent = new Intent(getContext(),SocialActivity.class);
+                            Intent socialIntent = new Intent(getContext(), SocialSearchActivity.class);
                             startActivity(socialIntent);
                         }
                     });
