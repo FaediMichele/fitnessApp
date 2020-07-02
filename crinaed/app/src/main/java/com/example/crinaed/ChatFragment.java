@@ -21,16 +21,8 @@ import java.util.List;
 
 public class ChatFragment extends Fragment {
 
-    public static final String SOCIAL_KEY_ID = "ID";
     public static final String TAG_IDENTITY = "CHAT_FRAGMENT_TO_IDENTITY_FRAGMENT";
-    public static final String SOCIAL_KEY_NAME = "NAME";
-    public static final String SOCIAL_KEY_LAST_NAME = "LAST_NAME";
-    public static final String SOCIAL_KEY_EMAIL = "EMAIL";
-    public static final String SOCIAL_KEY_TITLE_OBJECTIVE = "TITLE_OBJECTIVE";
-    public static final String SOCIAL_KEY_TITLE_STEP = "TITLE_STEP";
     public static final String TAG_BACK_STECK = "BACK_STACK_CHAT_FRAGMENT_TO_IDENTITY_FRAGMENT";
-
-
 
     static final public int SENT_LAYOUT = 0;
     static final public int RECEIVE_LAYOUT = 1;
@@ -48,10 +40,10 @@ public class ChatFragment extends Fragment {
         //delete status bar
         this.nameAndLastName =  view.findViewById(R.id.name_and_last_name);
         this.imageProfile = view.findViewById(R.id.image_profile);
-        Bundle dataForChatActivity = getArguments();
+        final Bundle dataForChatActivity = getArguments();
         this.imageProfile.setImageDrawable(getActivity().getDrawable(R.drawable.simple_people));
         this.id = dataForChatActivity.getString(ChatActivity.SOCIAL_KEY_ID);
-        this.nameAndLastName.setText(dataForChatActivity.getString(SOCIAL_KEY_NAME)+" "+dataForChatActivity.getString(SOCIAL_KEY_LAST_NAME) );
+        this.nameAndLastName.setText(dataForChatActivity.getString(ChatActivity.SOCIAL_KEY_NAME)+" "+dataForChatActivity.getString(ChatActivity.SOCIAL_KEY_LAST_NAME) );
         //set recycler view
         final RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -83,6 +75,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 IdentityFragment identityFragment = new IdentityFragment();
+                identityFragment.setArguments(dataForChatActivity);
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.container_chat, identityFragment, TAG_IDENTITY);
                 transaction.addToBackStack(TAG_BACK_STECK);
