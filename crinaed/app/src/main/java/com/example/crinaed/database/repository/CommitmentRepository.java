@@ -1,12 +1,14 @@
 package com.example.crinaed.database.repository;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.crinaed.database.AppDatabase;
+import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.database.dao.MyCommitmentDao;
 import com.example.crinaed.database.entity.MyCommitment;
 import com.example.crinaed.database.entity.MyStep;
@@ -22,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,10 +39,12 @@ public class CommitmentRepository extends Repository{
     // used for the insert. (the data created by the app must have negative ids)
     private long lastCommitmentId = -1;
     private long lastStepId = -1;
+    private Context context;
 
     public CommitmentRepository(Context context){
         AppDatabase db = AppDatabase.getDatabase(context);
         commitmentDao = db.commitmentDao();
+        this.context=context;
     }
 
     public LiveData<List<CommitmentWithMyStep>> getCommitmentWithSteps() {
@@ -236,7 +241,20 @@ public class CommitmentRepository extends Repository{
 
         JSONArray array = data.getJSONArray("MyCommitment");
         for(int i = 0; i < array.length(); i++){
-            commitmentList.add(new MyCommitment(array.getJSONObject(i)));
+            final MyCommitment c=new MyCommitment(array.getJSONObject(i));
+            commitmentList.add(c);
+            downloadImage(array, i, new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    if((Boolean) paramether[0]){
+                        File f = (File) paramether[1];
+                        c.image=f.getAbsolutePath();
+                        c.imageDownloaded=true;
+                        updateCommitment(c);
+                    }
+                    return new Object[0];
+                }
+            });
         }
         array = data.getJSONArray("MyStep");
         for(int i = 0; i < array.length(); i++){

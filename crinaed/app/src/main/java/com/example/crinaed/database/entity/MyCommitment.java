@@ -17,6 +17,8 @@ public class MyCommitment  implements MyEntity{
     public String desc;
     public long creationDate;
     public long idUser;
+    public String image;
+    public boolean imageDownloaded=false;
 
     public MyCommitment(long idCommitment, String name, String desc, long creationDate, long idUser) {
         this.idCommitment = idCommitment;

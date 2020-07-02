@@ -242,7 +242,12 @@ public class ServerManager {
     }
 
 
-
+    /**
+     * Download a file and save it in the directory
+     * @param filename name of the file to download
+     * @param directory Enviroment.something
+     * @param receiver a lambda function (parameter[0]=boolean, paramether[1]=File)
+     */
     public void downloadFile(final String filename, String directory, Lambda receiver){
         final String query="?to=fileManager&method=getFile&filename="+filename;
         File f = new File(context.getExternalFilesDir(directory), filename);

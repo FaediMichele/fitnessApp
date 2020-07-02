@@ -8,19 +8,19 @@ import org.json.JSONObject;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity(primaryKeys = {"idMyCommitment", "percentage"}, foreignKeys = {
-        @ForeignKey(entity = MyCommitment.class, parentColumns = "idMyCommitment", childColumns = "idMyCommitment", onDelete = CASCADE)
+@Entity(primaryKeys = {"idCommitment", "percentage"}, foreignKeys = {
+        @ForeignKey(entity = MyCommitment.class, parentColumns = "idCommitment", childColumns = "idCommitment", onDelete = CASCADE)
 })
 public class MyMotivationalPhrase implements  MyEntity{
-    long idMyCommitment;
+    long idCommitment;
     int percentage;
     String phrase;
 
     public MyMotivationalPhrase(JSONObject obj) throws JSONException {
-        this(obj.getLong("idMyCommitment"), obj.getInt("percentage"), obj.getString("phrase"));
+        this(obj.getLong("idCommitment"), obj.getInt("percentage"), obj.getString("phrase"));
     }
-    public MyMotivationalPhrase(long idMyCommitment, int percentage, String phrase){
-        this.idMyCommitment=idMyCommitment;
+    public MyMotivationalPhrase(long idCommitment, int percentage, String phrase){
+        this.idCommitment=idCommitment;
         this.percentage=percentage;
         this.phrase=phrase;
     }
@@ -28,7 +28,7 @@ public class MyMotivationalPhrase implements  MyEntity{
     @Override
     public JSONObject toJson() throws JSONException {
         JSONObject ret = new JSONObject();
-        ret.put("idMyCommitment", idMyCommitment);
+        ret.put("idCommitment", idCommitment);
         ret.put("percentage", percentage);
         ret.put("phrase", phrase);
         return ret;

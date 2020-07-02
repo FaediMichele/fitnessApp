@@ -16,6 +16,8 @@ public class User implements MyEntity {
     public String surname;
     public String email;
     public String hashPassword;
+    public String image;
+    public boolean imageDownloaded=false;
 
     public User(long idUser, String firstname, String surname, String email, String hashPassword) {
         this.idUser = idUser;

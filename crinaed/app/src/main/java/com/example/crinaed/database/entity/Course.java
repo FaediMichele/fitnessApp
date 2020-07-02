@@ -16,6 +16,10 @@ public class Course implements MyEntity{
     public String desc;
     public int minimumLevel;
     public long idSchool;
+    public String image;
+    public String video;
+    public boolean imageDownloaded=false;
+    public boolean videoDownloaded=false;
 
     public Course(long idCourse, String cat, String name, String desc, int minimumLevel, long idSchool){
         this.idSchool = idSchool;

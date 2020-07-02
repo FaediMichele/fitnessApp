@@ -92,55 +92,38 @@ public class ExerciseAndStepRepository extends Repository{
         final List<Exercise> exercises = new ArrayList<>();
         final List<Step> steps = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
-            final String videoFileName=array.getJSONObject(i).getString("video");
-            final int k=i;
-            if(!videoFileName.equals("")){
-                ServerManager.getInstance(context).downloadFile(videoFileName, Environment.DIRECTORY_MOVIES, new Lambda() {
+            final Exercise e=new Exercise(array.getJSONObject(i));
+            exercises.add(e);
+            downloadVideo(array, i, new Lambda() {
                     @Override
                     public Object[] run(Object... parameter) {
                         if((Boolean) parameter[0]) {
                             File f = (File) parameter[1];
-                            try {
-                                Exercise e = new Exercise(array.getJSONObject(k));
-                                e.videoDownloaded = true;
-                                e.video = f.getAbsolutePath();
-                                update(e);
-                                Log.d("video", "Exercise "+f.getAbsolutePath() + " file saved |" + f.length());
-                            } catch (JSONException ex) {
-                                ex.printStackTrace();
-                            }
+                            e.videoDownloaded = true;
+                            e.video = f.getAbsolutePath();
+                            update(e);
                         }
                         return null;
                     }
                 });
-            }
-            exercises.add(new Exercise(array.getJSONObject(i)));
         }
         final JSONArray array2 = data.getJSONArray("Step");
         for(int i = 0; i < array2.length(); i++){
-            final String videoFileName=array.getJSONObject(i).getString("video");
-            final int k=i;
-            if(!videoFileName.equals("")){
-                ServerManager.getInstance(context).downloadFile(videoFileName, Environment.DIRECTORY_MOVIES, new Lambda() {
+            final Step s=new Step(array2.getJSONObject(i));
+            steps.add(s);
+            downloadVideo(array, i, new Lambda() {
                     @Override
                     public Object[] run(Object... parameter) {
                         if((Boolean) parameter[0]) {
                             File f = (File) parameter[1];
-                            try {
-                                Step s = new Step(array.getJSONObject(k));
-                                s.videoDownloaded = true;
-                                s.video = f.getAbsolutePath();
-                                update(s);
-                                Log.d("video", "step "+f.getAbsolutePath() + " file saved |" + f.getTotalSpace());
-                            } catch (JSONException ex) {
-                                ex.printStackTrace();
-                            }
+                            s.videoDownloaded = true;
+                            s.video = f.getAbsolutePath();
+                            update(s);
+                            Log.d("video", "step "+f.getAbsolutePath() + " file saved |" + f.getTotalSpace());
                         }
                         return null;
                     }
                 });
-            }
-            steps.add(new Step(array2.getJSONObject(i)));
         }
         return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override

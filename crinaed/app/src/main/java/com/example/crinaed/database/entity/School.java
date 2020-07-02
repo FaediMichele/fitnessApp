@@ -19,6 +19,10 @@ public class School implements MyEntity {
     public String email;
     public String address;
     public long idTrainer;
+    public String video;
+    public String image;
+    public boolean videoDownloaded=false;
+    public boolean imageDownloaded=false;
 
     public School(long idSchool, String name, String email, String address, long idTrainer) {
         this.idSchool = idSchool;

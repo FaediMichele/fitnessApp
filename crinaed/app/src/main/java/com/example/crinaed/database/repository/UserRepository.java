@@ -1,22 +1,27 @@
 package com.example.crinaed.database.repository;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.crinaed.database.AppDatabase;
+import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.database.dao.UserDao;
+import com.example.crinaed.database.entity.MyCommitment;
 import com.example.crinaed.database.entity.User;
 import com.example.crinaed.database.entity.UserLevel;
 import com.example.crinaed.database.entity.UserSchoolCrossRef;
 import com.example.crinaed.database.entity.join.user.UserData;
 import com.example.crinaed.database.entity.join.user.UserInscription;
+import com.example.crinaed.util.Lambda;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -26,6 +31,7 @@ public class UserRepository extends Repository{
     private UserDao userDao;
     private LiveData<List<UserData>> userData;
     private LiveData<List<UserInscription>> inscriptions;
+    private Context context;
 
     private long lastId = -1;
 
@@ -34,6 +40,7 @@ public class UserRepository extends Repository{
         userDao = db.userDao();
         userData = userDao.getData();
         inscriptions = userDao.getInscription();
+        this.context=context;
     }
 
     public LiveData<List<UserData>> getData() {
@@ -97,7 +104,20 @@ public class UserRepository extends Repository{
         final List<UserLevel> userLevels = new ArrayList<>();
         final List<UserSchoolCrossRef> inscription = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
+            final User u = new User( array.getJSONObject(i));
             users.add(new User( array.getJSONObject(i)));
+            downloadImage(array,i,  new Lambda() {
+                    @Override
+                    public Object[] run(Object... paramether) {
+                        if((Boolean) paramether[0]){
+                            File f = (File) paramether[1];
+                            u.image=f.getAbsolutePath();
+                            u.imageDownloaded=true;
+                            updateUser(u);
+                        }
+                        return new Object[0];
+                    }
+                });
         }
         array = data.getJSONArray("Level");
         for(int i = 0; i < array.length(); i++){

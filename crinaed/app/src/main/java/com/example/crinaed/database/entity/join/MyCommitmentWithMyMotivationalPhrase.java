@@ -12,6 +12,6 @@ import java.util.List;
 public class MyCommitmentWithMyMotivationalPhrase {
     @Embedded
     public MyCommitment commitment;
-    @Relation(parentColumn = "idMyCommitment", entityColumn = "idMyCommitment")
+    @Relation(parentColumn = "idCommitment", entityColumn = "idCommitment")
     public List<MyMotivationalPhrase> phrase;
 }
