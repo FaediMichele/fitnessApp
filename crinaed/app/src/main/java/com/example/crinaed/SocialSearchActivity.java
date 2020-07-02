@@ -1,5 +1,6 @@
 package com.example.crinaed;
 
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,13 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SocialActivity extends AppCompatActivity {
-
+public class SocialSearchActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_social);
+        setTheme(R.style.Theme_Social);
+        setContentView(R.layout.activity_social_search);
         //delete status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -53,11 +54,26 @@ public class SocialActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull SocialSearchViewHolder holder, int position) {
             holder.imageView.setImageDrawable(getDrawable(R.drawable.simple_people));
-            ModelloFittizio modelloFittizio = this.modelloFittizio.get(position);
+            final ModelloFittizio modelloFittizio = this.modelloFittizio.get(position);
             holder.nameLastName.setText(modelloFittizio.nome + " " + modelloFittizio.cognome);
             holder.email.setText(modelloFittizio.email);
             holder.objective.setText(modelloFittizio.titoloObbiettivo);
             holder.step.setText(modelloFittizio.titoloStep);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(ChatActivity.SOCIAL_KEY_ID,modelloFittizio.id);
+                    bundle.putString(ChatActivity.SOCIAL_KEY_NAME,modelloFittizio.nome);
+                    bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME,modelloFittizio.cognome);
+                    bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL,modelloFittizio.email);
+                    bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE,modelloFittizio.titoloObbiettivo);
+                    bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP,modelloFittizio.nome);
+                    Intent chatIntent = new Intent(getApplicationContext(),ChatActivity.class);
+                    chatIntent.putExtras(bundle);
+                    startActivity(chatIntent);
+                }
+            });
         }
 
         @Override
@@ -85,7 +101,8 @@ public class SocialActivity extends AppCompatActivity {
     }
 
     //---------------da qui parte la classe del modello fitizzio che dovra essere sostituita con il db e quindi poi questa classe del modello fittizio verrà eliminata------------------------------------------
-    private static class ModelloFittizio {
+    public static class ModelloFittizio {
+        String id;
         String nome;
         String cognome;
         String email;

@@ -17,4 +17,6 @@
     <color name="greenSecondary">#87ff9f</color>
     <color name="bluPrimary">#8080FF</color>
     <color name="bluSecondary">#85C6FF</color>
+    <color name="orange">#FF8800</color>
+    <color name="white">#FFFFFF</color>
 </resources>

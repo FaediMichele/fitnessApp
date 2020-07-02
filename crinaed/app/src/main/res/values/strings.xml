@@ -12,4 +12,6 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="social">Social</string>
     <string name="sport">Sport</string>
     <string name="mental">Mental</string>
+    <string name="write_message">Scrivi un messaggio</string>
+    <string name="archive">archivio</string>
 </resources>
