@@ -179,6 +179,8 @@ public class ServerManager {
                             editor.apply();
 
                             Util.getInstance().setSessionId(obj.getString("SessionId"));
+                            Util.getInstance().setIdUser(obj.getLong("idUser"));
+
                             result.setVal(obj.getString("SessionId"));
                         } catch (JSONException | ExecutionException | InterruptedException e) {
                             e.printStackTrace();

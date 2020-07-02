@@ -20,9 +20,14 @@ import java.util.Locale;
 public class Util {
     private static Util instance = new Util();
     private String sessionId="";
+    private long idUser=-1;
 
     public String getSessionId(){
         return sessionId;
+    }
+
+    public long getIdUser(){
+        return idUser;
     }
 
     public static Util getInstance() {
@@ -101,6 +106,9 @@ public class Util {
 
     public void setSessionId(String sessionId){
         this.sessionId=sessionId;
+    }
+    public void setIdUser(long idUser){
+        this.idUser=idUser;
     }
 
 }

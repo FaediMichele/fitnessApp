@@ -1,6 +1,7 @@
 package com.example.crinaed.database.repository;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -9,6 +10,7 @@ import com.example.crinaed.database.dao.FriendMessageDao;
 import com.example.crinaed.database.dao.FriendshipDao;
 import com.example.crinaed.database.entity.FriendMessage;
 import com.example.crinaed.database.entity.Friendship;
+import com.example.crinaed.database.entity.join.user.UserWithUser;
 import com.example.crinaed.util.Util;
 
 import org.json.JSONArray;
@@ -31,12 +33,13 @@ public class FriendRepository extends Repository{
         friendMessageDao = db.friendMessageDao();
     }
 
-    public LiveData<List<Friendship>> getFriendship(long idUser){
-        return friendshipDao.getFriendshipByIdUser(idUser);
+    public LiveData<UserWithUser> getFriendshipByFriend(long idFriend){
+         Log.d("naed", "friend asked: "+ idFriend);
+        return friendshipDao.getFriendshipByFriend(idFriend);
     }
 
-    public LiveData<List<FriendMessage>> getMessageByIdFriendship(long Friendship){
-        return friendMessageDao.getMessageByIdFriendship(Friendship);
+    public LiveData<List<FriendMessage>> getMessageByIdFriendship(long idFriendship){
+        return friendMessageDao.getMessageByIdFriendship(idFriendship);
     }
 
 
