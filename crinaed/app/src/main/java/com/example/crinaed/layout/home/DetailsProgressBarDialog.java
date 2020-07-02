@@ -1,4 +1,4 @@
-package com.example.crinaed;
+package com.example.crinaed.layout.home;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.ProgressBarDetails.ProgressBarDetailsAdapter;
+import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.entity.MyStepDone;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
@@ -44,7 +45,7 @@ public class DetailsProgressBarDialog extends Dialog{
     private String title;
 
     public DetailsProgressBarDialog(Context context, String title, LiveData<List<MyStepDoneWithMyStep>> steps, LifecycleOwner owner) {
-        super(context,R.style.DialogSlideTheme);
+        super(context, R.style.DialogSlideTheme);
         this.activity = (Activity) context;
         this.steps = steps;
         this.title=title;

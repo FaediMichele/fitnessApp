@@ -1,6 +1,7 @@
 - chat activitiy
 	- mettere un marine tra la tastirea e EditText della chat
 	- da sistemare l'animazione quando si è al primo messaggio(più vecchio) e si invia un messaggio
+	- allineare correttamente le chat quando c'è poco testo.
 - social activity 
 	- da fra funzionare la ricerca
 	

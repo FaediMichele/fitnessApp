@@ -1,4 +1,4 @@
-package com.example.crinaed;
+package com.example.crinaed.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

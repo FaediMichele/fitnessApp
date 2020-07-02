@@ -1,4 +1,4 @@
-package com.example.crinaed;
+package com.example.crinaed.layout.home;
 
 import android.content.Intent;
 import android.media.Image;
@@ -14,6 +14,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.crinaed.layout.social.chat.ChatActivity;
+import com.example.crinaed.R;
+import com.example.crinaed.layout.social.SocialArchiveFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,8 +126,7 @@ public class SocialFragment extends Fragment {
 
         public SocialSearchViewHolder(@NonNull View itemView, boolean isArchive) {
             super(itemView);
-            if(isArchive){
-            }else {
+            if(!isArchive){
                 this.imageView = itemView.findViewById(R.id.image_profile);
                 this.nameLastName = itemView.findViewById(R.id.name_last_name);
                 this.email = itemView.findViewById(R.id.email);

@@ -10,7 +10,7 @@
 
     <fragment
         android:id="@+id/fragment"
-        android:name="com.example.crinaed.VideoFragment"
+        android:name="com.example.crinaed.deprecated.ChartFragmentDeprecated"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

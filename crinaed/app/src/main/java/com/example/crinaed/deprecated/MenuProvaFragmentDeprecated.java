@@ -1,4 +1,4 @@
-package com.example.crinaed;
+package com.example.crinaed.deprecated;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-public class MenuProvaFragment extends Fragment {
+import com.example.crinaed.R;
+
+public class MenuProvaFragmentDeprecated extends Fragment {
 
     private static final String TAG = "AKDialogFragment";
 

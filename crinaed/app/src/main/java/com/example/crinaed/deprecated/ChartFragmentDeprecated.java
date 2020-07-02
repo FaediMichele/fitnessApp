@@ -1,4 +1,4 @@
-package com.example.crinaed;
+package com.example.crinaed.deprecated;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 
+import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.database.repository.CommitmentRepository;
@@ -28,7 +29,7 @@ import java.util.List;
 /**
  * Test fragment of the graph. use the livedata to view the data. and allow to choose the period of time to visualize and the type of repetition for the steps
  */
-public class ChartFragment extends Fragment {
+public class ChartFragmentDeprecated extends Fragment {
     private LineChart social;
     private LineChart sport;
     private LineChart mental;

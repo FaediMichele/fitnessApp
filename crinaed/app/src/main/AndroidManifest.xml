@@ -17,19 +17,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApp">
-        <activity android:name=".MainActivity">
+        <activity android:name=".layout.home.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ObjectiveActivity">
+        <activity android:name=".layout.objective.ObjectiveActivity">
         </activity>
-        <activity android:name=".SocialSearchActivity">
+        <activity android:name=".layout.social.SocialSearchActivity">
         </activity>
-        <activity android:name=".LearningActivity">
+        <activity android:name=".layout.learning.LearningActivity">
         </activity>
-        <activity android:name=".ChatActivity">
+        <activity android:name=".layout.social.chat.ChatActivity">
         </activity>
     </application>
 

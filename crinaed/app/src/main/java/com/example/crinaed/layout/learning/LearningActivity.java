@@ -1,9 +1,11 @@
-package com.example.crinaed;
+package com.example.crinaed.layout.learning;
 
 import android.os.Bundle;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.crinaed.R;
 
 public class LearningActivity extends AppCompatActivity {
 

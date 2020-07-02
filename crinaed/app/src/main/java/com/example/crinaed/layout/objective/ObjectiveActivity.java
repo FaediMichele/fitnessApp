@@ -1,9 +1,11 @@
-package com.example.crinaed;
+package com.example.crinaed.layout.objective;
 
 import android.os.Bundle;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.crinaed.R;
 
 public class ObjectiveActivity extends AppCompatActivity {
 

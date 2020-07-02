@@ -1,4 +1,4 @@
-package com.example.crinaed;
+package com.example.crinaed.layout.home;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,15 +8,12 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.util.Util;
 
 import org.json.JSONException;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.example.crinaed;
+package com.example.crinaed.layout.social;
 
 import android.content.Intent;
 import android.media.Image;
@@ -13,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.crinaed.layout.social.chat.ChatActivity;
+import com.example.crinaed.R;
 
 import java.util.ArrayList;
 import java.util.List;

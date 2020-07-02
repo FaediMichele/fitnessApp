@@ -1,4 +1,4 @@
-package com.example.crinaed;
+package com.example.crinaed.layout.home;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.crinaed.ProgressBar.SliderProgressBar;
 import com.example.crinaed.ProgressBar.SliderProgressBarAdapter;
+import com.example.crinaed.R;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.IndicatorView.draw.controller.DrawController;
 import com.smarteist.autoimageslider.SliderAnimations;

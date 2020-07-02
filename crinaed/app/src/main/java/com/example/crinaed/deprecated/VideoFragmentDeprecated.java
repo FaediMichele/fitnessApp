@@ -1,4 +1,4 @@
-package com.example.crinaed;
+package com.example.crinaed.deprecated;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
+import com.example.crinaed.R;
 import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.ServerManager;
@@ -33,7 +34,7 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Objects;
 
-public class VideoFragment extends Fragment {
+public class VideoFragmentDeprecated extends Fragment {
     private VideoView video;
 
     @Override
@@ -50,7 +51,7 @@ public class VideoFragment extends Fragment {
                 for(int i=0; i < exercises.size(); i++){
                     if(exercises.get(i).videoDownloaded){
                         File f = new File(exercises.get(i).video);
-                        ServerManager.getInstance(getContext()).downloadFile("Exercise-912.mp4", Environment.DIRECTORY_DOWNLOADS, new Lambda() {
+                        /*ServerManager.getInstance(getContext()).downloadFile("Exercise-912.mp4", Environment.DIRECTORY_DOWNLOADS, new Lambda() {
                             @Override
                             public Object[] run(Object... paramether) {
                                 if((Boolean)paramether[0]){
@@ -83,8 +84,8 @@ public class VideoFragment extends Fragment {
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.setDataAndType(fileUri,
                                 URLConnection.guessContentTypeFromName(fileUri.toString()));*/
-                        /*video.setVideoPath(f.getAbsolutePath());
-                        video.start();*/
+                        video.setVideoPath(f.getAbsolutePath());
+                        video.start();
                     }
                 }
             }
