@@ -65,12 +65,12 @@ public interface MyCommitmentDao {
 
 
     @Transaction
-    @Query("SELECT * FROM MyStepDone WHERE dateStart IN(SELECT MAX(dateStart) FROM MyStepDone GROUP BY idMyStep) AND idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category))")
-    LiveData<List<MyStepDoneWithMyStep>> getLastMyStepDoneWithMyStep(int category);
+    @Query("SELECT * FROM MyStepDone WHERE dateStart > (:afterDay) AND idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category) AND repetitionDay=(:repetition))")
+    LiveData<List<MyStepDoneWithMyStep>> getLastMyStepDoneWithMyStep(int category, long afterDay, int repetition);
 
     @Transaction
-    @Query("SELECT * FROM MyStepDone WHERE dateStart IN(SELECT MAX(dateStart) FROM MyStepDone GROUP BY idMyStep) AND idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category))")
-    List<MyStepDoneWithMyStep> getLastMyStepDoneWithMyStepList(int category);
+    @Query("SELECT * FROM MyStepDone WHERE dateStart > (:afterDay) AND idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category) AND repetitionDay=(:repetition))")
+    List<MyStepDoneWithMyStep> getLastMyStepDoneWithMyStepList(int category, long afterDay, int repetition);
 
 
     @Transaction

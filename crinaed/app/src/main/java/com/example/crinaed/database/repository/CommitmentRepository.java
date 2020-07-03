@@ -19,6 +19,7 @@ import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.util.Category;
 import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Period;
+import com.example.crinaed.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,7 +54,6 @@ public class CommitmentRepository extends Repository{
 
 
     public List<MyStepDoneWithMyStep> getStepHistoryList(final Category category){
-        updateMyStepDone();
         Future<List<MyStepDoneWithMyStep>> future;
         List<MyStepDoneWithMyStep> ret=null;
         try{
@@ -73,7 +73,6 @@ public class CommitmentRepository extends Repository{
 
 
     public List<MyStepDoneWithMyStep> getStepHistoryList(final Category category, final Date date){
-        updateMyStepDone();
         Future<List<MyStepDoneWithMyStep>> future;
         List<MyStepDoneWithMyStep> ret=null;
         try{
@@ -91,13 +90,11 @@ public class CommitmentRepository extends Repository{
     }
 
     public LiveData<List<MyStepDoneWithMyStep>> getStepHistory(final Category category, final Date date, final Period repetition){
-        updateMyStepDone();
         return commitmentDao.getMyStepDoneWithMyStepWithCategoryAndData(category.ordinal(), date.getTime(), repetition.getDay());
 
     }
 
     public List<MyStepDoneWithMyStep> getStepHistoryList(final Category category, final Date date, final Period repetition){
-        updateMyStepDone();
         Future<List<MyStepDoneWithMyStep>> future;
         List<MyStepDoneWithMyStep> ret=null;
         try{
@@ -124,20 +121,22 @@ public class CommitmentRepository extends Repository{
         return commitmentDao.getMotivationalPhrase();
     }
 
-    public LiveData<List<MyStepDoneWithMyStep>> getStepOnGoing(Category category){
-        updateMyStepDone();
-        return commitmentDao.getLastMyStepDoneWithMyStep(category.ordinal());
+    public LiveData<List<MyStepDoneWithMyStep>> getStepOnGoing(Category category, Period repetition){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, repetition.getDay()*-1);
+        return commitmentDao.getLastMyStepDoneWithMyStep(category.ordinal(), calendar.getTime().getTime()-100, repetition.getDay());
     }
 
-    public List<MyStepDoneWithMyStep> getStepOnGoingList(final Category category){
-        updateMyStepDone();
+    public List<MyStepDoneWithMyStep> getStepOnGoingList(final Category category, final Period repetition){
         Future<List<MyStepDoneWithMyStep>> future;
         List<MyStepDoneWithMyStep> ret=null;
         try{
             future=AppDatabase.databaseWriteExecutor.submit(new Callable<List<MyStepDoneWithMyStep>>() {
                 @Override
                 public List<MyStepDoneWithMyStep> call() throws Exception {
-                    return commitmentDao.getLastMyStepDoneWithMyStepList(category.ordinal());
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.DAY_OF_MONTH, repetition.getDay()*-1);
+                    return commitmentDao.getLastMyStepDoneWithMyStepList(category.ordinal(), calendar.getTime().getTime(), repetition.getDay());
                 }
             });
             ret=future.get();
@@ -207,28 +206,42 @@ public class CommitmentRepository extends Repository{
         });
     }
 
-    public Future<List<MyStepDone>> updateMyStepDone(final MyStepDone... stepsDone){
-        return AppDatabase.databaseWriteExecutor.submit(new Callable<List<MyStepDone>>() {
+    public void updateMyStepDone(final MyStepDone... stepsDone){
+        AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
-            public List<MyStepDone> call() {
+            public void run() {
                 commitmentDao.update(stepsDone);
+            }
+        });
+    }
+
+    public void createNewStepDone(){
+        AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                /* TODO check this stuff */
+                Log.d("naed", "creating the new step done");
                 List<CommitmentWithMyStep> l = commitmentDao.getCommitmentWithMyStepList();
                 List<MyStepDone> ret = new ArrayList<>();
                 long now = new Date().getTime();
+                Log.d("naed" , "size c: " + l.size());
                 for(int i = 0; i < l.size(); i++){
                     CommitmentWithMyStep c = l.get(i);
+                    Log.d("naed" , "size "+ c.commitment.name + ": " + c.steps.size());
                     for(int j = 0; j < c.steps.size(); j++){
-                        MyStep s = c.steps.get(i);
+                        MyStep s = c.steps.get(j);
                         MyStepDone last = commitmentDao.getLastStepDone(s.idMyStep);
+                        Log.d("naed", "last step done= " + last.idMyStep+ "now = " +now + "| " + (now - last.dateStart) + ">=" + (s.repetitionDay * 1000*60*60*24));
                         // now - last.dateStart is in millisecond
-                        if(last == null || now - last.dateStart >  s.repetitionDay * 1000*60*60*24){
+                        if(last == null || now - last.dateStart >=  s.repetitionDay * 1000*60*60*24){
                             MyStepDone done = new MyStepDone(s.idMyStep, now, 0);
+                            Log.d("naed", "CREATED NEW STEP "+last.idMyStep);
                             commitmentDao.insert(done);
                             ret.add(done);
                         }
                     }
                 }
-                return ret;
+
             }
         });
     }
@@ -265,7 +278,6 @@ public class CommitmentRepository extends Repository{
         for(int i = 0; i < array.length(); i++){
             stepDoneListList.add(new MyStepDone(array.getJSONObject(i)));
         }
-
         return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
@@ -274,6 +286,7 @@ public class CommitmentRepository extends Repository{
                 commitmentDao.insert(stepDoneListList.toArray(new MyStepDone[0]));
             }
         });
+
     }
 
     @Override

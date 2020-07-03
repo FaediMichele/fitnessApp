@@ -23,6 +23,7 @@ import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.database.repository.RepositoryManager;
 import com.example.crinaed.util.Category;
 import com.example.crinaed.util.Lambda;
+import com.example.crinaed.util.Period;
 import com.example.crinaed.util.Single;
 import com.example.crinaed.util.Util;
 
@@ -100,7 +101,7 @@ public class DatabaseTest {
     }
 
     private void changeStepDone(){
-        final LiveData<List<MyStepDoneWithMyStep>> s = repositoryManager.getCommitmentRepository().getStepOnGoing(Category.MENTAL);
+        final LiveData<List<MyStepDoneWithMyStep>> s = repositoryManager.getCommitmentRepository().getStepOnGoing(Category.MENTAL, Period.DAY);
         final Single<Boolean> b = new Single<>(true);
         s.observeForever(new Observer<List<MyStepDoneWithMyStep>>() {
             @Override

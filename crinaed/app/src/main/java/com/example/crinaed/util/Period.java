@@ -1,15 +1,22 @@
 package com.example.crinaed.util;
 
+import com.example.crinaed.R;
+
 import java.util.Calendar;
 import java.util.Date;
 
 public enum Period {
-    DAY(1), WEEK(7), MONTH(30), YEAR(365), EVER(3650);
+    DAY(1, R.string.day), WEEK(7, R.string.week), MONTH(30, R.string.month), YEAR(365, R.string.year), EVER(3650, R.string.ever);
 
     private int day;
+    private int resId;
 
     public int getDay() {
         return this.day;
+    }
+
+    public int getResId(){
+        return resId;
     }
 
     public Date daysAgo(){
@@ -24,8 +31,9 @@ public enum Period {
         return cal.getTime();
     }
 
-    Period(int day) {
+    Period(int day, int resId) {
         this.day = day;
+        this.resId=resId;
     }
 
 

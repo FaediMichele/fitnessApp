@@ -68,10 +68,6 @@ public class Util {
         return dateFormat.format(new Date(lo));
     }
 
-    public static Date timestampToDate(long l){
-        return new Date(l);
-    }
-
     public static String dateToTimestamp(Date l){
         return dateToTimestamp(l, Locale.ITALY);
     }

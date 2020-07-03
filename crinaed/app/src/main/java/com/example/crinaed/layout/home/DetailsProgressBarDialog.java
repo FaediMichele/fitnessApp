@@ -25,9 +25,12 @@ import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.entity.MyStepDone;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.database.repository.CommitmentRepository;
+import com.example.crinaed.util.Category;
 import com.example.crinaed.util.Pair;
+import com.example.crinaed.util.Period;
 import com.example.crinaed.util.Single;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -39,22 +42,21 @@ public class DetailsProgressBarDialog extends Dialog{
 
     private Activity activity;
     private Dialog d;
-    private LiveData<List<MyStepDoneWithMyStep>> steps;
     private ProgressBarDetailsAdapter adapter;
     private LifecycleOwner owner;
     private String title;
+    private Category category;
 
-    public DetailsProgressBarDialog(Context context, String title, LiveData<List<MyStepDoneWithMyStep>> steps, LifecycleOwner owner) {
+    public DetailsProgressBarDialog(Context context, String title, Category category, LifecycleOwner owner) {
         super(context, R.style.DialogSlideTheme);
         this.activity = (Activity) context;
-        this.steps = steps;
+        this.category = category;
         this.title=title;
         this.owner=owner;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //gestione interfaccia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_details_progress_bar);
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -62,19 +64,60 @@ public class DetailsProgressBarDialog extends Dialog{
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView title = findViewById(R.id.title_details);
         title.setText(this.title);
-        final Single<Boolean> first=new Single<>(true);
+        final Single<Boolean> firstDay=new Single<>(true);
+        final Single<Boolean> firstWeek=new Single<>(true);
+        final Single<Boolean> zeroDay=new Single<>(false);
+        final Single<Boolean> zeroWeek=new Single<>(false);
         final RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
-        this.steps.observe(owner, new Observer<List<MyStepDoneWithMyStep>>() {
+        final List<MyStepDoneWithMyStep> stepsBoth = new ArrayList<>();
+
+        final LiveData<List<MyStepDoneWithMyStep>> stepsDay = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getStepOnGoing(category, Period.DAY);
+        final LiveData<List<MyStepDoneWithMyStep>> stepsWeek = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getStepOnGoing(category, Period.WEEK);
+
+        stepsDay.observe(owner, new Observer<List<MyStepDoneWithMyStep>>() {
             @Override
             public void onChanged(List<MyStepDoneWithMyStep> steps) {
-                //setto la recycle view
-                if(first.getVal()) {
-                    recyclerView.setHasFixedSize(true);
-                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
-                    recyclerView.setLayoutManager(layoutManager);
-                    adapter = new ProgressBarDetailsAdapter(steps);
-                    recyclerView.setAdapter(adapter);
+                if(firstDay.getVal()) {
+                    synchronized (stepsBoth) {
+                        if (stepsBoth.size() == 0 && !zeroWeek.getVal()) {
+                            stepsBoth.addAll(steps);
+                            zeroDay.setVal(true);
+                            return;
+                        }
+                        stepsBoth.addAll(steps);
+                        recyclerView.setHasFixedSize(true);
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
+                        recyclerView.setLayoutManager(layoutManager);
+                        adapter = new ProgressBarDetailsAdapter(stepsBoth);
+                        recyclerView.setAdapter(adapter);
+                        firstDay.setVal(false);
+                    }
+                } else {
+                    adapter.update(steps);
+                }
+            }
+        });
+
+        stepsWeek.observe(owner, new Observer<List<MyStepDoneWithMyStep>>() {
+            @Override
+            public void onChanged(List<MyStepDoneWithMyStep> steps) {
+                if(firstWeek.getVal()) {
+                    synchronized (stepsBoth) {
+                        if (stepsBoth.size() == 0 && !zeroDay.getVal()) {
+                            stepsBoth.addAll(steps);
+                            zeroWeek.setVal(true);
+                            return;
+                        }
+                        stepsBoth.addAll(steps);
+                        recyclerView.setHasFixedSize(true);
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
+                        recyclerView.setLayoutManager(layoutManager);
+                        adapter = new ProgressBarDetailsAdapter(stepsBoth);
+                        recyclerView.setAdapter(adapter);
+                        firstWeek.setVal(false);
+                    }
+
                 } else {
                     adapter.update(steps);
                 }

@@ -15,4 +15,9 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="write_message">Scrivi un messaggio</string>
     <string name="archive">archivio</string>
     <string name="name_surname">%s %s</string>
+    <string name="week">Week</string>
+    <string name="month">Month</string>
+    <string name="year">Year</string>
+    <string name="day">Day</string>
+    <string name="ever">Ever</string>
 </resources>

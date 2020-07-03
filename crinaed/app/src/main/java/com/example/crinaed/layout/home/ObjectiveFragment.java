@@ -2,6 +2,7 @@ package com.example.crinaed.layout.home;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.example.crinaed.ProgressBar.SliderProgressBar;
 import com.example.crinaed.ProgressBar.SliderProgressBarAdapter;
 import com.example.crinaed.R;
+import com.example.crinaed.util.Period;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.IndicatorView.draw.controller.DrawController;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -46,6 +48,26 @@ public class ObjectiveFragment  extends Fragment {
                 sliderView.setCurrentPagePosition(position);
             }
         });
+
+        view.findViewById(R.id.button_week).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                sliderView.setPeriod(Period.WEEK);
+            }
+        });
+        view.findViewById(R.id.button_month).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                sliderView.setPeriod(Period.MONTH);
+            }
+        });
+        view.findViewById(R.id.button_year).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                sliderView.setPeriod(Period.YEAR);
+            }
+        });
+
         return view;
     }
 }

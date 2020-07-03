@@ -1,81 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     package="com.example.crinaed"
     android:name=".DetailsProgressBarFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+    <Button
+        android:id="@+id/button_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="0.8dp"
+        android:background="@drawable/button_left"
+        android:text="@string/week"
+        android:textSize="12sp"
+        android:minHeight="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/button_month"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="0.8dp"
+        android:background="@drawable/button_center"
+        android:text="@string/month"
+        android:textSize="12sp"
+        android:minHeight="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/button_year"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@id/button_week"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_right"
+        android:text="@string/year"
+        android:textSize="12sp"
+        android:minHeight="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@id/button_month"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardSlider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/button_month">
 
         <com.example.crinaed.view.NestedScrollableHost
-            android:layout_height="match_parent"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
             <com.example.crinaed.ProgressBar.SliderProgressBar
                 android:id="@+id/progressBarSlider"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="match_parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardSlider"
+                app:layout_constraintTop_toBottomOf="parent"
                 app:sliderAnimationDuration="600"
                 app:sliderAutoCycleDirection="back_and_forth"
                 app:sliderIndicatorAnimationDuration="600"
                 app:sliderIndicatorGravity="center_horizontal|bottom"
-                app:sliderIndicatorMargin="15dp"
+                app:sliderIndicatorMargin="0dp"
                 app:sliderIndicatorOrientation="horizontal"
                 app:sliderIndicatorPadding="3dp"
-                app:sliderIndicatorRadius="2dp"
+                app:sliderIndicatorRadius="3dp"
                 app:sliderScrollTimeInSec="1">
+
             </com.example.crinaed.ProgressBar.SliderProgressBar>
         </com.example.crinaed.view.NestedScrollableHost>
 
     </com.google.android.material.card.MaterialCardView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        package="com.example.crinaed"
-        android:name=".DetailsProgressBarFragment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardSlider">
-
-        <Button
-            package="com.example.crinaed"
-            android:id="@+id/addNewItem"
-            android:name=".DetailsProgressBarFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add An Item" />
-
-        <Button
-            package="com.example.crinaed"
-            android:id="@+id/removeLastItem"
-            android:name=".DetailsProgressBarFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Remove Last Item" />
-
-        <Button
-            package="com.example.crinaed"
-            android:id="@+id/renewItems"
-            android:name=".DetailsProgressBarFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Renew Items" />
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

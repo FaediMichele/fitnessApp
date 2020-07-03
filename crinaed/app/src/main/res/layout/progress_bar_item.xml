@@ -3,17 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginTop="15dp">
 
     <com.example.crinaed.view.ProgressBarView
         android:id="@+id/progressBarItem"
         android:layout_width="300dp"
         android:layout_height="200dp"
+        android:layout_marginTop="5dp"
         app:angle="270"
         app:backgroundColor="@color/redPrimary"
         app:backgroundStrokeWidth="1dp"
         app:foregroundColor="@color/redSecondary"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/lineChart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,43 +23,35 @@
         app:startAngle="270"
         app:strokeWidth="5dp" />
 
-    <Button
-        android:id="@+id/button_month"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Month"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button_week"
-        app:layout_constraintEnd_toStartOf="@id/button_year"/>
-
-    <Button
-        android:id="@+id/button_year"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Year"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button_month" />
-
-    <Button
-        android:id="@+id/button_week"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Week"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_month"/>
-
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart_sport"
+        android:id="@+id/lineChart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:background="@color/cardview_dark_background"
-        app:layout_constraintBottom_toTopOf="@+id/button_month"
+        android:background="@drawable/graph"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progressBarItem"
-        />
+        app:layout_constraintTop_toBottomOf="@id/progressBarItem" />
+
+    <TextView
+        android:id="@+id/textView_repetition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/orange"
+        android:textSize="15sp"
+        android:text="Change type of objective"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lineChart" />
+
+    <Switch
+        android:id="@+id/switch_repetition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_repetition" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

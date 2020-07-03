@@ -4,10 +4,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
 import androidx.core.content.ContextCompat;
 
 import com.example.crinaed.R;
+import com.example.crinaed.util.Period;
 import com.smarteist.autoimageslider.SliderView;
 
 public class SliderProgressBar extends SliderView {
@@ -17,6 +19,10 @@ public class SliderProgressBar extends SliderView {
 
     public SliderProgressBar(Context context) {
         super(context);
+
+    }
+    public void setPeriod(Period p){
+        sliderProgressBarAdapter.setPeriod(p);
     }
 
     public SliderProgressBar(Context context, AttributeSet attrs) {

@@ -188,6 +188,8 @@ public class ServerManager {
                             Util.getInstance().setSessionId(obj.getString("SessionId"));
                             Util.getInstance().setIdUser(obj.getLong("idUser"));
 
+                            DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().createNewStepDone();
+
                             result.setVal(obj.getString("SessionId"));
                         } catch (JSONException | ExecutionException | InterruptedException e) {
                             e.printStackTrace();
