@@ -1,7 +1,5 @@
 package com.example.crinaed.layout.home;
 
-import android.content.Context;
-import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,9 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
-import com.example.crinaed.database.entity.Course;
 import com.example.crinaed.layout.social.SocialArchiveFragment;
-import com.example.crinaed.layout.social.chat.ChatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +29,7 @@ public class LearningFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_social, container, false);
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -88,9 +84,17 @@ public class LearningFragment extends Fragment {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //start acrivity learning
-                        Intent chatIntent = new Intent(getContext(), ChatActivity.class);
-                        startActivity(chatIntent);
+                        //start acrivity learning fragment del corso gia acquistato
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString(ChatActivity.SOCIAL_KEY_ID, modelloFittizio.id);
+//                        bundle.putString(ChatActivity.SOCIAL_KEY_NAME, modelloFittizio.nome);
+//                        bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME, modelloFittizio.cognome);
+//                        bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL, modelloFittizio.email);
+//                        bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE, modelloFittizio.titoloObbiettivo);
+//                        bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP, modelloFittizio.nome);
+//                        Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+//                        chatIntent.putExtras(bundle);
+//                        startActivity(chatIntent);
                     }
                 });
             }else{
@@ -194,8 +198,4 @@ public class LearningFragment extends Fragment {
             PHYSICAL,LEARNING,SOCIAL
         }
     }
-
-
-
-
 }
