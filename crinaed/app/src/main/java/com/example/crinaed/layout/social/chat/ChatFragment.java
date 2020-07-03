@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,10 +22,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.database.entity.FriendMessage;
 import com.example.crinaed.database.entity.Friendship;
 import com.example.crinaed.database.entity.join.user.UserWithUser;
 import com.example.crinaed.database.repository.FriendRepository;
+import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Single;
 import com.example.crinaed.util.Util;
 
@@ -113,6 +116,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(getActivity() != null) {
+                    ServerManager.getInstance(null).stopMessagePolling();
                     getActivity().finish();
                 }
             }
@@ -156,19 +160,31 @@ public class ChatFragment extends Fragment {
                 public void onChanged(List<FriendMessage> friendMessages) {
                     newest=friendMessages;
                     notifyDataSetChanged();
+                    Log.d("naed", "new message arrived");
                 }
             });
             this.idFriend=idFriend;
             this.idFriendship=idFriendship;
+            ServerManager.getInstance(null).startMessagePolling(idFriendship);
         }
 
         public void addItem(String message){
             // automatically update the newest
-            /* TODO add the post to the server here */
-            repo.addMessage(new FriendMessage(idFriendship, new Date().getTime(), Util.getInstance().getIdUser(), idFriend, message));
+
+            final FriendMessage friendMessage = new FriendMessage(idFriendship, new Date().getTime(), Util.getInstance().getIdUser(), idFriend, message);
+            ServerManager.getInstance(null).sendMessage(friendMessage, new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    repo.addMessage(friendMessage);
+                    return new Object[0];
+                }
+            }, new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    return new Object[0];
+                }
+            });
         }
-
-
 
         @NonNull
         @Override

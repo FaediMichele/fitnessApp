@@ -10,6 +10,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.example.crinaed.R;
+import com.example.crinaed.database.entity.FriendMessage;
 import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Single;
 import com.example.crinaed.util.Util;
@@ -36,16 +37,23 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.Semaphore;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 public class ServerManager {
     private static final String SERVER = "http://192.168.1.111:8080";
     private static ServerManager instance;
     private Context context;
+    private final Single<Boolean> pollingMessageOn = new Single<>(false);
+    private final Single<Long> lastDate = new Single<>(0L);
+    private final Single<Long> idFriendship = new Single<>(0L);
     private ServerManager(Context context){
         this.context=context;
     }
@@ -63,7 +71,7 @@ public class ServerManager {
     }
 
     static public ServerManager getInstance(Context context){
-        if(instance == null){
+        if(instance == null) {
             synchronized (DatabaseUtil.class){
                 if(instance == null){
                     instance = new ServerManager(context);
@@ -76,7 +84,6 @@ public class ServerManager {
 
 
     public void manageGet(final String query, final Lambda onResponseMethod, final Lambda onErrorMethod){
-        Log.d("naed", "manage get");
         StringRequest request = new StringRequest(Request.Method.GET, SERVER + (query.equals("") ? "" : "?" + query), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -91,14 +98,14 @@ public class ServerManager {
         Volley.newRequestQueue(this.context).add(request);
     }
 
-    public void managePost(final String body, final Lambda onResponseMethod, final Lambda onErrorMethod){
+    private void managePost(final String body, final Lambda onResponseMethod, final Lambda onErrorMethod){
         managePost(body, onResponseMethod, onErrorMethod, "");
     }
-    public void managePost(final String body, final Lambda onResponseMethod, final Lambda onErrorMethod, final String query){
+    private void managePost(final String body, final Lambda onResponseMethod, final Lambda onErrorMethod, final String query){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, SERVER+(query.equals("")?"":"?"+query), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("ServerManager", "*" + response+ "*");
+                //Log.d("ServerManager", "*" + response+ "*");
                 if(onResponseMethod != null) {
                     onResponseMethod.run(response);
                 }
@@ -273,6 +280,98 @@ public class ServerManager {
         } else{
             receiver.run(false);
         }
+    }
+
+    public void sendMessage(final FriendMessage message, Lambda onSuccess, Lambda onFailure){
+        JSONObject body = new JSONObject();
+        try {
+            body.put("idSession", Util.getInstance().getSessionId());
+            body.put("to", "friend");
+            body.put("method", "addMessage");
+            JSONObject data= new JSONObject();
+            data.put("idFriendship", message.idFriendship);
+            data.put("message", message.message);
+            body.put("data", data);
+            managePost(body.toString(), onSuccess, onFailure);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            onFailure.run();
+        }
+    }
+
+    public void receiveMessage(Long idFriendship, Lambda onSuccess, Lambda onFailure){
+        JSONObject body = new JSONObject();
+        try {
+            body.put("idSession", Util.getInstance().getSessionId());
+            body.put("to", "friend");
+            body.put("method", "getMessage");
+            JSONObject data= new JSONObject();
+            data.put("idFriendship", idFriendship);
+            synchronized (lastDate){
+                data.put("lastDate", lastDate.getVal());
+            }
+            body.put("data", data);
+            managePost(body.toString(), onSuccess, onFailure);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            onFailure.run();
+        }
+    }
+
+    public void startMessagePolling(long idFriendship){
+        synchronized (pollingMessageOn) {
+            pollingMessageOn.setVal(true);
+        }
+        synchronized (this.idFriendship) {
+            this.idFriendship.setVal(idFriendship);
+
+        }
+        synchronized (this.lastDate){
+            this.lastDate.setVal(0L);
+        }
+        runLoop();
+    }
+
+    private void runLoop(){
+        synchronized (pollingMessageOn){
+            if(!pollingMessageOn.getVal()){
+                return;
+            }
+        }
+        synchronized (idFriendship){
+            receiveMessage(idFriendship.getVal(), new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    try {
+                        JSONObject response = new JSONObject(paramether[0].toString());
+                        synchronized (lastDate){
+                            lastDate.setVal(response.getLong("lastDate"));
+                        }
+                        DatabaseUtil.getInstance().getRepositoryManager().getFriendRepository().loadData(response);
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                runLoop();
+                            }
+                        }, 2000);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return new Object[0];
+                }
+            }, new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    return new Object[0];
+                }
+            });
+        }
+
+    }
+
+    public void stopMessagePolling(){
+        pollingMessageOn.setVal(false);
     }
 
 

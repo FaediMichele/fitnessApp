@@ -46,25 +46,6 @@ public class ObjectiveFragment  extends Fragment {
                 sliderView.setCurrentPagePosition(position);
             }
         });
-
-        view.findViewById(R.id.renewItems).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //renewItems(view);
-            }
-        });
-        view.findViewById(R.id.addNewItem).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //addNewItem(view);
-            }
-        });
-        view.findViewById(R.id.removeLastItem).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //removeLastItem(view);
-            }
-        });
         return view;
     }
 }

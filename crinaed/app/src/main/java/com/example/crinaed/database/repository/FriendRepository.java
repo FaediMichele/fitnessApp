@@ -90,16 +90,25 @@ public class FriendRepository extends Repository{
 
     @Override
     public Future<?> loadData(JSONObject data) throws JSONException {
-        JSONArray array = data.getJSONArray("Friendship");
-        final List<Friendship> friendships = new ArrayList<>();
         final List<FriendMessage> messages = new ArrayList<>();
-        for(int i = 0; i < array.length(); i++){
-            friendships.add(new Friendship(array.getJSONObject(i)));
+        final List<Friendship> friendships = new ArrayList<>();
+
+        try{
+            final JSONArray arrayFriend = data.getJSONArray("Friendship");
+            for(int i = 0; i < arrayFriend.length(); i++){
+                friendships.add(new Friendship(arrayFriend.getJSONObject(i)));
+            }
+        } catch (JSONException ignore){
         }
-        array = data.getJSONArray("Message");
-        for(int i = 0; i < array.length(); i++){
-            messages.add(new FriendMessage(array.getJSONObject(i)));
+
+        try{
+            final JSONArray arrayMessage = data.getJSONArray("Message");
+            for(int i = 0; i < arrayMessage.length(); i++){
+                messages.add(new FriendMessage(arrayMessage.getJSONObject(i)));
+            }
+        } catch (JSONException ignore){
         }
+
         return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
