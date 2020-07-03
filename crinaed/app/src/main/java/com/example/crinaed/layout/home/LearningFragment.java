@@ -1,5 +1,6 @@
 package com.example.crinaed.layout.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,7 +38,7 @@ public class LearningFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        LearningFragment.LearningAdapter adapter = new LearningFragment.LearningAdapter(LearningFragment.ModelloFittizio.getListModel());
+        LearningFragment.LearningAdapter adapter = new LearningFragment.LearningAdapter(LearningFragment.ModelloCourse.getListModel());
         recyclerView.setAdapter(adapter);
         return view;
     }
@@ -70,10 +72,23 @@ public class LearningFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull LearningFragment.LearningViewHolder holder, int position) {
             if(position > 0) {
+                ModelloCourse.TypeCourse typeCourse = this.modelloFittizio.get(position).typeCourse;
+                switch (typeCourse){
+                    case SOCIAL:
+                        holder.itemView.findViewById(R.id.course_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_social));
+                        break;
+                    case LEARNING:
+                        holder.itemView.findViewById(R.id.course_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_learning));
+                        break;
+                    case PHYSICAL:
+                        holder.itemView.findViewById(R.id.course_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_physical));
+                        break;
+                }
                 holder.imageView.setImageDrawable(getActivity().getDrawable(R.drawable.simple_people));
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //start acrivity learning
                         Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                         startActivity(chatIntent);
                     }
@@ -82,6 +97,8 @@ public class LearningFragment extends Fragment {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+                        //start archivio learning
                         SocialArchiveFragment socialArchiveFragment = new SocialArchiveFragment();
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.container, socialArchiveFragment, TAG_SOCIAL_ARCHIVE);
@@ -126,12 +143,15 @@ public class LearningFragment extends Fragment {
         String title;
         Image image;
         int price;
+        TypeCourse typeCourse;
 
-        public ModelloCourse(String id, String titleCourse, Image imageCourse, int price) {
+        public ModelloCourse(String id, String titleCourse, Image imageCourse, int price, TypeCourse typeCourse ) {
             this.id = id;
             this.title = titleCourse;
             this.image = imageCourse;
             this.price = price;
+            this.typeCourse = typeCourse;
+
         }
 
         @Override
@@ -146,29 +166,36 @@ public class LearningFragment extends Fragment {
 
         static public List<ModelloCourse> getListModel(){
             List<LearningFragment.ModelloCourse> modelloFittizioList = new ArrayList<>();
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
-            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
+            modelloFittizioList.add(new ModelloCourse("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
             return modelloFittizioList;
         }
+
+        enum   TypeCourse{
+            PHYSICAL,LEARNING,SOCIAL
+        }
     }
+
+
+
 
 }

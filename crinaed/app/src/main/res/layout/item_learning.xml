@@ -9,6 +9,7 @@
     android:padding="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/course_item"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:padding="10dp"
