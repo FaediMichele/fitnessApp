@@ -3,12 +3,14 @@ package com.example.crinaed.ProgressBar;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
@@ -44,6 +46,7 @@ import java.util.List;
 public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBarAdapter.SliderProgressBarVH> {
     private Context context;
     private LifecycleOwner owner;
+    private SliderProgressBarVH[] created = new SliderProgressBarVH[Category.values().length];
 
     public SliderProgressBarAdapter(Context context, LifecycleOwner owner) {
         CommitmentRepository repo = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository();
@@ -59,7 +62,21 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
     @Override
     public SliderProgressBarVH onCreateViewHolder(ViewGroup parent) {
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_bar_item, null);
+        Log.d("naed", "creating view holder");
         return new SliderProgressBarVH(inflate, context, owner);
+    }
+
+    @NonNull
+    @Override
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
+        if (created[position] != null) {
+            created[position].releaseLiveData();
+            super.destroyItem(container, position, created[position]);
+        }
+        created[position] = onCreateViewHolder(container);
+        container.addView(created[position].itemView);
+        onBindViewHolder(created[position], position);
+        return created[position];
     }
 
     @Override
@@ -126,7 +143,6 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
             @Override
             public void onChanged(List<MyStepDoneWithMyStep> steps) {
                 todayDay=steps;
-
                 updateProgressBar();
             }
         };
@@ -246,7 +262,24 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
                 progressBarView.setProgress(100*sum / weights);
             }
         }
-
+        public void releaseLiveData(){
+            if(historyDay != null){
+                historyDay.removeObserver(historyObserverDay);
+                historyDay=null;
+            }
+            if(historyWeek != null){
+                historyWeek.removeObserver(historyObserverDay);
+                historyWeek=null;
+            }
+            if(onGoingDay != null){
+                onGoingDay.removeObserver(onGoingObserverDay);
+                onGoingDay=null;
+            }
+            if(onGoingWeek != null){
+                onGoingWeek.removeObserver(onGoingObserverDay);
+                onGoingWeek=null;
+            }
+        }
 
 
         private void setCategory(final Category category){

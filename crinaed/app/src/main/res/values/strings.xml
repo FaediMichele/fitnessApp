@@ -21,4 +21,7 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="day">Day</string>
     <string name="ever">Ever</string>
     <string name="graph_title">%s statistics</string>
+    <string name="delete">Delete</string>
+    <string name="confirm">Confirm</string>
+    <string name="progress_text">%d/%d</string>
 </resources>

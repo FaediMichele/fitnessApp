@@ -9,6 +9,7 @@ import android.view.View;
 import androidx.core.content.ContextCompat;
 
 import com.example.crinaed.R;
+import com.example.crinaed.util.Pair;
 import com.example.crinaed.util.Period;
 import com.smarteist.autoimageslider.SliderView;
 
@@ -19,7 +20,6 @@ public class SliderProgressBar extends SliderView {
 
     public SliderProgressBar(Context context) {
         super(context);
-
     }
 
     public SliderProgressBar(Context context, AttributeSet attrs) {
@@ -37,27 +37,8 @@ public class SliderProgressBar extends SliderView {
     public void onPageSelected(int position) {
         super.onPageSelected(position);
         this.sliderProgressBarAdapter = (SliderProgressBarAdapter) super.getSliderAdapter();
-        int primaryColor;
-        int secondaryColor;
-        switch(sliderProgressBarAdapter.getCategoryForPosition(position)){
-            case SOCIAL:
-                primaryColor = ContextCompat.getColor(getContext(), R.color.greenPrimary);
-                secondaryColor = ContextCompat.getColor(getContext(),R.color.greenSecondary);
-                break;
-            case MENTAL:
-                primaryColor = ContextCompat.getColor(getContext(),R.color.bluPrimary);
-                secondaryColor = ContextCompat.getColor(getContext(),R.color.bluSecondary);
-                break;
-            case SPORT:
-                primaryColor = ContextCompat.getColor(getContext(),R.color.redPrimary);
-                secondaryColor = ContextCompat.getColor(getContext(),R.color.redSecondary);
-                break;
-            default:
-                primaryColor = ContextCompat.getColor(getContext(),R.color.redPrimary);
-                secondaryColor = ContextCompat.getColor(getContext(),R.color.redSecondary);
-                break;
-        }
-        super.setIndicatorSelectedColor(primaryColor);
+        Pair<Integer,Integer> color = sliderProgressBarAdapter.getCategoryForPosition(position).toColor(getContext());
+        super.setIndicatorSelectedColor(color.getX());
     }
 
     @Override

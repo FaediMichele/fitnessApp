@@ -89,7 +89,7 @@ public class DetailsProgressBarDialog extends Dialog{
                         recyclerView.setHasFixedSize(true);
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
                         recyclerView.setLayoutManager(layoutManager);
-                        adapter = new ProgressBarDetailsAdapter(stepsBoth);
+                        adapter = new ProgressBarDetailsAdapter(stepsBoth, getContext());
                         recyclerView.setAdapter(adapter);
                         firstDay.setVal(false);
                     }
@@ -113,30 +113,25 @@ public class DetailsProgressBarDialog extends Dialog{
                         recyclerView.setHasFixedSize(true);
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
                         recyclerView.setLayoutManager(layoutManager);
-                        adapter = new ProgressBarDetailsAdapter(stepsBoth);
+                        adapter = new ProgressBarDetailsAdapter(stepsBoth, getContext());
                         recyclerView.setAdapter(adapter);
                         firstWeek.setVal(false);
                     }
-
                 } else {
                     adapter.update(steps);
                 }
             }
         });
 
-
-
-        Button confirm = findViewById(R.id.conferma);
-        Button del = findViewById(R.id.cancella);
+        Button confirm = findViewById(R.id.confirm_button);
+        Button del = findViewById(R.id.delete_button);
 
         // retrieve the data from all the holder and save them on the db(also update the percentage)
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pair<Boolean, MyStepDone[]> data = adapter.getDataToSave();
-                if(data.getX()){
-                    DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().updateMyStepDone(data.getY());
-                }
+                MyStepDone[] data = adapter.getDataToSave();
+                DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().updateMyStepDone(data);
                 dismiss();
             }
         });

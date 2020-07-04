@@ -1,14 +1,19 @@
 package com.example.crinaed.ProgressBarDetails;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,10 +35,12 @@ public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarD
 
     private List<MyStepDoneWithMyStep> stepList;
     private List<ProgressBarDetailsViewHolder> holderList;
+    private Context context;
 
-    public ProgressBarDetailsAdapter(List<MyStepDoneWithMyStep> steps) {
+    public ProgressBarDetailsAdapter(List<MyStepDoneWithMyStep> steps, Context context) {
         this.stepList = steps;
         this.holderList = new ArrayList<>(steps.size());
+        this.context=context;
     }
 
     public void update(final List<MyStepDoneWithMyStep> newSteps){
@@ -68,60 +75,47 @@ public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarD
     @NonNull
     @Override
     public ProgressBarDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView;
+        View itemView = null;
         TypeOfStep type=TypeOfStep.values()[viewType];
-        switch (type){
-            case CHECKLIST:
-                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_checked_progress_bar, parent, false);
-                break;
-            case PROGRESSION:
-                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progressive_progress_bar, parent, false);
-                break;
-            default:
-                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progressive_progress_bar, parent, false);
-                break;
+        // progression
+        if (type == TypeOfStep.CHECKLIST) {
+            itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_checked_progress_bar, parent, false);
+        } else { // Progression
+            itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progressive_progress_bar, parent, false);
         }
-        ProgressBarDetailsViewHolder ret = new ProgressBarDetailsViewHolder(itemView);
+        ProgressBarDetailsViewHolder ret = new ProgressBarDetailsViewHolder(itemView, context);
         holderList.add(ret);
         return ret;
     }
 
-    // is optimized to use return only the data that has been changed.
-    public Pair<Boolean, MyStepDone[]> getDataToSave(){
+
+    public MyStepDone[] getDataToSave(){
         MyStepDone[] ret = new MyStepDone[stepList.size()];
         for(int i=0; i< ret.length; i++){
             ret[i] = stepList.get(i).stepDone;
             if(stepList.get(i).step.getType() == TypeOfStep.CHECKLIST){
-                if(ret[i].result == (int) (holderList.get(i).checkBox.isChecked()?stepList.get(i).step.max:0)){
-                    ret[i]=null;
-                    continue;
-                }
                 ret[i].result = (int) (holderList.get(i).checkBox.isChecked()?stepList.get(i).step.max:0);
             } else{
-                if(holderList.get(i).editText.getText().toString().equals(Integer.valueOf(ret[i].result).toString())){
-                    ret[i]=null;
-                    continue;
-                }
-                try{
-                    ret[i].result = Integer.parseInt(holderList.get(i).editText.getText().toString());
-                } catch (NumberFormatException e) {
-                    return new Pair<>(false, null);
-                }
+                ret[i].result = holderList.get(i).seekBar.getProgress();
             }
         }
-        return new Pair<>(true, ret);
+        return ret;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProgressBarDetailsViewHolder holder, int position) {
         MyStepDoneWithMyStep currentStep = this.stepList.get(position);
-        holder.description.setText(currentStep.step.name);
+        holder.setDescription(currentStep.step.name);
         switch (currentStep.step.getType()){
             case CHECKLIST:
                 holder.checkBox.setChecked(currentStep.stepDone.result == currentStep.step.max);
+                holder.previousVal=holder.checkBox.isChecked()?1:0;
+                holder.checkBox.setClickable(!holder.checkBox.isChecked());
                 break;
             case PROGRESSION:
-                holder.editText.setText(String.valueOf(currentStep.stepDone.result), TextView.BufferType.EDITABLE);
+                holder.seekBar.setProgress(currentStep.stepDone.result);
+                holder.seekBar.setMax((int) currentStep.step.max);
+                holder.previousVal=currentStep.stepDone.result;
                 break;
         }
     }
@@ -141,17 +135,55 @@ public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarD
         View itemView;
         TextView description;
         CheckBox checkBox;
-        EditText editText;
+        SeekBar seekBar;
+        boolean checklist=false;
 
-        public ProgressBarDetailsViewHolder(@NonNull View itemView) {
+        int previousVal=0;
+
+        public ProgressBarDetailsViewHolder(@NonNull View itemView, final Context context) {
             super(itemView);
             this.description = itemView.findViewById(R.id.description_step);
-            if (itemView.findViewById(R.id.value_step) != null){
-                this.editText = itemView.findViewById(R.id.value_step);
+            if (itemView.findViewById(R.id.seekBar) != null){
+                this.seekBar = itemView.findViewById(R.id.seekBar);
+                final TextView seekBarValue= itemView.findViewById(R.id.progress_text);
+                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if(progress < previousVal){
+                            seekBar.setProgress(previousVal);
+                        }else{
+                            seekBarValue.setText(context.getString(R.string.progress_text, progress, seekBar.getMax()));
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
             }else{
-                this.checkBox = itemView.findViewById(R.id.value_step_checked);
+                this.checkBox = itemView.findViewById(R.id.checkBox);
+                checklist=true;
             }
-            this.itemView = itemView;;
+            this.itemView = itemView;
+        }
+
+        public void setDescription(String text){
+            text = text.substring(0, 1).toUpperCase() + text.substring(1);
+            description.setText(text);
+        }
+
+        public float getResult(){
+            if(checklist){
+                return checkBox.isChecked()?1:previousVal;
+            } else{
+                return seekBar.getProgress();
+            }
         }
     }
 }

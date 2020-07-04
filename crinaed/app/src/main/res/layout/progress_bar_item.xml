@@ -50,7 +50,8 @@
                 app:foregroundColor="@color/redSecondary"
                 app:progress="10"
                 app:startAngle="270"
-                app:strokeWidth="10dp" />
+                app:strokeWidth="10dp"
+                app:percentageTextSize="40sp"/>
 
                 <TextView
                     android:id="@+id/textView_graph_title"

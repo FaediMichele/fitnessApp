@@ -42,32 +42,12 @@ public class ObjectiveFragment  extends Fragment {
         sliderView.setScrollTimeInSec(3);
         sliderView.setAutoCycle(false);
         sliderView.startAutoCycle();
-        sliderView.setOnIndicatorClickListener(new DrawController.ClickListener() {
+        /*sliderView.setOnIndicatorClickListener(new DrawController.ClickListener() {
             @Override
             public void onIndicatorClicked(int position) {
                 sliderView.setCurrentPagePosition(position);
             }
-        });
-
-        /*view.findViewById(R.id.button_week).setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                sliderView.setPeriod(Period.WEEK);
-            }
-        });
-        view.findViewById(R.id.button_month).setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                sliderView.setPeriod(Period.MONTH);
-            }
-        });
-        view.findViewById(R.id.button_year).setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                sliderView.setPeriod(Period.YEAR);
-            }
         });*/
-
         return view;
     }
 }
