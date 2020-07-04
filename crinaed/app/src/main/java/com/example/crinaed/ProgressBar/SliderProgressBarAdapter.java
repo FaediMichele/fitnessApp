@@ -3,17 +3,12 @@ package com.example.crinaed.ProgressBar;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.icu.text.SimpleDateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
@@ -101,7 +96,8 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
         final Single<Boolean> first = new Single<>(true);
         View itemView;
         ProgressBarView progressBarView;
-        TextView textView;
+        TextView textView_title_page;
+        TextView textView_graph_title;
         Button week;
         Button month;
         Button year;
@@ -161,8 +157,10 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
         public SliderProgressBarVH(View itemView, final Context context, LifecycleOwner owner) {
             super(itemView);
             chart= itemView.findViewById(R.id.lineChart);
+            chart.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
             progressBarView = itemView.findViewById(R.id.progressBarItem);
-            textView = itemView.findViewById(R.id.item_category);
+            textView_title_page = itemView.findViewById(R.id.item_category);
+            textView_graph_title = itemView.findViewById(R.id.textView_graph_title);
             week = itemView.findViewById(R.id.button_week);
             month = itemView.findViewById(R.id.button_month);
             year = itemView.findViewById(R.id.button_year);
@@ -258,7 +256,8 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
                 Pair<Integer, Integer> color = category.toColor(context);
                 progressBarView.setForegroundColor(color.getX());
                 progressBarView.setBackgroundColor(color.getY());
-                textView.setText(context.getString(category.getRes()));
+                textView_title_page.setText(context.getString(category.getRes()));
+                textView_graph_title.setText(context.getString(R.string.graph_title, context.getString(category.getRes())));
                 updateObserver();
             }
         }

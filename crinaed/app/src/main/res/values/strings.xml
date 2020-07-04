@@ -20,4 +20,5 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="year">Year</string>
     <string name="day">Day</string>
     <string name="ever">Ever</string>
+    <string name="graph_title">%s statistics</string>
 </resources>
