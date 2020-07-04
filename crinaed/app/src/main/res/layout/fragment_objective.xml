@@ -29,14 +29,14 @@
                 app:sliderAnimationDuration="600"
                 app:sliderAutoCycleDirection="back_and_forth"
                 app:sliderIndicatorAnimationDuration="600"
-                app:sliderIndicatorGravity="center_horizontal|bottom"
-                app:sliderIndicatorMargin="15dp"
-                app:sliderIndicatorOrientation="horizontal"
+                appliderIndicatorOrientation="horizontal"
                 app:sliderIndicatorPadding="3dp"
                 app:sliderIndicatorRadius="2dp"
                 app:sliderScrollTimeInSec="1">
             </com.example.crinaed.ProgressBar.SliderProgressBar>
-        </com.example.crinaed.view.NestedScrollableHost>
+        </com.example.crinaed.view.NestedScrollableHost>:sliderIndicatorGravity="center_horizontal|bottom"
+                app:sliderIndicatorMargin="15dp"
+                app:s
 
     </com.google.android.material.card.MaterialCardView>
 

@@ -11,16 +11,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
+import com.example.crinaed.layout.social.chat.IdentityFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LearningBuySearchFragment extends Fragment  {
     public static final String TAG_SOCIAL_ARCHIVE = "SOCIAL_FRAGMENT_TO_SOCIAL_ARCHIVE_FRAGMENT";
+    public static final String TAG_DETAIL = "LEARNING_BUY_FRAGMENT_TO_LEARNING_BUY_DETAIL_FRAGMENT";
     final public static int TYPE_VIEW_ITEM_VIEW_ARCHIVE = 0;
     final public static int TYPE_VIEW_VIEW_NORMAL = 1;
 
@@ -70,6 +73,12 @@ public class LearningBuySearchFragment extends Fragment  {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    LearningBuyDetailsFragment learningBuyDetailsFragment = new LearningBuyDetailsFragment();
+                    //learningBuyDetailsFragment.setArguments(dataForChatActivity);
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.container_learning, learningBuyDetailsFragment, TAG_DETAIL);
+                    //transaction.addToBackStack(TAG_BACK_STECK);
+                    transaction.commit();
                 }
             });
         }
