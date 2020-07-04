@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.database.repository.CommitmentRepository;
 import com.example.crinaed.util.Category;
+import com.example.crinaed.util.Pair;
 import com.example.crinaed.util.Period;
 import com.example.crinaed.util.Single;
 import com.example.crinaed.view.GraphUtil;
@@ -45,30 +47,14 @@ import java.util.List;
  * This class manage the categories and the relatives Dialog.
  */
 public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBarAdapter.SliderProgressBarVH> {
-
-    public final static String TAG = "LAUNCH_DETAIL_FRAGMENT";
     private Context context;
     private LifecycleOwner owner;
-    private Single<Period> period = new Single<>(Period.WEEK);
-    private List<SliderProgressBarVH> holders = new ArrayList<>();
 
     public SliderProgressBarAdapter(Context context, LifecycleOwner owner) {
         CommitmentRepository repo = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository();
         this.owner=owner;
         this.context = context;
         repo.updateMyStepDone();
-    }
-
-    public void setPeriod(Period period){
-        if (this.period.getVal() != period) {
-            this.period.setVal(period);
-            updateGraph();
-        }
-    }
-    private void updateGraph(){
-        for(SliderProgressBarVH holder : holders){
-            holder.update();
-        }
     }
 
     public Category getCategoryForPosition(int position){
@@ -78,68 +64,32 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
     @Override
     public SliderProgressBarVH onCreateViewHolder(ViewGroup parent) {
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_bar_item, null);
-        holders.add(new SliderProgressBarVH(inflate, context, owner, period));
-        return holders.get(holders.size()-1);
+        return new SliderProgressBarVH(inflate, context, owner);
     }
 
     @Override
     public void onBindViewHolder(final SliderProgressBarVH viewHolder, final int position) {
         viewHolder.setCategory(getCategoryForPosition(position));
-        int primaryColor;
-        int secondaryColor;
-
-        switch(Category.values()[position]){
-            case SOCIAL:
-                primaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.greenPrimary);
-                secondaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.greenSecondary);
-                break;
-            case MENTAL:
-                primaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.bluPrimary);
-                secondaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.bluSecondary);
-                break;
-            case SPORT:
-                primaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.redPrimary);
-                secondaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.redSecondary);
-                break;
-            default:
-                primaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.redPrimary);
-                secondaryColor = ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.redSecondary);
-                break;
-        }
-        viewHolder.progressBarView.setForegroundColor(primaryColor);
-        viewHolder.progressBarView.setBackgroundColor(secondaryColor);
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        viewHolder.progressBarView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Float progress = viewHolder.progressBarView.getProgress();
                 // progress = (progress+10)%100;
                 // viewHolder.progressBarView.setProgress(progress);
                 //build data for dialog
-                if(!viewHolder.isDialog()){
+                if(!viewHolder.status){
                     DetailsProgressBarDialog dialog = new DetailsProgressBarDialog(context, context.getString(getCategoryForPosition(position).getRes()), getCategoryForPosition(position), owner);
                     dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
-                            viewHolder.setDialogStatus(false);
+                            viewHolder.status = false;
                         }
                     });
-                    viewHolder.setDialogStatus(true);
+                    viewHolder.status=true;
                     dialog.show();
                 }
             }
         });
-    }
-
-    private Float getPercentProgress (List<MyStepDoneWithMyStep> steps){
-        if(steps.size()==0){
-            return 1f;
-        }
-        Double result = 0.0;
-        for (MyStepDoneWithMyStep step: steps) {
-            result = result + ((double) step.stepDone.result)/step.step.max;
-        }
-        result = result / steps.size();
-        return result.floatValue()*100;
     }
 
     @Override
@@ -151,110 +101,178 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
         final Single<Boolean> first = new Single<>(true);
         View itemView;
         ProgressBarView progressBarView;
-        Switch switch_repetition;
+        TextView textView;
+        Button week;
+        Button month;
+        Button year;
         LineChart chart;
-        Single<Period> period;
+        Period period;
 
         CommitmentRepository repo = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository();
         Category category;
         Context context;
         LifecycleOwner owner;
-        List<MyStepDoneWithMyStep> newest;
-        Single<Period> repetition;
-        LiveData<List<MyStepDoneWithMyStep>> onGoing = null;
-        LiveData<List<MyStepDoneWithMyStep>> history = null;
-        private boolean status = false;
+        List<MyStepDoneWithMyStep> newestDay;
+        List<MyStepDoneWithMyStep> newestWeek;
+        List<MyStepDoneWithMyStep> newestBoth=new ArrayList<>();
+        List<MyStepDoneWithMyStep> todayDay;
+        List<MyStepDoneWithMyStep> todayWeek;
+        List<MyStepDoneWithMyStep> todayBoth=new ArrayList<>();
+
+        LiveData<List<MyStepDoneWithMyStep>> onGoingDay = null;
+        LiveData<List<MyStepDoneWithMyStep>> onGoingWeek = null;
+        LiveData<List<MyStepDoneWithMyStep>> historyDay = null;
+        LiveData<List<MyStepDoneWithMyStep>> historyWeek = null;
+        boolean status = false;
 
 
-        final Observer<List<MyStepDoneWithMyStep>> onGoingObserver = new Observer<List<MyStepDoneWithMyStep>>() {
+        final Observer<List<MyStepDoneWithMyStep>> onGoingObserverDay = new Observer<List<MyStepDoneWithMyStep>>() {
             @Override
             public void onChanged(List<MyStepDoneWithMyStep> steps) {
-                if(steps.size() == 0){
-                    progressBarView.setProgress(0);
-                } else {
-                    float sum = 0;
-                    float weights = 0;
-                    for (MyStepDoneWithMyStep step : steps) {
-                        sum += step.stepDone.result;
-                        weights += step.step.max;
-                    }
-                    progressBarView.setProgress(100*sum / weights);
-                }
+                todayDay=steps;
+
+                updateProgressBar();
+            }
+        };
+        final Observer<List<MyStepDoneWithMyStep>> onGoingObserverWeek = new Observer<List<MyStepDoneWithMyStep>>() {
+            @Override
+            public void onChanged(List<MyStepDoneWithMyStep> steps) {
+                todayWeek=steps;
+                updateProgressBar();
             }
         };
 
-        final Observer<List<MyStepDoneWithMyStep>> historyObserver = new Observer<List<MyStepDoneWithMyStep>>() {
+        final Observer<List<MyStepDoneWithMyStep>> historyObserverDay = new Observer<List<MyStepDoneWithMyStep>>() {
             @Override
             public void onChanged(List<MyStepDoneWithMyStep> steps) {
-                newest=steps;
-                setLine(steps);
+                newestDay=steps;
+                setLine();
+                //Log.d("naed", category.name() + "-> updated the data: " + steps.toString());
+            }
+        };
+        final Observer<List<MyStepDoneWithMyStep>> historyObserverWeek = new Observer<List<MyStepDoneWithMyStep>>() {
+            @Override
+            public void onChanged(List<MyStepDoneWithMyStep> steps) {
+                newestWeek=steps;
+                setLine();
             }
         };
 
-        public SliderProgressBarVH(View itemView, final Context context, LifecycleOwner owner, Single<Period> period) {
+        public SliderProgressBarVH(View itemView, final Context context, LifecycleOwner owner) {
             super(itemView);
             chart= itemView.findViewById(R.id.lineChart);
             progressBarView = itemView.findViewById(R.id.progressBarItem);
+            textView = itemView.findViewById(R.id.item_category);
+            week = itemView.findViewById(R.id.button_week);
+            month = itemView.findViewById(R.id.button_month);
+            year = itemView.findViewById(R.id.button_year);
 
-            repetition = new Single<>(Period.DAY);
-            switch_repetition = itemView.findViewById(R.id.switch_repetition);
-            switch_repetition.setText(context.getString(repetition.getVal().getResId()));
-            switch_repetition.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(repetition.getVal() == Period.DAY){
-                        repetition.setVal(Period.WEEK);
-                    } else {
-                        repetition.setVal(Period.DAY);
-                    }
-                    switch_repetition.setText(context.getString(repetition.getVal().getResId()));
-                    updateObserver();
-                    update();
-                }
-            });
             this.itemView = itemView;
             this.context=context;
             this.owner=owner;
 
-            this.period=period;
-        }
+            week.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    period=Period.WEEK;
+                    update();
+                }
+            });
 
-        public void setDialogStatus(boolean status){
-            this.status=status;
-        }
-        public boolean isDialog(){
-            return this.status;
-        }
+            month.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    period=Period.MONTH;
+                    update();
+                }
+            });
 
+            year.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    period=Period.YEAR;
+                    update();
+                }
+            });
 
-        private void updateObserver(){
-            if(history != null){
-                history.removeObserver(historyObserver);
-            }
-            history = repo.getStepHistory(category, period.getVal().daysAgo(), repetition.getVal());
-            history.observe(owner, historyObserver);
-
-            if(onGoing != null){
-                onGoing.removeObserver(onGoingObserver);
-            }
-            onGoing = repo.getStepOnGoing(category, repetition.getVal());
-            onGoing.observe(owner, onGoingObserver);
+            this.period=Period.WEEK;
         }
 
         public void update(){
-            setLine(newest);
+            updateObserver();
+            updateProgressBar();
+            setLine();
         }
+
+        private void updateObserver(){
+            if(historyDay != null){
+                historyDay.removeObserver(historyObserverDay);
+            }
+            historyDay = repo.getStepHistory(category, period.daysAgo(), Period.DAY);
+            historyDay.observe(owner, historyObserverDay);
+            if(historyWeek != null){
+                historyWeek.removeObserver(historyObserverDay);
+            }
+            historyWeek = repo.getStepHistory(category, period.daysAgo(), Period.WEEK);
+            historyWeek.observe(owner, historyObserverWeek);
+
+            if(onGoingDay != null){
+                onGoingDay.removeObserver(onGoingObserverDay);
+            }
+            onGoingDay = repo.getStepOnGoing(category, Period.DAY);
+            onGoingDay.observe(owner, onGoingObserverDay);
+
+            if(onGoingWeek != null){
+                onGoingWeek.removeObserver(onGoingObserverDay);
+            }
+            onGoingWeek = repo.getStepOnGoing(category, Period.WEEK);
+            onGoingWeek.observe(owner, onGoingObserverWeek);
+        }
+        private void updateProgressBar(){
+            todayBoth.clear();
+            if(todayDay!=null){
+                todayBoth.addAll(todayDay);
+            }
+            if(todayWeek!=null){
+                todayBoth.addAll(todayWeek);
+            }
+            if(todayBoth.size() == 0){
+                progressBarView.setProgress(0);
+            } else {
+                float sum = 0;
+                float weights = 0;
+                for (MyStepDoneWithMyStep step : todayBoth) {
+                    sum += step.stepDone.result;
+                    weights += step.step.max;
+                }
+                progressBarView.setProgress(100*sum / weights);
+            }
+        }
+
+
 
         private void setCategory(final Category category){
             if(first.getVal()){
                 this.category=category;
                 first.setVal(false);
+                Pair<Integer, Integer> color = category.toColor(context);
+                progressBarView.setForegroundColor(color.getX());
+                progressBarView.setBackgroundColor(color.getY());
+                textView.setText(context.getString(category.getRes()));
                 updateObserver();
             }
         }
 
-        private void setLine(List<MyStepDoneWithMyStep> data){
-            List<Entry> entries = GraphUtil.getGraphData(data, period.getVal());
+        private void setLine(){
+            newestBoth.clear();
+            if(newestDay!=null){
+                newestBoth.addAll(newestDay);
+            }
+            if(newestWeek!=null){
+                newestBoth.addAll(newestWeek);
+            }
+            //Log.d("naed", category.name() + " -> newest both: " + newestBoth);
+            List<Entry> entries = GraphUtil.getGraphData(newestBoth, period);
             LineData lineData = new LineData();
             setLineDataSet(lineData, new LineDataSet(entries, context.getString(category.getRes())), category);
             chart.setData(lineData);

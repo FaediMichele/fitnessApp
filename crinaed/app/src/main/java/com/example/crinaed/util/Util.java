@@ -68,6 +68,11 @@ public class Util {
         return dateFormat.format(new Date(lo));
     }
 
+    public static String timestampToIsoMonth(long lo, Locale l){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", l);
+        return dateFormat.format(new Date(lo));
+    }
+
     public static String dateToTimestamp(Date l){
         return dateToTimestamp(l, Locale.ITALY);
     }

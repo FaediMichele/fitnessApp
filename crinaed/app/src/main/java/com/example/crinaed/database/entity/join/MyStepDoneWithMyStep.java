@@ -6,6 +6,8 @@ import androidx.room.Relation;
 import com.example.crinaed.database.entity.MyStep;
 import com.example.crinaed.database.entity.MyStepDone;
 
+import org.json.JSONException;
+
 import java.util.Objects;
 
 public class MyStepDoneWithMyStep {
@@ -27,5 +29,14 @@ public class MyStepDoneWithMyStep {
     @Override
     public int hashCode() {
         return Objects.hash(stepDone, step);
+    }
+
+    @Override
+    public String toString(){
+        try {
+            return "{step:" + step.toJson().toString() + ", stepDone: " + stepDone.toJson().toString()+"}";
+        } catch (JSONException e) {
+            return super.toString();
+        }
     }
 }

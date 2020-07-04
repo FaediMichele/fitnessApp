@@ -21,9 +21,6 @@ public class SliderProgressBar extends SliderView {
         super(context);
 
     }
-    public void setPeriod(Period p){
-        sliderProgressBarAdapter.setPeriod(p);
-    }
 
     public SliderProgressBar(Context context, AttributeSet attrs) {
         super(context, attrs);

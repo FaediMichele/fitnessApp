@@ -49,7 +49,7 @@ public class ObjectiveFragment  extends Fragment {
             }
         });
 
-        view.findViewById(R.id.button_week).setOnClickListener(new View.OnClickListener(){
+        /*view.findViewById(R.id.button_week).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 sliderView.setPeriod(Period.WEEK);
@@ -66,7 +66,7 @@ public class ObjectiveFragment  extends Fragment {
             public void onClick(View v) {
                 sliderView.setPeriod(Period.YEAR);
             }
-        });
+        });*/
 
         return view;
     }
