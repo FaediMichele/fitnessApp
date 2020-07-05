@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
-import com.example.crinaed.layout.social.chat.IdentityFragment;
+import com.example.crinaed.deprecated.LearningBoughtFragmentDeprecated;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,11 +73,17 @@ public class LearningBuySearchFragment extends Fragment  {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LearningBuyDetailsFragment learningBuyDetailsFragment = new LearningBuyDetailsFragment();
-                    //learningBuyDetailsFragment.setArguments(dataForChatActivity);
+//                    LearningBuyDetailsFragment learningBuyDetailsFragment = new LearningBuyDetailsFragment();
+//                    //learningBuyDetailsFragment.setArguments(dataForChatActivity);
+//                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+//                    transaction.replace(R.id.container_learning, learningBuyDetailsFragment, TAG_DETAIL);
+//                    //transaction.addToBackStack(TAG_BACK_STECK);
+//                    transaction.commit();
+
+                    //da eliminare
+                    LearningBoughtFragmentDeprecated learningBuyDetailsFragment = new LearningBoughtFragmentDeprecated();
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.container_learning, learningBuyDetailsFragment, TAG_DETAIL);
-                    //transaction.addToBackStack(TAG_BACK_STECK);
                     transaction.commit();
                 }
             });
