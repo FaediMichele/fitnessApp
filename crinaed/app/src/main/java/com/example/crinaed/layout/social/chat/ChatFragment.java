@@ -40,7 +40,7 @@ public class ChatFragment extends Fragment {
 
         //delete status bar
         this.nameAndLastName =  view.findViewById(R.id.name_and_last_name);
-        this.imageProfile = view.findViewById(R.id.image_profile);
+        this.imageProfile = view.findViewById(R.id.image_video);
         final Bundle dataForChatActivity = getArguments();
         this.imageProfile.setImageDrawable(getActivity().getDrawable(R.drawable.simple_people));
         this.id = dataForChatActivity.getString(ChatActivity.SOCIAL_KEY_ID);

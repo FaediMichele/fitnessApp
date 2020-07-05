@@ -95,7 +95,7 @@ public class SocialSearchActivity extends AppCompatActivity {
 
         public SocialSearchViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.imageView = itemView.findViewById(R.id.image_profile);
+            this.imageView = itemView.findViewById(R.id.image_video);
             this.nameLastName  = itemView.findViewById(R.id.name_last_name);
             this.email = itemView.findViewById(R.id.email);
             this.objective  = itemView.findViewById(R.id.objective);

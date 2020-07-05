@@ -81,7 +81,7 @@ public class LearningBuySearchFragment extends Fragment  {
 //                    transaction.commit();
 
                     //da eliminare
-                    LearningBoughtFragmentDeprecated learningBuyDetailsFragment = new LearningBoughtFragmentDeprecated();
+                    LearningBoughtFragment learningBuyDetailsFragment = new LearningBoughtFragment();
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.container_learning, learningBuyDetailsFragment, TAG_DETAIL);
                     transaction.commit();
