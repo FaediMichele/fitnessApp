@@ -14,15 +14,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:textColor="@color/orange"
-        android:textSize="20sp" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:background="?android:attr/listDivider" />
+        android:textSize="30sp" />
 
 
     <ScrollView
@@ -75,12 +67,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="0.8dp"
                         android:background="@drawable/button_left"
-                        android:minHeight="0dp"
                         android:text="@string/week"
                         android:textSize="12sp"
-                        app:layout_constraintBottom_toTopOf="@id/lineChart"
+                        app:layout_constraintBottom_toBottomOf="@id/button_month"
                         app:layout_constraintEnd_toStartOf="@+id/button_month"
-                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintHorizontal_chainStyle="spread_inside"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -91,7 +82,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="0.8dp"
                         android:background="@drawable/button_center"
-                        android:minHeight="0dp"
                         android:text="@string/month"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toTopOf="@id/lineChart"
@@ -103,11 +93,11 @@
                     <Button
                         android:id="@+id/button_year"
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/button_right"
                         android:text="@string/year"
                         android:textSize="12sp"
-                        app:layout_constraintBottom_toTopOf="@+id/lineChart"
+                        app:layout_constraintBottom_toBottomOf="@+id/button_month"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_chainStyle="spread_inside"
                         app:layout_constraintStart_toEndOf="@id/button_month"
@@ -117,6 +107,7 @@
                         android:id="@+id/lineChart"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:layout_marginTop="5dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"

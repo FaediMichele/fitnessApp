@@ -16,6 +16,7 @@ import com.example.crinaed.database.entity.UserSchoolCrossRef;
 import com.example.crinaed.database.entity.join.user.UserData;
 import com.example.crinaed.database.entity.join.user.UserInscription;
 import com.example.crinaed.util.Lambda;
+import com.example.crinaed.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +41,7 @@ public class UserRepository extends Repository{
     }
 
     public LiveData<List<UserData>> getData() {
-        return userDao.getData();
+        return userDao.getData(Util.getInstance().getIdUser());
     }
     public LiveData<List<UserInscription>> getInscription(){
         return  userDao.getInscription();

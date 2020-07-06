@@ -96,68 +96,53 @@ public class SocialFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull final SocialFragment.SocialSearchViewHolder holder, int position) {
-            if(position > 0) {
-                if(newest !=null){
-                    holder.updateData(position, newest, getContext());
-                    final UserData data = this.newest.get(position);
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (holder.button.getVisibility() == View.INVISIBLE) {
-                                Bundle bundle = new Bundle();
-                                bundle.putString(ChatActivity.SOCIAL_KEY_ID, String.valueOf(data.user.idUser));
-                                bundle.putString(ChatActivity.SOCIAL_KEY_NAME, data.user.firstname);
-                                bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME, data.user.surname);
-                                bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL, data.user.email);
-                                bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE, data.levels.get(1).cat + ": " + data.levels.get(1).level);
-                                bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP, data.levels.get(1).cat + ": " + data.levels.get(1).level);
-                                if (data.user.imageDownloaded) {
-                                    bundle.putString(ChatActivity.SOCIAL_KEY_IMAGE_PATH, data.user.image);
-                                }
-                                Intent chatIntent = new Intent(getContext(), ChatActivity.class);
-                                chatIntent.putExtras(bundle);
-                                startActivityForResult(chatIntent, MainActivity.REQUEST_CODE_CHAT);
-                            }
-                        }
-                    });
-                    holder.button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ServerManager.getInstance(getContext()).unblockUser(data.user.idUser, new Lambda() {
-                                @Override
-                                public Object[] run(Object... paramether) {
-                                    Toast.makeText(getContext(), getString(R.string.unblock_ok), Toast.LENGTH_SHORT).show();
-                                    holder.setIdFriendship(Long.parseLong(paramether[0].toString()));
-                                    return new Object[0];
-                                }
-                            }, new Lambda() {
-                                @Override
-                                public Object[] run(Object... paramether) {
-                                    return new Object[0];
-                                }
-                            });
-                        }
-                    });
-                }
-
-            }else{
+            if(newest !=null){
+                holder.updateData(position, newest, getContext());
+                final UserData data = this.newest.get(position);
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SocialArchiveFragment socialArchiveFragment = new SocialArchiveFragment();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.container, socialArchiveFragment, TAG_SOCIAL_ARCHIVE);
-                        transaction.addToBackStack(null);
-                        transaction.commit();
+                        if (holder.button.getVisibility() == View.INVISIBLE) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString(ChatActivity.SOCIAL_KEY_ID, String.valueOf(data.user.idUser));
+                            bundle.putString(ChatActivity.SOCIAL_KEY_NAME, data.user.firstname);
+                            bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME, data.user.surname);
+                            bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL, data.user.email);
+                            bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE, data.levels.get(1).cat + ": " + data.levels.get(1).level);
+                            bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP, data.levels.get(1).cat + ": " + data.levels.get(1).level);
+                            if (data.user.imageDownloaded) {
+                                bundle.putString(ChatActivity.SOCIAL_KEY_IMAGE_PATH, data.user.image);
+                            }
+                            Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                            chatIntent.putExtras(bundle);
+                            startActivityForResult(chatIntent, MainActivity.REQUEST_CODE_CHAT);
+                        }
                     }
                 });
-
+                holder.button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ServerManager.getInstance(getContext()).unblockUser(data.user.idUser, new Lambda() {
+                            @Override
+                            public Object[] run(Object... paramether) {
+                                Toast.makeText(getContext(), getString(R.string.unblock_ok), Toast.LENGTH_SHORT).show();
+                                holder.setIdFriendship(Long.parseLong(paramether[0].toString()));
+                                return new Object[0];
+                            }
+                        }, new Lambda() {
+                            @Override
+                            public Object[] run(Object... paramether) {
+                                return new Object[0];
+                            }
+                        });
+                    }
+                });
             }
         }
 
         @Override
         public int getItemViewType(int position) {
-            return position == 0 ? SocialFragment.TYPE_VIEW_ITEM_VIEW_ARCHIVE : SocialFragment.TYPE_VIEW_VIEW_NORMAL;
+            return SocialFragment.TYPE_VIEW_VIEW_NORMAL;
         }
 
         @Override

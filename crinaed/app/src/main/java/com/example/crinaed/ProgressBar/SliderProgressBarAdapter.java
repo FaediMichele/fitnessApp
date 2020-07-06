@@ -316,9 +316,15 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
             chart.setDescription(d);
             chart.setVisibleYRange(0,120, YAxis.AxisDependency.LEFT);
             chart.setScaleXEnabled(false);
-            chart.getAxisLeft().setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
-            chart.getAxisRight().setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+            chart.getAxisLeft().setTextColor(Color.argb(0,0,0,0));
+            chart.getAxisRight().setTextColor(Color.argb(0,0,0,0));
+            chart. setGridBackgroundColor(Color.argb(0,0,0,0));
             chart.getXAxis().setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+            chart.getXAxis().setDrawGridLines(false);
+            chart.getAxisRight().setDrawGridLines(false);
+            chart.getAxisLeft().setDrawGridLines(false);
+            chart.getXAxis().setTextSize(20);
+            chart.setDrawBorders(false);
         }
         private void setLineDataSet(LineData lineData, LineDataSet lineDataSet, Category c){
             lineDataSet.setColor(c.toColor(context).getX());
