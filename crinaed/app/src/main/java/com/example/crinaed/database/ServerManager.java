@@ -1,6 +1,5 @@
 package com.example.crinaed.database;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -11,30 +10,23 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.example.crinaed.R;
 import com.example.crinaed.database.entity.FriendMessage;
+import com.example.crinaed.database.entity.Friendship;
 import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Single;
 import com.example.crinaed.util.Util;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import org.json.JSONArray;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -42,18 +34,15 @@ import java.util.TimerTask;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.Semaphore;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 public class ServerManager {
-    private static final String SERVER = "http://192.168.1.111:8080";
+    private static final String SERVER = "http://192.168.1.210:8080";
     private static ServerManager instance;
     private Context context;
     private final Single<Boolean> pollingMessageOn = new Single<>(false);
     private final Single<Long> lastDate = new Single<>(0L);
-    private final Single<Long> idFriendship = new Single<>(0L);
+    private final Single<Long> idFriendshipPolling = new Single<>(0L); // friendship messages polling
     private ServerManager(Context context){
         this.context=context;
     }
@@ -320,12 +309,59 @@ public class ServerManager {
         }
     }
 
+    public void blockUser(Long idUser, Lambda onSuccess, Lambda onFailure){
+        JSONObject body = new JSONObject();
+        try {
+            body.put("idSession", Util.getInstance().getSessionId());
+            body.put("to", "friend");
+            body.put("method", "blockUser");
+            JSONObject data= new JSONObject();
+            data.put("idFriend", idUser);
+            body.put("data", data);
+            managePost(body.toString(), onSuccess, onFailure);
+            stopMessagePolling();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            onFailure.run();
+        }
+    }
+
+    public void unblockUser(final Long idUser, final Lambda onSuccess, Lambda onFailure){
+        JSONObject body = new JSONObject();
+        try {
+            body.put("idSession", Util.getInstance().getSessionId());
+            body.put("to", "friend");
+            body.put("method", "addFriend");
+            JSONObject data= new JSONObject();
+            data.put("idFriend", idUser);
+            body.put("data", data);
+            managePost(body.toString(), new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    Friendship friendship = new Friendship(Long.parseLong(paramether[0].toString()), Util.getInstance().getIdUser(), idUser);
+                    DatabaseUtil.getInstance().getRepositoryManager().getFriendRepository().addFriend(friendship, new Lambda() {
+                        @Override
+                        public Object[] run(Object... paramether) {
+                            onSuccess.run(paramether);
+                            return new Object[0];
+                        }
+                    });
+                    return null;
+                }
+            }, onFailure);
+            stopMessagePolling();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            onFailure.run();
+        }
+    }
+
     public void startMessagePolling(long idFriendship){
         synchronized (pollingMessageOn) {
             pollingMessageOn.setVal(true);
         }
-        synchronized (this.idFriendship) {
-            this.idFriendship.setVal(idFriendship);
+        synchronized (this.idFriendshipPolling) {
+            this.idFriendshipPolling.setVal(idFriendship);
 
         }
         synchronized (this.lastDate){
@@ -340,8 +376,8 @@ public class ServerManager {
                 return;
             }
         }
-        synchronized (idFriendship){
-            receiveMessage(idFriendship.getVal(), new Lambda() {
+        synchronized (idFriendshipPolling){
+            receiveMessage(idFriendshipPolling.getVal(), new Lambda() {
                 @Override
                 public Object[] run(Object... paramether) {
                     try {

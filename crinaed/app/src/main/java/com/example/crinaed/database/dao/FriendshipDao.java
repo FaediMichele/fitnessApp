@@ -23,10 +23,13 @@ public interface FriendshipDao {
     @Delete
     void delete(Friendship... friendships);
 
+    @Query("DELETE FROM Friendship WHERE idFriendship=(:idFriendship)")
+    void deleteFriendship(long idFriendship);
+
     @Query("SELECT * FROM Friendship")
     List<Friendship> getFriendshipList();
 
     @Transaction
-    @Query("SELECT * FROM Friendship WHERE idUser2=(:idFriend)")
+    @Query("SELECT * FROM Friendship WHERE idUser2=(:idFriend) OR idUser1=(:idFriend)")
     LiveData<UserWithUser> getFriendshipByFriend(long idFriend);
 }

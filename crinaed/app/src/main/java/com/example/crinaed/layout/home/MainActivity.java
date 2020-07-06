@@ -1,10 +1,12 @@
 package com.example.crinaed.layout.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -18,6 +20,8 @@ import org.json.JSONException;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG_PAGER = "MAIN_ACTIVITY_TO_OBJECTIVE_FRAGMENT";
+    public static final int REQUEST_CODE_CHAT = 1;
+    PagerFragment pagerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         //delete status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        PagerFragment pagerFragment = new PagerFragment();
+        pagerFragment = new PagerFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, pagerFragment, TAG_PAGER);
         transaction.addToBackStack(null);
@@ -53,6 +57,15 @@ public class MainActivity extends AppCompatActivity {
 //        transaction1.replace(R.id.container_page, objectiveFragment, TAG_CONTAINER);
 //        transaction1.addToBackStack(null);
 //        transaction1.commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE_CHAT){
+            pagerFragment.sendDataToSocial(requestCode);
+        }
+
     }
 
 }

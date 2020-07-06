@@ -11,6 +11,7 @@ import com.example.crinaed.database.dao.FriendshipDao;
 import com.example.crinaed.database.entity.FriendMessage;
 import com.example.crinaed.database.entity.Friendship;
 import com.example.crinaed.database.entity.join.user.UserWithUser;
+import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Util;
 
 import org.json.JSONArray;
@@ -20,6 +21,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class FriendRepository extends Repository{
@@ -43,21 +45,25 @@ public class FriendRepository extends Repository{
     }
 
 
-    public Future<?> addFriend(long idUser1, long idUser2){
-        final Friendship friendship = new Friendship(0, idUser1, idUser2);
+    public Future<?> addFriend(final Friendship friendship, final Lambda onAddDone){
+        Log.d("naed", "creating new friendship" + friendship.idFriendship);
         return AppDatabase.databaseWriteExecutor.submit(new Callable<Long>() {
             @Override
             public Long call() {
-                return friendshipDao.insert(friendship)[0];
+                long ret= friendshipDao.insert(friendship)[0];
+                onAddDone.run(ret);
+                Log.d("naed", "newFriendship: " + ret);
+                return ret;
             }
         });
     }
 
-    public Future<?> removeFriend(final Friendship friendship){
+    public Future<?> removeFriend(final long friendship){
         return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {
-                friendshipDao.delete(friendship);
+                Log.d("naed", "deleting friendship: " + friendship);
+                friendshipDao.deleteFriendship(friendship);
             }
         });
     }

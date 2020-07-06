@@ -33,7 +33,7 @@ public class PagerFragment extends Fragment {
     private static final int LEARNING_FRAGMENT = 2;
 
     private ViewPager2 viewPager;
-    private FragmentStateAdapter pagerAdapter;
+    private HomePagerAdapter pagerAdapter;
 
 
     @Override
@@ -144,10 +144,16 @@ public class PagerFragment extends Fragment {
             });
             fab.startAnimation(shrink);
         }
+    }
 
+    public void sendDataToSocial(Object data){
+        pagerAdapter.socialFragment.receiveData(data);
     }
 
     private class HomePagerAdapter extends FragmentStateAdapter{
+        ObjectiveFragment objectiveFragment;
+        SocialFragment socialFragment;
+        LearningFragment learningFragment;
 
         public HomePagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
             super(fragmentManager, lifecycle);
@@ -156,22 +162,17 @@ public class PagerFragment extends Fragment {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            Fragment fragment;
             switch (position) {
-                case OBJECTIVE_FRAGMENT:
-                    fragment = new ObjectiveFragment();
-                    break;
                 case SOCIAL_FRAGMENT:
-                    fragment = new SocialFragment();
-                    break;
+                    socialFragment = new SocialFragment();
+                    return socialFragment;
                 case LEARNING_FRAGMENT:
-                    fragment = new LearningFragment();
-                    break;
+                    learningFragment = new LearningFragment();
+                    return learningFragment;
                 default:
-                    fragment = new ObjectiveFragment();
-                    break;
+                    objectiveFragment = new ObjectiveFragment();
+                    return objectiveFragment;
             }
-            return fragment;
         }
 
         @Override

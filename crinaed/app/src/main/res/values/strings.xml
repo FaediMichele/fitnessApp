@@ -24,4 +24,12 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="delete">Delete</string>
     <string name="confirm">Confirm</string>
     <string name="progress_text">%d/%d</string>
+    <string name="block_friend">Block friend</string>
+    <string name="friend_image">Friend image</string>
+    <string name="exit">Exit</string>
+    <string name="block_ok">User blocked</string>
+    <string name="connection_error">%s,. The connection cannot be established</string>
+    <string name="block_error">Cannot block user</string>
+    <string name="unblock">Unblock</string>
+    <string name="unblock_ok">User unblocked</string>
 </resources>

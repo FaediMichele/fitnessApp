@@ -70,9 +70,6 @@ public class ChatFragment extends Fragment {
             /* TODO Handle this situation if needed */
         }
 
-
-
-
         final RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -84,6 +81,10 @@ public class ChatFragment extends Fragment {
         DatabaseUtil.getInstance().getRepositoryManager().getFriendRepository().getFriendshipByFriend(id).observe(this, new Observer<UserWithUser>() {
             @Override
             public void onChanged(final UserWithUser friendships) {
+                if(friendships == null){ // deleted friendship
+                    getActivity().finish();
+                    return;
+                }
                 if(friendships.user2.imageDownloaded) {
                     imageProfile.setImageURI(Uri.parse(friendships.user2.image));
                 }
@@ -103,6 +104,7 @@ public class ChatFragment extends Fragment {
                         }
                     });
                 }
+                dataForChatActivity.putString(ChatActivity.TAG_KEY_FRIENDSHIP, Long.toString(friendships.friendship.idFriendship));
             }
         });
         imageProfile.setImageDrawable(getActivity().getDrawable(R.drawable.simple_people));
@@ -135,6 +137,7 @@ public class ChatFragment extends Fragment {
                     transaction.addToBackStack(TAG_BACK_STECK);
                     transaction.commit();
                 }
+
             }
         });
         return view;
