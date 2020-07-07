@@ -3,11 +3,14 @@ package com.example.crinaed.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.MediaController;
+import android.widget.VideoView;
 
 import com.example.crinaed.R;
 
@@ -22,7 +25,6 @@ public class FullScreenMediaController extends MediaController {
 
     @Override
     public void setAnchorView(View view) {
-
         super.setAnchorView(view);
 
         //image button for full screen to be added to media controller
@@ -56,4 +58,14 @@ public class FullScreenMediaController extends MediaController {
             }
         });
     }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            this.hide();
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+
 }
