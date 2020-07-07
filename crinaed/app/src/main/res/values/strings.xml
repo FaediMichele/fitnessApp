@@ -37,4 +37,10 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="request_sended">Request sended</string>
     <string name="request_received">Accept request</string>
     <string name="request_accepted">The friendship has been accepted</string>
+    <string name="email">e-mail</string>
+    <string name="wrong_email">e-mail is not valid</string>
+    <string name="wrong_password">The password must be longher than 6 character</string>
+    <string name="login_action_label">Login</string>
+    <string name="cannot_login">The connection with the server cannot be established</string>
+    <string name="wrong_credential">The email or the password is wrong</string>
 </resources>

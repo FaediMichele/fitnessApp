@@ -1,14 +1,11 @@
 package com.example.crinaed.layout.social;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,18 +18,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.crinaed.database.AppDatabase;
-import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.ServerManager;
-import com.example.crinaed.database.entity.User;
-import com.example.crinaed.database.entity.join.user.UserData;
-import com.example.crinaed.layout.home.MainActivity;
+import com.example.crinaed.layout.home.HomeActivity;
 import com.example.crinaed.layout.social.chat.ChatActivity;
 import com.example.crinaed.R;
 import com.example.crinaed.util.Lambda;
@@ -95,7 +85,6 @@ public class SocialSearchActivity extends AppCompatActivity {
                 @Override
                 public Object[] run(Object... paramether) {
                     newestData.add(new Pair<>((JSONObject)paramether[0], ((File) paramether[1]).getAbsolutePath()));
-                    Log.d("naed", "notifyItemChanged ");
                     notifyItemInserted(newestData.size()-1);
                     return new Object[0];
                 }
@@ -170,7 +159,6 @@ public class SocialSearchActivity extends AppCompatActivity {
                         itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Log.d("naed", "opening chat");
                                 Bundle bundle = new Bundle();
                                 try {
                                     bundle.putString(ChatActivity.SOCIAL_KEY_ID, obj.getString("idUser"));
@@ -184,7 +172,7 @@ public class SocialSearchActivity extends AppCompatActivity {
                                     }
                                     Intent chatIntent = new Intent(getBaseContext(), ChatActivity.class);
                                     chatIntent.putExtras(bundle);
-                                    startActivityForResult(chatIntent, MainActivity.REQUEST_CODE_CHAT);
+                                    startActivityForResult(chatIntent, HomeActivity.REQUEST_CODE_CHAT);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -225,7 +213,6 @@ public class SocialSearchActivity extends AppCompatActivity {
                                         public void run() {
                                             try{
                                                 if((Boolean) paramether[0]){
-                                                    Log.d("naed", "sendRequestFriendship: true");
                                                     Toast.makeText(getApplicationContext(), getString(R.string.request_sended), Toast.LENGTH_SHORT).show();
                                                     sendRequest.setText(R.string.request_sended);
                                                     sendRequest.setEnabled(false);

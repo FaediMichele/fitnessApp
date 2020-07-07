@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.example.crinaed.R;
@@ -44,11 +45,16 @@ public class ServerManager {
     private static final String SERVER = "http://192.168.1.5:8080";
     private static ServerManager instance;
     private Context context;
+    private static final int MS_SOCKET_TIMEOUT = 100;
+    private NetworkUtil networkUtil;
+
+
     private final Single<Boolean> pollingMessageOn = new Single<>(false);
     private final Single<Long> lastDate = new Single<>(0L);
     private final Single<Long> idFriendshipPolling = new Single<>(0L); // friendship messages polling
     private ServerManager(Context context){
         this.context=context;
+        networkUtil = new NetworkUtil(context);
     }
 
     public enum FileType{
@@ -130,11 +136,16 @@ public class ServerManager {
                         HttpHeaderParser.parseCacheHeaders(response));
             }
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(MS_SOCKET_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(this.context).add(stringRequest);
     }
 
 
-    public Future<String> login(String username, String password) throws JSONException {
+    public void login(String username, String password, final Lambda onDone) throws JSONException {
+        if(networkUtil.isConnected()){
+            onDone.run(false);
+            return;
+        }
         final JSONObject data = new JSONObject();
         final JSONObject param = new JSONObject();
         final Context context= this.context;
@@ -145,21 +156,6 @@ public class ServerManager {
         param.put("to", "login");
         param.put("data", data);
 
-        // used to wait for the login or interrupt the operation if the server is not available
-        final Semaphore s = new Semaphore(0);
-        final Single<String> result = new Single<>();
-        Callable<String> r = new Callable<String>() {
-            @Override
-            public String call() {
-                try {
-                    s.acquire();
-                    return result.getVal();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    return "";
-                }
-            }
-        };
         managePost(param.toString(), new Lambda() {
             @Override
             public Object[] run(final Object... paramether) {
@@ -181,12 +177,11 @@ public class ServerManager {
 
                             DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().createNewStepDone();
 
-                            result.setVal(obj.getString("SessionId"));
+                            onDone.run(true, true, obj.getString("SessionId"));
                         } catch (JSONException | ExecutionException | InterruptedException e) {
                             e.printStackTrace();
-                            result.setVal("");
+                            onDone.run(false);
                         }
-                        s.release();
                     }
                 });
                 return null;
@@ -194,53 +189,42 @@ public class ServerManager {
         }, new Lambda() {
             @Override
             public Object[] run(Object... paramether) {
-                result.setVal("");
+                VolleyError error = (VolleyError) paramether[0];
+                if(error.networkResponse != null && error.networkResponse.statusCode == 401){
+                    onDone.run(true, false);
+                }else{
+                    onDone.run(false);
+                }
                 Log.d("login", "Error on login");
-                s.release();
                 return null;
             }
         });
-        return AppDatabase.databaseWriteExecutor.submit(r);
     }
-    public Future<Boolean> logout(String idSession) throws JSONException{
-        final Semaphore s = new Semaphore(0);
 
+    public void logout(final Lambda onDone) throws JSONException{
+        if(networkUtil.isConnected()){
+            onDone.run(false);
+            return;
+        }
         JSONObject body = new JSONObject();
         body.put("to", "logout");
-        body.put("idSession", idSession);
+        body.put("idSession", Util.getInstance().getSessionId());
         body.put("data", DatabaseUtil.getInstance().getRepositoryManager().getData());
-        final Single<Boolean> result = new Single<>();
 
         managePost(body.toString(), new Lambda() {
             @Override
             public Object[] run(Object... paramether) {
-                result.setVal(true);
                 context.deleteDatabase(AppDatabase.DATABASE_NAME);
-                s.release();
+                onDone.run(true);
                 return new Object[0];
             }
         }, new Lambda() {
             @Override
             public Object[] run(Object... paramether) {
-                result.setVal(false);
-                s.release();
+                onDone.run(true);
                 return new Object[0];
             }
         });
-
-        Callable<Boolean> r = new Callable<Boolean>() {
-            @Override
-            public Boolean call() {
-                try {
-                    s.acquire();
-                    return result.getVal();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    return false;
-                }
-            }
-        };
-        return AppDatabase.databaseWriteExecutor.submit(r);
     }
 
 

@@ -2,7 +2,6 @@ package com.example.crinaed.layout.home;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -29,10 +27,8 @@ import com.example.crinaed.database.entity.join.user.UserData;
 import com.example.crinaed.database.entity.join.user.UserWithUser;
 import com.example.crinaed.layout.social.chat.ChatActivity;
 import com.example.crinaed.R;
-import com.example.crinaed.layout.social.SocialArchiveFragment;
 import com.example.crinaed.util.Lambda;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +51,7 @@ public class SocialFragment extends Fragment {
     }
 
     public void receiveData(Object data){
-        if(data.equals(MainActivity.REQUEST_CODE_CHAT)){
+        if(data.equals(HomeActivity.REQUEST_CODE_CHAT)){
 
         }
     }
@@ -119,7 +115,7 @@ public class SocialFragment extends Fragment {
                             }
                             Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                             chatIntent.putExtras(bundle);
-                            startActivityForResult(chatIntent, MainActivity.REQUEST_CODE_CHAT);
+                            startActivityForResult(chatIntent, HomeActivity.REQUEST_CODE_CHAT);
                         }
                     }
                 });

@@ -17,7 +17,7 @@ import com.example.crinaed.util.Util;
 
 import org.json.JSONException;
 
-public class MainActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     public static final String TAG_PAGER = "MAIN_ACTIVITY_TO_OBJECTIVE_FRAGMENT";
     public static final int REQUEST_CODE_CHAT = 1;
@@ -38,19 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
         DatabaseUtil.getInstance().setApplication(this);
 
-        /* TODO Change the following code with the page of the login */
-        if(true){ // delete shared preferences ONLY FOR DEBUG
-            SharedPreferences settings = getSharedPreferences(getString(R.string.sessionId), Context.MODE_PRIVATE);
-            settings.edit().clear().commit();
-        }
 
-        if(!Util.getInstance().checkData(this)){
-            try {
-                ServerManager.getInstance(this).login("ciaobello", "p");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+
 
 //        ObjectiveFragment objectiveFragment = new ObjectiveFragment();
 //        FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
