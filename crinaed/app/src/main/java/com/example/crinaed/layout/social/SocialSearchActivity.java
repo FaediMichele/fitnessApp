@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -216,26 +218,29 @@ public class SocialSearchActivity extends AppCompatActivity {
                         try {
                             ServerManager.getInstance(getApplicationContext()).sendRequestFriendship(obj.getLong("idUser"), new Lambda() {
                                 @Override
-                                public Object[] run(Object... paramether) {
-                                    Log.d("naed", "sendRequestFriendship: " +  paramether[0].toString());
-                                    try{
-                                        if((Boolean) paramether[0]){
-                                            Log.d("naed", "sendRequestFriendship: true");
-                                            Toast.makeText(getApplicationContext(), getString(R.string.request_sended), Toast.LENGTH_SHORT).show();
-                                            sendRequest.setText(R.string.request_sended);
-                                            sendRequest.setEnabled(false);
+                                public Object[] run(final Object... paramether) {
+                                    Handler handler = new Handler(Looper.getMainLooper());
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try{
+                                                if((Boolean) paramether[0]){
+                                                    Log.d("naed", "sendRequestFriendship: true");
+                                                    Toast.makeText(getApplicationContext(), getString(R.string.request_sended), Toast.LENGTH_SHORT).show();
+                                                    sendRequest.setText(R.string.request_sended);
+                                                    sendRequest.setEnabled(false);
+                                                }
+                                            } catch (Exception e){
+                                                e.printStackTrace();
+                                                try{
+                                                    Toast.makeText(getBaseContext(), getString(R.string.request_accepted), Toast.LENGTH_SHORT).show();
+                                                    sendRequest.setVisibility(View.GONE);
+                                                }catch (Exception e1) {
+                                                    e1.printStackTrace();
+                                                }
+                                            }
                                         }
-                                    } catch (Exception e){
-                                        e.printStackTrace();
-                                        try{
-                                            /* TODO print the result on the main thread */
-                                            Toast.makeText(getBaseContext(), getString(R.string.request_accepted), Toast.LENGTH_SHORT).show();
-                                            sendRequest.setVisibility(View.GONE);
-                                        }catch (Exception e1) {
-                                            e1.printStackTrace();
-                                        }
-
-                                    }
+                                    });
                                     return new Object[0];
                                 }
                             }, new Lambda() {
