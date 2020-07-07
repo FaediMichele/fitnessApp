@@ -17,7 +17,7 @@
         app:shapeAppearanceOverlay="@style/roundedImageViewRoundedVideo" />
 
     <TextView
-        android:id="@+id/title_course"
+        android:id="@+id/title_lesson"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -34,7 +34,7 @@
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/p"
         android:text="prova descrzione breve descrizione video corso"
-        app:layout_constraintTop_toBottomOf="@id/title_course"
+        app:layout_constraintTop_toBottomOf="@id/title_lesson"
         app:layout_constraintStart_toEndOf="@id/image_video"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

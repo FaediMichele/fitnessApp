@@ -31,6 +31,8 @@
         </activity>
         <activity android:name=".layout.social.chat.ChatActivity">
         </activity>
+        <activity android:name=".view.FullScreenVideoActivity">
+        </activity>
     </application>
 
 </manifest>

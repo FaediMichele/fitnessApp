@@ -135,7 +135,7 @@ public class LearningFragment extends Fragment {
             super(itemView);
             if(!isArchive){
                 this.imageView = itemView.findViewById(R.id.image_course);
-                this.title = itemView.findViewById(R.id.title_course);
+                this.title = itemView.findViewById(R.id.title_lesson);
                 this.description = itemView.findViewById(R.id.description_course);
             }
         }

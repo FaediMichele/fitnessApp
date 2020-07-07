@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
-import com.example.crinaed.deprecated.LearningBoughtFragmentDeprecated;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +103,7 @@ public class LearningBuySearchFragment extends Fragment  {
         public LearningViewHolder(@NonNull View itemView) {
             super(itemView);
                 this.imageView = itemView.findViewById(R.id.image_course);
-                this.title = itemView.findViewById(R.id.title_course);
+                this.title = itemView.findViewById(R.id.title_lesson);
                 this.description = itemView.findViewById(R.id.description_course);
         }
     }
