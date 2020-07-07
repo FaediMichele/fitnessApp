@@ -1,6 +1,7 @@
 package com.example.crinaed.layout.learning;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,8 @@ public class LearningActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         LearningBuySearchFragment learningBuyFragment = new LearningBuySearchFragment();
         learningBuyFragment.setArguments(bundle);
+
+        Log.d("cri", "onCreate");
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container_learning, learningBuyFragment, TAG_LEARNING_BUY);

@@ -12,33 +12,37 @@ import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import androidx.core.content.ContextCompat;
+
 import com.example.crinaed.R;
 
 public class FullScreenMediaController extends MediaController {
 
+    final public static String KEY_MINUTE = "KEY_MINUTE";
+    final private static String KEY_IS_FULL_SCREEN = "KEY_IS_FULL_SCREEN";
     private ImageButton fullScreen;
-    private String isFullScreen;
+    private boolean isFullScreen;
 
     public FullScreenMediaController(Context context) {
         super(context);
     }
 
     @Override
-    public void setAnchorView(View view) {
+    public void setAnchorView(final View view) {
         super.setAnchorView(view);
 
         //image button for full screen to be added to media controller
         fullScreen = new ImageButton (super.getContext());
-
+        fullScreen.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.RIGHT;
-        params.rightMargin = 3;
+        params.rightMargin = 10;
+        params.topMargin = 12;
         addView(fullScreen, params);
 
         //fullscreen indicator from intent
-        isFullScreen =  ((Activity)getContext()).getIntent().getStringExtra("fullScreenInd");
-
-        if("y".equals(isFullScreen)){
+        isFullScreen =  ((Activity)getContext()).getIntent().getBooleanExtra(KEY_IS_FULL_SCREEN,false);
+        if(isFullScreen){
             fullScreen.setImageResource(R.drawable.ic_baseline_fullscreen_exit);
         }else{
             fullScreen.setImageResource(R.drawable.ic_baseline_fullscreen);
@@ -48,13 +52,19 @@ public class FullScreenMediaController extends MediaController {
         fullScreen.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(),FullScreenVideoActivity.class);
-                if("y".equals(isFullScreen)){
-                    intent.putExtra("fullScreenInd", "");
+                VideoView videoView =  view.findViewById(R.id.video_lesson);
+                if(isFullScreen){
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra(KEY_MINUTE,videoView.getCurrentPosition());
+                    returnIntent.putExtra(KEY_IS_FULL_SCREEN, false);
+                    ((Activity)getContext()).setResult(Activity.RESULT_OK,returnIntent);
+                    ((Activity)getContext()).finish();
                 }else{
-                    intent.putExtra("fullScreenInd", "y");
+                    Intent intent = new Intent(getContext(),FullScreenVideoActivity.class);
+                    intent.putExtra(KEY_IS_FULL_SCREEN, true);
+                    intent.putExtra(KEY_MINUTE,videoView.getCurrentPosition());
+                    ((Activity)getContext()).startActivity(intent);
                 }
-                ((Activity)getContext()).startActivity(intent);
             }
         });
     }

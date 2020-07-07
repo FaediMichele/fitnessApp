@@ -8,9 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.example.crinaed.R;
@@ -25,8 +29,8 @@ public class LessonFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lesson, container, false);
 
+        int minute  = ((Activity)getContext()).getIntent().getIntExtra(FullScreenMediaController.KEY_MINUTE,0);
         mVideoView = view.findViewById(R.id.video_lesson);
-
         String path = "android.resource://"+ getActivity().getPackageName() + "/" + R.raw.video_simple ;  // if your video is not .mp4 change it your video extension
         Uri uri = Uri.parse(path);
         mVideoView.setVideoURI(uri);
@@ -36,7 +40,7 @@ public class LessonFragment extends Fragment {
         mVideoView.setMediaController(controller);
         controller.setAnchorView(mVideoView);
         controller.setMediaPlayer(mVideoView);
-
+        mVideoView.seekTo(minute);
         return view;
     }
 }
