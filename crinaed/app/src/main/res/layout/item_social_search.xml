@@ -44,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:hint="nome persona"
             android:textSize="@dimen/search_activity_name_last_name"
             app:layout_constraintStart_toEndOf="@+id/image_card"
             app:layout_constraintTop_toTopOf="parent" />
@@ -53,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:hint="Email"
             android:textSize="@dimen/search_activity_email"
             app:layout_constraintStart_toEndOf="@+id/image_card"
             app:layout_constraintTop_toBottomOf="@+id/name_last_name" />
@@ -73,7 +75,17 @@
             android:layout_marginStart="10dp"
             android:textSize="@dimen/search_activity_step"
             app:layout_constraintStart_toEndOf="@+id/image_card"
-            app:layout_constraintTop_toBottomOf="@+id/objective" />
+            app:layout_constraintTop_toBottomOf="@+id/objective"/>
+
+        <TextView
+            android:id="@+id/level3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textSize="@dimen/search_activity_step"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/image_card"
+            app:layout_constraintTop_toBottomOf="@+id/step"/>
 
         <Button
             android:id="@+id/button_friend_request"

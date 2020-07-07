@@ -101,8 +101,15 @@ public class Util {
     public boolean checkData(Context context){
         /* TODO maybe is wrong */
         SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.sessionId), Context.MODE_PRIVATE);
-        Log.d("naed", "checkData "+preferences.contains("value"));
-        return preferences.contains("value");
+        boolean ret = preferences.contains("value");
+        if(ret){
+            this.sessionId = preferences.getString("value", "");
+            ret = preferences.contains("idUser");
+            if(ret){
+                this.idUser = preferences.getLong("idUser", -1);
+            }
+        }
+        return ret;
     }
 
     public void setSessionId(String sessionId){

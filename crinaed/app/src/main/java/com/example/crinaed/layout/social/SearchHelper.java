@@ -26,39 +26,21 @@ public class SearchHelper {
         this.context=context;
     }
 
+    public void getFriendshipRequest(final Lambda onResultElaborated, final Lambda onFailure){
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
+                ServerManager.getInstance(context).getFriendshipRequest(getLambda(onResultElaborated), onFailure);
+            }
+        });
+    }
+
     public void search(final String text, final Lambda onResultElaborated){
+        final String query = "to=search&text=" + text + "&idUser=" + Util.getInstance().getIdUser();
         service.submit(new Callable<JSONObject>() {
             @Override
             public JSONObject call() throws Exception {
-                ServerManager.getInstance(context).manageGet("to=search&text=" + text + "&idUser=" + Util.getInstance().getIdUser(), new Lambda() {
-                    @Override
-                    public Object[] run(Object... paramether) {
-                        Log.d("naed", paramether[0].toString());
-                        try {
-                            JSONArray data = new JSONArray(paramether[0].toString());
-                            for(int i = 0; i < data.length(); i++){
-                                final JSONObject obj = data.getJSONObject(i);
-                                String imageName = obj.getString("image");
-                                if(!imageName.equals("")) {
-                                    Log.d("naed", "start image download");
-                                    ServerManager.getInstance(context).downloadFile(imageName, searchDir.getName(), new Lambda() {
-                                        @Override
-                                        public Object[] run(Object... paramether) {
-                                            Log.d("naed", "image downloaded");
-                                            onResultElaborated.run(obj, paramether[1]);
-                                            return null;
-                                        }
-                                    });
-                                } else{
-                                    onResultElaborated.run(obj);
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        return new Object[0];
-                    }
-                }, new Lambda() {
+                ServerManager.getInstance(context).manageGet(query, getLambda(onResultElaborated) , new Lambda() {
                     @Override
                     public Object[] run(Object... paramether) {
                         return new Object[0];
@@ -68,4 +50,38 @@ public class SearchHelper {
             }
         });
     }
+
+    private Lambda getLambda(final Lambda onResultElaborated){
+        return new Lambda() {
+            @Override
+            public Object[] run(Object... paramether) {
+                Log.d("naed", paramether[0].toString());
+                try {
+                    JSONArray data = new JSONArray(paramether[0].toString());
+                    for(int i = 0; i < data.length(); i++){
+                        final JSONObject obj = data.getJSONObject(i);
+                        String imageName = obj.getString("image");
+                        if(!imageName.equals("")) {
+                            Log.d("naed", "start image download");
+                            ServerManager.getInstance(context).downloadFile(imageName, searchDir.getName(), new Lambda() {
+                                @Override
+                                public Object[] run(Object... paramether) {
+                                    Log.d("naed", "image downloaded");
+                                    onResultElaborated.run(obj, paramether[1]);
+                                    return null;
+                                }
+                            });
+                        } else{
+                            onResultElaborated.run(obj);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return new Object[0];
+            }
+        };
+    }
+
+
 }

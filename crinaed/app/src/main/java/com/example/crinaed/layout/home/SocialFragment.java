@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
@@ -160,10 +161,12 @@ public class SocialFragment extends Fragment {
         TextView email;
         TextView objective;
         TextView step;
+        TextView level3;
         Button button;
         LifecycleOwner owner;
         Observer<UserWithUser> old=null;
         LiveData<UserWithUser> oldLiveData=null;
+        View itemView;
 
         public SocialSearchViewHolder(@NonNull View itemView, boolean isArchive, LifecycleOwner owner) {
             super(itemView);
@@ -173,10 +176,11 @@ public class SocialFragment extends Fragment {
                 this.email = itemView.findViewById(R.id.email);
                 this.objective = itemView.findViewById(R.id.objective);
                 this.step = itemView.findViewById(R.id.step);
+                this.level3 = itemView.findViewById(R.id.level3);
                 button = itemView.findViewById(R.id.button_unblock);
             }
-
             this.owner=owner;
+            this.itemView=itemView;
         }
 
         public void updateData(int position, List<UserData> newData, Context context){
@@ -213,8 +217,9 @@ public class SocialFragment extends Fragment {
             }
             nameLastName.setText(context.getString(R.string.name_surname, userData.user.firstname, userData.user.surname));
             email.setText(userData.user.email);
-            objective.setText(userData.levels.get(0).cat + ": " + userData.levels.get(0).level);
-            step.setText(userData.levels.get(1).cat + ": " + userData.levels.get(1).level);
+            objective.setText(itemView.getContext().getString(R.string.cat_level, userData.levels.get(0).cat, userData.levels.get(0).level));
+            step.setText(itemView.getContext().getString(R.string.cat_level, userData.levels.get(1).cat,  userData.levels.get(1).level));
+            level3.setText(itemView.getContext().getString(R.string.cat_level, userData.levels.get(2).cat,  userData.levels.get(2).level));
         }
     }
 }

@@ -57,6 +57,8 @@ public class ServerManager {
         networkUtil = new NetworkUtil(context);
     }
 
+
+
     public enum FileType{
         Commitment("idCommitment"), Course("idCourse"), Exercise("idExercise");
         private String key;
@@ -170,6 +172,7 @@ public class ServerManager {
                             SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.sessionId), Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor= preferences.edit();
                             editor.putString("value", obj.getString("SessionId"));
+                            editor.putLong("idUser", obj.getLong("idUser"));
                             editor.apply();
 
                             Util.getInstance().setSessionId(obj.getString("SessionId"));
@@ -386,6 +389,26 @@ public class ServerManager {
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
+                    return null;
+                }
+            }, onFailure);
+            stopMessagePolling();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            onFailure.run();
+        }
+    }
+
+    public void getFriendshipRequest(final Lambda onSuccess, final Lambda onFailure) {
+        JSONObject body = new JSONObject();
+        try {
+            body.put("idSession", Util.getInstance().getSessionId());
+            body.put("to", "friend");
+            body.put("method", "getFriendshipRequest");
+            managePost(body.toString(), new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    onSuccess.run(paramether);
                     return null;
                 }
             }, onFailure);

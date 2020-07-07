@@ -27,7 +27,10 @@ import com.example.crinaed.layout.social.chat.ChatActivity;
 import com.example.crinaed.R;
 import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Pair;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,7 +52,8 @@ public class SocialSearchActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new SocialSearchAdapter(this);
+        final View root = findViewById(R.id.root);
+        adapter = new SocialSearchAdapter(this, root);
         recyclerView.setAdapter(adapter);
 
         SearchView searchView = findViewById(R.id.search_view);
@@ -74,8 +78,24 @@ public class SocialSearchActivity extends AppCompatActivity {
         private List<Pair<JSONObject, String>> newestData = new ArrayList<>();
         private SearchHelper helper;
 
-        public SocialSearchAdapter(Context context){
+        public SocialSearchAdapter(final Context context, final View root){
             helper= new SearchHelper(getCacheDir(), context);
+            newestData.clear();
+            notifyDataSetChanged();
+            helper.getFriendshipRequest(new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    newestData.add(new Pair<>((JSONObject) paramether[0], ((File) paramether[1]).getAbsolutePath()));
+                    notifyItemInserted(newestData.size() - 1);
+                    return new Object[0];
+                }
+            }, new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    Snackbar.make(root, R.string.connection_error, BaseTransientBottomBar.LENGTH_LONG).show();
+                    return new Object[0];
+                }
+            });
         }
 
         public void search(String text){
@@ -121,6 +141,7 @@ public class SocialSearchActivity extends AppCompatActivity {
         TextView email;
         TextView objective;
         TextView step;
+        TextView level3;
         Button sendRequest;
         View itemView;
 
@@ -132,6 +153,7 @@ public class SocialSearchActivity extends AppCompatActivity {
             this.objective  = itemView.findViewById(R.id.objective);
             this.step = itemView.findViewById(R.id.step);
             this.sendRequest = itemView.findViewById(R.id.button_friend_request);
+            this.level3 = itemView.findViewById(R.id.level3);
             this.itemView=itemView;
         }
 
@@ -143,11 +165,22 @@ public class SocialSearchActivity extends AppCompatActivity {
                 final String emailText = obj.getString("email");
                 String objectiveText="";
                 String stepText="";
-                nameLastName.setText(firstname+" " + surname);
+                nameLastName.setText(itemView.getContext().getString(R.string.name_surname, firstname, surname));
                 email.setText(emailText);
                 try{
                     objective.setText(obj.getString("nameCommitment"));
                     step.setText(obj.getString("nameStep"));
+                }catch (JSONException ignore) {
+                }
+                try{
+                    JSONArray levels = obj.getJSONArray("Levels");
+                    JSONObject level1 = levels.getJSONObject(0);
+                    objective.setText(itemView.getContext().getString(R.string.cat_level, level1.getString("cat") , level1.getInt("level")));
+                    JSONObject level2 = levels.getJSONObject(1);
+                    step.setText(itemView.getContext().getString(R.string.cat_level, level2.getString("cat") , level2.getInt("level")));
+                    JSONObject level3Obj= levels.getJSONObject(2);
+                    level3.setText(itemView.getContext().getString(R.string.cat_level, level3Obj.getString("cat"), level3Obj.getInt("level")));
+                    level3.setVisibility(View.VISIBLE);
                 }catch (JSONException ignore) {
                 }
                 this.imageView.setImageURI(Uri.parse(data.getY()));
@@ -243,6 +276,5 @@ public class SocialSearchActivity extends AppCompatActivity {
                 });
             }
         }
-
     }
 }
