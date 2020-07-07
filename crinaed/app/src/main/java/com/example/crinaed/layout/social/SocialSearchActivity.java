@@ -1,15 +1,21 @@
 package com.example.crinaed.layout.social;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,19 +27,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.database.entity.User;
 import com.example.crinaed.database.entity.join.user.UserData;
+import com.example.crinaed.layout.home.MainActivity;
 import com.example.crinaed.layout.social.chat.ChatActivity;
 import com.example.crinaed.R;
+import com.example.crinaed.util.Lambda;
+import com.example.crinaed.util.Pair;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SocialSearchActivity extends AppCompatActivity {
-
-
-
+    SocialSearchAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,21 +57,45 @@ public class SocialSearchActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        SocialSearchAdapter adapter = new SocialSearchAdapter(this);
+        adapter = new SocialSearchAdapter(this);
         recyclerView.setAdapter(adapter);
 
+        SearchView searchView = findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                adapter.search(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
+
+
 
     private class SocialSearchAdapter extends RecyclerView.Adapter<SocialSearchViewHolder>{
 
-        private List<UserData> newestData = null;
+        private List<Pair<JSONObject, String>> newestData = new ArrayList<>();
+        private SearchHelper helper;
 
-        public SocialSearchAdapter(LifecycleOwner owner){
-            DatabaseUtil.getInstance().getRepositoryManager().getUserRepository().getData().observe(owner, new Observer<List<UserData>>() {
+        public SocialSearchAdapter(Context context){
+            helper= new SearchHelper(getCacheDir(), context);
+        }
+
+        public void search(String text){
+            newestData.clear();
+            notifyDataSetChanged();
+            helper.search(text, new Lambda() {
                 @Override
-                public void onChanged(List<UserData> userData) {
-                    newestData=userData;
-                    notifyDataSetChanged();
+                public Object[] run(Object... paramether) {
+                    newestData.add(new Pair<>((JSONObject)paramether[0], ((File) paramether[1]).getAbsolutePath()));
+                    Log.d("naed", "notifyItemChanged ");
+                    notifyItemInserted(newestData.size()-1);
+                    return new Object[0];
                 }
             });
         }
@@ -74,34 +109,9 @@ public class SocialSearchActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull final SocialSearchViewHolder holder, final int position) {
-
             if(newestData != null) {
-                final UserData user = newestData.get(position);
-                if(user.user.imageDownloaded){
-                    holder.imageView.setImageURI(Uri.fromFile(new File(user.user.image)));
-                }
-
-                holder.nameLastName.setText(user.user.firstname + " " + user.user.surname);
-                holder.email.setText(user.user.email);
-                holder.objective.setText(user.levels.get(0).cat + ": " + user.levels.get(0).level);
-                holder.step.setText(user.levels.get(1).cat + ": " + user.levels.get(1).level);
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString(ChatActivity.SOCIAL_KEY_ID, String.valueOf(user.user.idUser));
-                        bundle.putString(ChatActivity.SOCIAL_KEY_NAME, user.user.firstname);
-                        bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME, user.user.surname);
-                        bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL, user.user.email);
-                        bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE, user.levels.get(0).cat + ": " + user.levels.get(0).level);
-                        bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP, user.levels.get(1).cat + ": " + user.levels.get(1).level);
-                        Intent chatIntent = new Intent(getApplicationContext(), ChatActivity.class);
-                        chatIntent.putExtras(bundle);
-                        startActivity(chatIntent);
-                    }
-                });
+                holder.setData(newestData.get(position));
             }
-
         }
 
         @Override
@@ -113,13 +123,15 @@ public class SocialSearchActivity extends AppCompatActivity {
         }
     }
 
-    private static class SocialSearchViewHolder extends RecyclerView.ViewHolder{
+    private class SocialSearchViewHolder extends RecyclerView.ViewHolder{
 
         ImageView imageView;
         TextView nameLastName;
         TextView email;
         TextView objective;
         TextView step;
+        Button sendRequest;
+        View itemView;
 
         public SocialSearchViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -128,6 +140,117 @@ public class SocialSearchActivity extends AppCompatActivity {
             this.email = itemView.findViewById(R.id.email);
             this.objective  = itemView.findViewById(R.id.objective);
             this.step = itemView.findViewById(R.id.step);
+            this.sendRequest = itemView.findViewById(R.id.button_friend_request);
+            this.itemView=itemView;
         }
+
+        public void setData(final Pair<JSONObject, String> data){
+            final JSONObject obj = data.getX();
+            try{
+                final String firstname = obj.getString("firstname");
+                final String surname = obj.getString("surname");
+                final String emailText = obj.getString("email");
+                String objectiveText="";
+                String stepText="";
+                nameLastName.setText(firstname+" " + surname);
+                email.setText(emailText);
+                try{
+                    objective.setText(obj.getString("nameCommitment"));
+                    step.setText(obj.getString("nameStep"));
+                }catch (JSONException ignore) {
+                }
+                this.imageView.setImageURI(Uri.parse(data.getY()));
+                try{
+                    if(obj.getBoolean("isFriend")){
+                        final String obT = objectiveText;
+                        final String stT = stepText;
+                        sendRequest.setVisibility(View.INVISIBLE);
+                        itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.d("naed", "opening chat");
+                                Bundle bundle = new Bundle();
+                                try {
+                                    bundle.putString(ChatActivity.SOCIAL_KEY_ID, obj.getString("idUser"));
+                                    bundle.putString(ChatActivity.SOCIAL_KEY_NAME, firstname);
+                                    bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME, surname);
+                                    bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL, emailText);
+                                    bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE, obT);
+                                    bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP, stT);
+                                    if (!data.getY().equals("")) {
+                                        bundle.putString(ChatActivity.SOCIAL_KEY_IMAGE_PATH, data.getY());
+                                    }
+                                    Intent chatIntent = new Intent(getBaseContext(), ChatActivity.class);
+                                    chatIntent.putExtras(bundle);
+                                    startActivityForResult(chatIntent, MainActivity.REQUEST_CODE_CHAT);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+
+                }catch (JSONException ignore) {
+                }
+                try{
+                    if(obj.getBoolean("requestSended")){
+                        sendRequest.setText(R.string.request_sended);
+                        sendRequest.setEnabled(false);
+                    }
+
+                }catch (JSONException ignore) {
+                }
+                try{
+                    if(obj.getBoolean("requestReceived")){
+                        sendRequest.setText(R.string.request_received);
+                        sendRequest.setEnabled(true);
+                    }
+                }catch (JSONException ignore) {
+                }
+            } catch (JSONException ignore) {
+            }
+            if(sendRequest.isEnabled()){
+                sendRequest.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            ServerManager.getInstance(getApplicationContext()).sendRequestFriendship(obj.getLong("idUser"), new Lambda() {
+                                @Override
+                                public Object[] run(Object... paramether) {
+                                    Log.d("naed", "sendRequestFriendship: " +  paramether[0].toString());
+                                    try{
+                                        if((Boolean) paramether[0]){
+                                            Log.d("naed", "sendRequestFriendship: true");
+                                            Toast.makeText(getApplicationContext(), getString(R.string.request_sended), Toast.LENGTH_SHORT).show();
+                                            sendRequest.setText(R.string.request_sended);
+                                            sendRequest.setEnabled(false);
+                                        }
+                                    } catch (Exception e){
+                                        e.printStackTrace();
+                                        try{
+                                            /* TODO print the result on the main thread */
+                                            Toast.makeText(getBaseContext(), getString(R.string.request_accepted), Toast.LENGTH_SHORT).show();
+                                            sendRequest.setVisibility(View.GONE);
+                                        }catch (Exception e1) {
+                                            e1.printStackTrace();
+                                        }
+
+                                    }
+                                    return new Object[0];
+                                }
+                            }, new Lambda() {
+                                @Override
+                                public Object[] run(Object... paramether) {
+                                    return new Object[0];
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        }
+
     }
 }

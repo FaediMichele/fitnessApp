@@ -24,15 +24,14 @@
             android:orientation="horizontal"
             android:paddingHorizontal="10dp">
 
-            <EditText
-                android:id="@+id/autoCompleteTextView"
+            <SearchView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="AutoCompleteTextView"
+                android:layout_height="match_parent"
+                android:id="@+id/search_view"
                 android:textCursorDrawable="@color/orange"
                 android:background="@android:color/transparent"
-                android:textColor="#FFF"/>
+                android:textColor="@color/white"
+                android:padding="10dp"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

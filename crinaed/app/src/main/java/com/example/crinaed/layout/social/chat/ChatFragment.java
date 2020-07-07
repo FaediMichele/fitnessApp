@@ -96,10 +96,12 @@ public class ChatFragment extends Fragment {
                     view.findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            adapter.addItem(editText.getText().toString());
-                            editText.setText("");
-                            if(recyclerView.getLayoutManager() != null) {
-                                recyclerView.getLayoutManager().scrollToPosition(adapter.newest.size()-1);
+                            if(!editText.getText().toString().equals("")) {
+                                adapter.addItem(editText.getText().toString());
+                                editText.setText("");
+                                if (recyclerView.getLayoutManager() != null) {
+                                    recyclerView.getLayoutManager().scrollToPosition(adapter.newest.size()-1);
+                                }
                             }
                         }
                     });
@@ -178,7 +180,6 @@ public class ChatFragment extends Fragment {
             ServerManager.getInstance(null).sendMessage(friendMessage, new Lambda() {
                 @Override
                 public Object[] run(Object... paramether) {
-                    repo.addMessage(friendMessage);
                     return new Object[0];
                 }
             }, new Lambda() {
@@ -193,6 +194,7 @@ public class ChatFragment extends Fragment {
         @Override
         public ChatFragment.ChatVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View itemView;
+            Log.d("naed", "layout message" + viewType + "| sent=" + ChatFragment.SENT_LAYOUT);
             switch(viewType){
                 case ChatFragment.SENT_LAYOUT:
                     itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_sent,parent,false);
@@ -208,6 +210,7 @@ public class ChatFragment extends Fragment {
 
         @Override
         public int getItemViewType(int position) {
+            Log.d("naed", "idSender= " + newest.get(position).idSender);
             if(this.newest.get(position).idSender != Util.getInstance().getIdUser()){
                 return ChatFragment.SENT_LAYOUT;
             }

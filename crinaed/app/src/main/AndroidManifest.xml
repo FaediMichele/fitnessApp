@@ -26,10 +26,17 @@
         <activity android:name=".layout.objective.ObjectiveActivity">
         </activity>
         <activity android:name=".layout.social.SocialSearchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
         </activity>
         <activity android:name=".layout.learning.LearningActivity">
         </activity>
-        <activity android:name=".layout.social.chat.ChatActivity">
+        <activity android:name=".layout.social.chat.ChatActivity"
+            android:windowSoftInputMode="adjustResize">
+
         </activity>
     </application>
 

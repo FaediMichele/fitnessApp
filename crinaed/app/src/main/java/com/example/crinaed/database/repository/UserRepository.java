@@ -48,12 +48,12 @@ public class UserRepository extends Repository{
     }
 
     public Future<?> addUser(final User user, final UserLevel... levels){
-        return AppDatabase.databaseWriteExecutor.submit(new Callable<Pair<Long, Long[]>>() {
+        return AppDatabase.databaseWriteExecutor.submit(new Callable<Long>() {
             @Override
-            public Pair<Long, Long[]> call() {
-                user.idUser = lastId--;
-                long idUser = userDao.insert(user)[0];
-                return new Pair<>(idUser, userDao.insert(levels));
+            public Long call() {
+                Long ret = userDao.insert(user)[0];
+                userDao.insert(levels);
+                return ret;
             }
         });
     }

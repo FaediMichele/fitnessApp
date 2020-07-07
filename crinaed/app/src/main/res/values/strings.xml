@@ -32,4 +32,9 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="block_error">Cannot block user</string>
     <string name="unblock">Unblock</string>
     <string name="unblock_ok">User unblocked</string>
+    <string name="request_friendship">Send request</string>
+    <string name="search_hint">Search a friend, an objective name or a step name</string>
+    <string name="request_sended">Request sended</string>
+    <string name="request_received">Accept request</string>
+    <string name="request_accepted">The friendship has been accepted</string>
 </resources>

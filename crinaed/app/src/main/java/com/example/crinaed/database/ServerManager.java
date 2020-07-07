@@ -2,6 +2,7 @@ package com.example.crinaed.database;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -11,6 +12,8 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.example.crinaed.R;
 import com.example.crinaed.database.entity.FriendMessage;
 import com.example.crinaed.database.entity.Friendship;
+import com.example.crinaed.database.entity.User;
+import com.example.crinaed.database.entity.UserLevel;
 import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Single;
 import com.example.crinaed.util.Util;
@@ -21,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,7 +41,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.Semaphore;
 
 public class ServerManager {
-    private static final String SERVER = "http://192.168.1.210:8080";
+    private static final String SERVER = "http://192.168.1.5:8080";
     private static ServerManager instance;
     private Context context;
     private final Single<Boolean> pollingMessageOn = new Single<>(false);
@@ -70,8 +74,6 @@ public class ServerManager {
         return instance;
     }
 
-
-
     public void manageGet(final String query, final Lambda onResponseMethod, final Lambda onErrorMethod){
         StringRequest request = new StringRequest(Request.Method.GET, SERVER + (query.equals("") ? "" : "?" + query), new Response.Listener<String>() {
             @Override
@@ -87,10 +89,10 @@ public class ServerManager {
         Volley.newRequestQueue(this.context).add(request);
     }
 
-    private void managePost(final String body, final Lambda onResponseMethod, final Lambda onErrorMethod){
+    public void managePost(final String body, final Lambda onResponseMethod, final Lambda onErrorMethod){
         managePost(body, onResponseMethod, onErrorMethod, "");
     }
-    private void managePost(final String body, final Lambda onResponseMethod, final Lambda onErrorMethod, final String query){
+    public void managePost(final String body, final Lambda onResponseMethod, final Lambda onErrorMethod, final String query){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, SERVER+(query.equals("")?"":"?"+query), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -258,7 +260,6 @@ public class ServerManager {
             Toast.makeText(context, "Could not download " + filename, Toast.LENGTH_SHORT).show();
             Log.d("naed", "Could not download " + filename);
         }
-
         TransferFile.downloadFile(SERVER+query, f, receiver);
     }
 
@@ -346,6 +347,61 @@ public class ServerManager {
                             return new Object[0];
                         }
                     });
+                    return null;
+                }
+            }, onFailure);
+            stopMessagePolling();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            onFailure.run();
+        }
+    }
+
+    public void sendRequestFriendship(long idFriend, final Lambda onSuccess, final Lambda onFailure){
+        JSONObject body = new JSONObject();
+        try {
+            body.put("idSession", Util.getInstance().getSessionId());
+            body.put("to", "friend");
+            body.put("method", "requestFriendship");
+            JSONObject data= new JSONObject();
+            data.put("idReceiver", idFriend);
+            body.put("data", data);
+            managePost(body.toString(), new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    try{
+                        JSONObject response = new JSONObject(paramether[0].toString());
+                        JSONArray jsonArray = response.getJSONArray("friendLevels");
+                        UserLevel[] levels = new UserLevel[jsonArray.length()];
+                        for(int i=0; i<levels.length; i++){
+                            levels[i] = new UserLevel(jsonArray.getJSONObject(i));
+                        }
+                        final User user = new User(response.getJSONObject("friend"));
+                        DatabaseUtil.getInstance().getRepositoryManager().getUserRepository().addUser(user, levels).get();
+                        Friendship friendship = new Friendship(response.getJSONObject("friendship"));
+                        downloadFile(response.getJSONObject("friend").getString("image"), Environment.DIRECTORY_PICTURES, new Lambda() {
+                            @Override
+                            public Object[] run(Object... paramether) {
+                                user.image = ((File) paramether[1]).getAbsolutePath();
+                                user.imageDownloaded = true;
+                                DatabaseUtil.getInstance().getRepositoryManager().getUserRepository().updateUser(user);
+                                return new Object[0];
+                            }
+                        });
+                        DatabaseUtil.getInstance().getRepositoryManager().getFriendRepository().addFriend(friendship, new Lambda() {
+                            @Override
+                            public Object[] run(Object... paramether) {
+                                onSuccess.run(paramether);
+                                return new Object[0];
+                            }
+                        });
+                    } catch (JSONException ignore) {
+                        ignore.printStackTrace();
+                        Log.d("naed", "add friend response: " + paramether[0].toString());
+                        onSuccess.run(true);
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
                     return null;
                 }
             }, onFailure);

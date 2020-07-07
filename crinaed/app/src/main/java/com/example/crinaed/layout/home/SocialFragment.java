@@ -63,7 +63,7 @@ public class SocialFragment extends Fragment {
     private class SocialSearchAdapter extends RecyclerView.Adapter<SocialFragment.SocialSearchViewHolder>{
 
         private List<UserData> newest;
-
+        private List<SocialSearchViewHolder> holders = new ArrayList<>();
 
         public SocialSearchAdapter(){
             DatabaseUtil.getInstance().getRepositoryManager().getUserRepository().getData().observe(getActivity(), new Observer<List<UserData>>() {
@@ -71,6 +71,9 @@ public class SocialFragment extends Fragment {
                 public void onChanged(List<UserData> userData) {
                     newest=userData;
                     notifyDataSetChanged();
+                    for(int i=0; i< holders.size();i++){
+                        holders.get(i).updateData(i, newest, getContext());
+                    }
                 }
             });
 
@@ -85,7 +88,7 @@ public class SocialFragment extends Fragment {
                     itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_social_archive, parent, false);
                     break;
                 case TYPE_VIEW_VIEW_NORMAL:
-                    itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_social_search, parent, false);
+                    itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_social_base, parent, false);
                     break;
                 default:
                     itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_social_search, parent, false);
@@ -97,6 +100,7 @@ public class SocialFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull final SocialFragment.SocialSearchViewHolder holder, int position) {
             if(newest !=null){
+                holders.add(holder);
                 holder.updateData(position, newest, getContext());
                 final UserData data = this.newest.get(position);
                 holder.itemView.setOnClickListener(new View.OnClickListener() {

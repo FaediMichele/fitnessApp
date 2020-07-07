@@ -46,6 +46,10 @@ public class TransferFile {
     private static final int NUMBER_OF_THREAD = 4;
     private static final ExecutorService downloaderExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREAD);
 
+    public static ExecutorService getDownloaderExecutor(){
+        return downloaderExecutor;
+    }
+
     public static void uploadFile(final File from, final String dest, final Lambda l){
         downloaderExecutor.submit(new Runnable() {
             @Override
@@ -58,8 +62,6 @@ public class TransferFile {
             }
         });
     }
-
-
 
     public static void downloadFile(final String from, final File dest, final Lambda l){
         downloaderExecutor.submit(new Runnable() {
