@@ -40,7 +40,7 @@ public class MyCommitment  implements MyEntity{
         String endDate=obj.getString("endDate");
         if(endDate.equals("0")){
             ended=false;
-            this.endDate="0";
+            this.endDate=0L;
         } else{
             this.endDate = Util.isoFormatToTimestamp("endDate");
             ended=true;
