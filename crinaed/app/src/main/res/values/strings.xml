@@ -22,4 +22,7 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="buy_courese">compra il corso</string>
     <string name="value_review">Value Review</string>
     <string name="price">Price</string>
+    <string name="buy_for_view_video">Compra il corso per visualizzare le video lezioni</string>
+    <string name="congratulation">Congratulazioni per aver acquistato il corso</string>
+    <string name="course_bought">Corso acquistato</string>
 </resources>

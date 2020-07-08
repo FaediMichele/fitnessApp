@@ -96,10 +96,11 @@ public class LearningPagerFragment extends Fragment {
             switch (position) {
                 case DETAIL_FRAGMENT:
                     if(course.isBuoght){
-                        fragment = new LearningBuyDetailsFragment();
+                        fragment = new LearningBoughtDetailsFragment();
                         fragment.setArguments(dataLearning);
                     }else {
-                        fragment = new LearningNotBuyDetailsFragment();
+                        fragment = new LearningNotBoughtDetailsFragment();
+                        fragment.setArguments(dataLearning);
                     }
                     break;
                 case BOUGHT_FRAGMENT:
@@ -108,10 +109,12 @@ public class LearningPagerFragment extends Fragment {
                         fragment.setArguments(dataLearning);
                     }else{
                         fragment = new LearningNotBoughtFragment();
+                        fragment.setArguments(dataLearning);
                     }
                     break;
                 default:
-                    fragment = new LearningNotBuyDetailsFragment();
+                    fragment = new LearningNotBoughtDetailsFragment();
+                    fragment.setArguments(dataLearning);
                     break;
             }
             return fragment;
