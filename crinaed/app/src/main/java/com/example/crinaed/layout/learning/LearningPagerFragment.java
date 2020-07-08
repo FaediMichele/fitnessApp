@@ -29,7 +29,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class LearningPagerFragment extends Fragment {
-    private static final int NUM_PAGES = 3;
+    private static final int NUM_PAGES = 2;
     private static final int OBJECTIVE_FRAGMENT = 0;
     private static final int SOCIAL_FRAGMENT = 1;
     private static final int LEARNING_FRAGMENT = 2;
