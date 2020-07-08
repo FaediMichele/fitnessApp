@@ -44,4 +44,5 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="cannot_login">The connection with the server cannot be established</string>
     <string name="wrong_credential">The email or the password is wrong</string>
     <string name="cat_level">%s: %d</string>
+    <string name="old_commitment_data">Old commitment data</string>
 </resources>

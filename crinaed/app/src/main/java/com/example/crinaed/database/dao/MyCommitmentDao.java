@@ -49,6 +49,10 @@ public interface MyCommitmentDao {
     LiveData<List<CommitmentWithMyStep>> getCommitmentWithMyStep(int category);
 
     @Transaction
+    @Query("SELECT * FROM MyCommitment WHERE idCommitment IN (SELECT idCommitment FROM MyStep WHERE category=(:category)) AND ended=1")
+    LiveData<List<CommitmentWithMyStep>> getCommitmentEndedWithMyStep(int category);
+
+    @Transaction
     @Query("SELECT * FROM MyCommitment WHERE ended=0")
     List<CommitmentWithMyStep> getCommitmentWithMyStepList();
 

@@ -125,6 +125,9 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
         LineChart chart;
         Period period;
         RecyclerView recyclerView;
+        RecyclerView recyclerView_old;
+        TextView txt_old;
+        View divider_old;
 
         CommitmentRepository repo = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository();
         Category category;
@@ -186,6 +189,9 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
             month = itemView.findViewById(R.id.button_month);
             year = itemView.findViewById(R.id.button_year);
             recyclerView = itemView.findViewById(R.id.recycler_view);
+            recyclerView_old = itemView.findViewById(R.id.recycler_view_old);
+            txt_old = itemView.findViewById(R.id.txt_old);
+            divider_old = itemView.findViewById(R.id.divider_old);
 
             this.itemView = itemView;
             this.context=context;
@@ -299,6 +305,8 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
                 textView_graph_title.setText(context.getString(R.string.graph_title, context.getString(category.getRes())));
                 recyclerView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
                 recyclerView.setAdapter(new GraphAdapter(owner, category));
+                recyclerView_old.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
+                recyclerView_old.setAdapter(new GraphAdapter(owner, category, txt_old, divider_old));
                 updateObserver();
             }
         }

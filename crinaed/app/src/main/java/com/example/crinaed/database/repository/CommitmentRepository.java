@@ -53,6 +53,10 @@ public class CommitmentRepository extends Repository{
         return commitmentDao.getCommitmentWithMyStep(category.ordinal());
     }
 
+    public LiveData<List<CommitmentWithMyStep>> getCommitmentEndedWithSteps(Category category) {
+        return commitmentDao.getCommitmentEndedWithMyStep(category.ordinal());
+    }
+
 
     public List<MyStepDoneWithMyStep> getStepHistoryList(final Category category){
         Future<List<MyStepDoneWithMyStep>> future;
@@ -224,28 +228,19 @@ public class CommitmentRepository extends Repository{
             @Override
             public void run() {
                 /* TODO check this stuff */
-                Log.d("naed", "creating the new step done");
                 List<CommitmentWithMyStep> l = commitmentDao.getCommitmentWithMyStepList();
-                List<MyStepDone> ret = new ArrayList<>();
                 long now = new Date().getTime();
-                Log.d("naed" , "size c: " + l.size());
                 for(int i = 0; i < l.size(); i++){
                     CommitmentWithMyStep c = l.get(i);
-                    Log.d("naed" , "size "+ c.commitment.name + ": " + c.steps.size());
                     for(int j = 0; j < c.steps.size(); j++){
                         MyStepWithMyStepDone s = c.steps.get(j);
                         MyStepDone last = commitmentDao.getLastStepDone(s.myStep.idMyStep);
-                        Log.d("naed", "last step done= " + last.idMyStep+ "now = " +now + "| " + (now - last.dateStart) + ">=" + (s.myStep.repetitionDay * 1000*60*60*24));
-                        // now - last.dateStart is in millisecond
                         if(last == null || now - last.dateStart >=  s.myStep.repetitionDay * 1000*60*60*24){
                             MyStepDone done = new MyStepDone(s.myStep.idMyStep, now, 0);
-                            Log.d("naed", "CREATED NEW STEP "+last.idMyStep);
                             commitmentDao.insert(done);
-                            ret.add(done);
                         }
                     }
                 }
-
             }
         });
     }

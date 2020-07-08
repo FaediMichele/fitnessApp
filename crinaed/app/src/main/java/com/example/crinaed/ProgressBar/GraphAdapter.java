@@ -41,14 +41,53 @@ public class GraphAdapter extends RecyclerView.Adapter<GraphAdapter.GraphAdapter
     List<CommitmentWithMyStep> newest;
     Category category;
     LifecycleOwner owner;
+    TextView txt;
+    View divider;
 
     public GraphAdapter(LifecycleOwner owner, Category category){
         this.category=category;
         this.owner=owner;
+        newType();
+    }
+
+    public GraphAdapter(LifecycleOwner owner, Category category, TextView txt, View divider){
+        this.category=category;
+        this.owner=owner;
+        oldType();
+        this.txt=txt;
+        this.divider=divider;
+    }
+
+    private void newType(){
         DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getCommitmentWithSteps(category).observe(owner, new Observer<List<CommitmentWithMyStep>>() {
             @Override
             public void onChanged(List<CommitmentWithMyStep> commitmentWithMySteps) {
                 newest=commitmentWithMySteps;
+                notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void oldType(){
+        DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getCommitmentEndedWithSteps(category).observe(owner, new Observer<List<CommitmentWithMyStep>>() {
+            @Override
+            public void onChanged(List<CommitmentWithMyStep> commitmentWithMySteps) {
+                newest=commitmentWithMySteps;
+                if(newest.size()==0){
+                    if(divider!= null){
+                        divider.setVisibility(View.GONE);
+                    }
+                    if(txt!= null){
+                        txt.setVisibility(View.GONE);
+                    }
+                }else{
+                    if(divider!= null){
+                        divider.setVisibility(View.VISIBLE);
+                    }
+                    if(txt!= null){
+                        txt.setVisibility(View.VISIBLE);
+                    }
+                }
                 notifyDataSetChanged();
             }
         });
