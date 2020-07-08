@@ -8,6 +8,8 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="tab_objective">obiettivi</string>
     <string name="tab_social">social</string>
     <string name="tab_learning">learning</string>
+    <string name="tab_learnign_details">info</string>
+    <string name="tab_learnign_bought">lezioni</string>
     <string name="sessionId">sessionId</string>
     <string name="social">Social</string>
     <string name="sport">Sport</string>

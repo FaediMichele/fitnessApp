@@ -4,4 +4,6 @@
 	- allineare correttamente le chat quando c'è poco testo.
 - social activity 
 	- da fra funzionare la ricerca
+- lesson
+	-il player musicale non full screen il controller rimane fixed dove compare
 	

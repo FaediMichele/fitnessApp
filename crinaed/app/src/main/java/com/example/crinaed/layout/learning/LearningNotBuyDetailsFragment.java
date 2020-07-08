@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.crinaed.R;
 
-public class LearningNotBuyDetails extends Fragment {
+public class LearningNotBuyDetailsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

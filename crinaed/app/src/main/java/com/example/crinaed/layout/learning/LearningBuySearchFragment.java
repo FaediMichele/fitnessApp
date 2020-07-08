@@ -23,6 +23,8 @@ import java.util.List;
 public class LearningBuySearchFragment extends Fragment  {
     public static final String TAG_SOCIAL_ARCHIVE = "SOCIAL_FRAGMENT_TO_SOCIAL_ARCHIVE_FRAGMENT";
     public static final String TAG_DETAIL = "LEARNING_BUY_FRAGMENT_TO_LEARNING_BUY_DETAIL_FRAGMENT";
+    public static final String TAG_LEARNING_PAGER = "LEARNING_ACTIVITY_TO_LEARNING_PAGER_FRAGMENT";
+    public static final String KEY_ID_COURSE = "KEY_ID_COURSE";
     final public static int TYPE_VIEW_ITEM_VIEW_ARCHIVE = 0;
     final public static int TYPE_VIEW_VIEW_NORMAL = 1;
 
@@ -55,7 +57,7 @@ public class LearningBuySearchFragment extends Fragment  {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull LearningBuySearchFragment.LearningViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull LearningBuySearchFragment.LearningViewHolder holder, final int position) {
         ModelloCourseBuy.TypeCourse typeCourse = this.modelloFittizio.get(position).typeCourse;
         switch (typeCourse){
             case SOCIAL:
@@ -79,10 +81,12 @@ public class LearningBuySearchFragment extends Fragment  {
 //                    //transaction.addToBackStack(TAG_BACK_STECK);
 //                    transaction.commit();
 
-                    //da eliminare
-                    LearningBoughtFragment learningBuyDetailsFragment = new LearningBoughtFragment();
+                    LearningPagerFragment learningPagerFragment = new LearningPagerFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KEY_ID_COURSE, modelloFittizio.get(position).id);
+                    learningPagerFragment.setArguments(bundle);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.container_learning, learningBuyDetailsFragment, TAG_DETAIL);
+                    transaction.replace(R.id.container_learning, learningPagerFragment, TAG_LEARNING_PAGER);
                     transaction.addToBackStack(null);
                     transaction.commit();
                 }
