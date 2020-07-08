@@ -35,7 +35,8 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.example.crinaed.view.NestedScrollableHost
-                    android:layout_height="300dp"
+                    android:layout_height="250dp"
+                    android:padding="10dp"
                     android:layout_width="match_parent"
                     app:layout_constraintTop_toBottomOf="@id/title_lesson"
                     app:layout_constraintBottom_toTopOf="@id/linearLayout"
@@ -44,7 +45,7 @@
                     <com.smarteist.autoimageslider.SliderView
                         android:id="@+id/slider_course"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
+                        android:layout_height="match_parent"
                         app:sliderAnimationDuration="600"
                         app:sliderAutoCycleDirection="back_and_forth"
                         app:sliderIndicatorAnimationDuration="600"
@@ -67,29 +68,55 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.5">
+                        android:layout_weight="0.5"
+                        android:background="@drawable/right_line">
                         <TextView
+                            android:id="@+id/review_title_top"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/value_review"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+                        </TextView>
+
+
+                        <TextView
+                            android:id="@+id/review_top_card"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="recensioni"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
+                            app:layout_constraintTop_toBottomOf="@id/review_title_top">
                         </TextView>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.5">
+                        android:layout_weight="0.5"
+                        android:background="@drawable/left_line">
+
                         <TextView
+                            android:id="@+id/price_top_card_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/price"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+                        </TextView>
+
+                        <TextView
+                            android:id="@+id/price_top_card"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="prezzo"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
+                            app:layout_constraintTop_toBottomOf="@+id/price_top_card_title">
                         </TextView>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
@@ -97,12 +124,26 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_buy"
+            app:cornerRadius="200dp"
+            android:backgroundTint="@color/redPrimary"
+            android:textColor="@color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/card_course"
+            android:text="CIAO" />
+
+
+
     <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/card_course"
+            app:layout_constraintTop_toBottomOf="@+id/button_buy"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -119,6 +160,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
                 <TextView
+                    android:id="@+id/description_course"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="10dp"
@@ -146,7 +188,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="250dp">
 
             <TextView
                 android:id="@+id/title_review"
@@ -154,82 +196,22 @@
                 android:layout_height="wrap_content"
                 android:text="@string/review"
                 android:textSize="@dimen/h2"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                app:layout_constraintBottom_toTopOf="@id/link_all_review"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title_review">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/image_video"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/simple_people"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:shapeAppearanceOverlay="@style/roundedImageViewRounded" />
-
-                    <TextView
-                        android:id="@+id/name_and_last_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="nome congonome"
-                        app:layout_constraintStart_toEndOf="@+id/image_video"
-                        app:layout_constraintTop_toTopOf="@id/image_video" />
-
-                    <TextView
-                        android:id="@+id/stars_review"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="stelle"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/image_video" />
-
-                    <TextView
-                        android:id="@+id/date_review"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="data"
-                        app:layout_constraintStart_toEndOf="@+id/stars_review"
-                        app:layout_constraintTop_toTopOf="@+id/stars_review" />
-
-                    <TextView
-                        android:id="@+id/review"
-                        android:layout_marginTop="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="testo recensione testo recensione testo recensione testo recensione testo recensione testo recensione testo recensione testo recensione testo recensione testo recensione testo recensione testo recensione "
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/stars_review" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <TextView
-                android:id="@+id/link_all_review"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vedi tutte le recensioni"
+                android:layout_height="0dp"
+                android:paddingBottom="50dp"
+                android:clipToPadding="false"
+                app:layout_constraintTop_toBottomOf="@id/title_review"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

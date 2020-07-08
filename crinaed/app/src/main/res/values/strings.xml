@@ -20,4 +20,6 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="info_of_course">info sul corso</string>
     <string name="descritpion">Descrizione</string>
     <string name="buy_courese">compra il corso</string>
+    <string name="value_review">Value Review</string>
+    <string name="price">Price</string>
 </resources>

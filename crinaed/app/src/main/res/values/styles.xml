@@ -20,6 +20,9 @@
         <item name="colorPrimary">@color/greenPrimary</item>
     </style>
 
+    <style name="RoundedCornerMaterialButton">
+        <item name="colorAccent">@color/redPrimary</item>
+    </style>
 
 <!--init card style-->
     <style name="MyCard" parent="Widget.MaterialComponents.CardView">

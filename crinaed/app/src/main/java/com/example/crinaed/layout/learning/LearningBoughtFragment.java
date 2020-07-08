@@ -12,12 +12,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
-import com.example.crinaed.view.FullScreenVideoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +23,19 @@ import java.util.List;
 public class LearningBoughtFragment extends Fragment {
 
     public static final String TAG_LESSON = "LEARNING_BOUGHT_FRAGMENT_TO_LESSON_FRAGMENT";
+    private String idCourse;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_learning_bought, container, false);
+
+        //to receive model
+        Bundle dataLearning = getArguments();
+        idCourse = dataLearning.getString(LearningBuySearchFragment.KEY_ID_COURSE);
+
+        //set view
+        TextView title = view.findViewById(R.id.title_lesson);
+        title.setText("Titolo del corso scritto in Java");
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -44,7 +51,6 @@ public class LearningBoughtFragment extends Fragment {
     private class LearningBoughtAdapter extends RecyclerView.Adapter<LearningBoughtVH>{
 
         private List<ModelloVideoBought> modelloVideoBoughtList;
-
         public LearningBoughtAdapter(List<ModelloVideoBought> modelloVideoBoughtList) {
             this.modelloVideoBoughtList = modelloVideoBoughtList;
         }

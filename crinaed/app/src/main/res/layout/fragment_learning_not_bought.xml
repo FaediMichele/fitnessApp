@@ -15,7 +15,7 @@
         android:textAlignment="center"
         android:text="@string/buy_courese"
         android:textColor="@color/white"
-        android:background="@drawable/rounded_edit_text_learnign"
+        android:background="@drawable/rounded_edit_text_learning"
         android:layout_margin="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
