@@ -45,11 +45,11 @@ public interface MyCommitmentDao {
     void delete(MyStep... steps);
 
     @Transaction
-    @Query("SELECT * FROM MyCommitment WHERE idCommitment IN (SELECT idCommitment FROM MyStep WHERE category=(:category))")
+    @Query("SELECT * FROM MyCommitment WHERE idCommitment IN (SELECT idCommitment FROM MyStep WHERE category=(:category)) AND ended=0")
     LiveData<List<CommitmentWithMyStep>> getCommitmentWithMyStep(int category);
 
     @Transaction
-    @Query("SELECT * FROM MyCommitment")
+    @Query("SELECT * FROM MyCommitment WHERE ended=0")
     List<CommitmentWithMyStep> getCommitmentWithMyStepList();
 
     @Query("SELECT * FROM MyStep WHERE idCommitment = (:idCommitment)")
@@ -65,7 +65,7 @@ public interface MyCommitmentDao {
 
 
     @Transaction
-    @Query("SELECT * FROM MyStepDone WHERE dateStart > (:afterDay) AND idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category) AND repetitionDay=(:repetition))")
+    @Query("SELECT * FROM MyStepDone WHERE dateStart > (:afterDay) AND idMyStep IN(SELECT idMyStep FROM MyStep WHERE category=(:category) AND repetitionDay=(:repetition) AND idCommitment NOT IN (SELECT idCommitment FROM MyCommitment WHERE ended=1))")
     LiveData<List<MyStepDoneWithMyStep>> getLastMyStepDoneWithMyStep(int category, long afterDay, int repetition);
 
     @Transaction

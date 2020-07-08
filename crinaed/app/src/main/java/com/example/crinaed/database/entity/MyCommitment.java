@@ -16,6 +16,8 @@ public class MyCommitment  implements MyEntity{
     public String name;
     public String desc;
     public long creationDate;
+    public long endDate;
+    public boolean ended;
     public long idUser;
     public String image;
     public boolean imageDownloaded=false;
@@ -25,6 +27,7 @@ public class MyCommitment  implements MyEntity{
         this.name = name;
         this.desc = desc;
         this.creationDate = creationDate;
+        this.endDate=0;
         this.idUser = idUser;
     }
 
@@ -34,6 +37,15 @@ public class MyCommitment  implements MyEntity{
         this.desc = obj.getString("desc");
         this.creationDate = Util.isoFormatToTimestamp(obj.getString("creationDate"));
         this.idUser = obj.getLong("idUser");
+        String endDate=obj.getString("endDate");
+        if(endDate.equals("0")){
+            ended=false;
+            this.endDate="0";
+        } else{
+            this.endDate = Util.isoFormatToTimestamp("endDate");
+            ended=true;
+        }
+
     }
 
     @Override
@@ -44,6 +56,7 @@ public class MyCommitment  implements MyEntity{
         obj.put("name", name);
         obj.put("desc", desc);
         obj.put("idUser", idUser);
+        obj.put("endDate", endDate);
         return obj;
     }
 
