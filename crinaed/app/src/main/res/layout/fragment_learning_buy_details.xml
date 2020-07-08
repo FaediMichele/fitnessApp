@@ -21,7 +21,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="400dp">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/title_lesson"
@@ -33,6 +33,27 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <com.example.crinaed.view.NestedScrollableHost
+                    android:layout_height="300dp"
+                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toBottomOf="@id/title_lesson"
+                    app:layout_constraintBottom_toTopOf="@id/linearLayout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+                    <com.smarteist.autoimageslider.SliderView
+                        android:id="@+id/slider_course"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        app:sliderAnimationDuration="600"
+                        app:sliderAutoCycleDirection="back_and_forth"
+                        app:sliderIndicatorAnimationDuration="600"
+                        appliderIndicatorOrientation="horizontal"
+                        app:sliderIndicatorPadding="3dp"
+                        app:sliderIndicatorRadius="2dp"
+                        app:sliderScrollTimeInSec="1"/>
+                </com.example.crinaed.view.NestedScrollableHost>
+
 
                 <LinearLayout
                     android:id="@+id/linearLayout"
