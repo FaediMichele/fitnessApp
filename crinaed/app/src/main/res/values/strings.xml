@@ -45,4 +45,19 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="wrong_credential">The email or the password is wrong</string>
     <string name="cat_level">%s: %d</string>
     <string name="old_commitment_data">Old commitment data</string>
+    <string name="checklist">Single</string>
+    <string name="progression">Progression</string>
+    <string name="error_name">The name must not be empty</string>
+    <string name="error_max">Accepted value 1-99999</string>
+    <string-array name="unit_measure">
+        <item>Km</item>
+        <item>m</item>
+        <item>hr</item>
+        <item>Times</item>
+        <item>Kg</item>
+        <item>Km</item>
+        <item>mi</item>
+        <item>L</item>
+        <item>lb</item>
+    </string-array>
 </resources>

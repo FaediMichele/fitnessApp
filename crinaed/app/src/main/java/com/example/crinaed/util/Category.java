@@ -23,6 +23,15 @@ public enum Category{
         return new Pair<>(ContextCompat.getColor(c, primary),ContextCompat.getColor(c, secondary));
     }
 
+    public static String[] toLocalized(Context context){
+        Category[] array= Category.values();
+        String[] ret = new String[array.length];
+        for(int i=0;i<array.length;i++){
+            ret[i]=context.getString(array[i].getRes());
+        }
+        return ret;
+    }
+
     public int getRes(){
         return nameRes;
     }

@@ -1,5 +1,7 @@
 package com.example.crinaed.util;
 
+import android.content.Context;
+
 import com.example.crinaed.R;
 
 import java.util.Calendar;
@@ -19,6 +21,11 @@ public enum Period {
         return resId;
     }
 
+    Period(int day, int resId) {
+        this.day = day;
+        this.resId=resId;
+    }
+
     public Date daysAgo(){
         Date ret = new Date();
         return decrementDays(ret, getDay()-1);
@@ -31,10 +38,11 @@ public enum Period {
         return cal.getTime();
     }
 
-    Period(int day, int resId) {
-        this.day = day;
-        this.resId=resId;
+    public static String[] toRepetition(Context context){
+        return new String[]{context.getString(Period.DAY.getResId()), context.getString(Period.WEEK.getResId())};
     }
 
-
+    public static Period getRepetition(int position){
+        return position==0 ? Period.DAY: Period.WEEK;
+    }
 }

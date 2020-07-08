@@ -51,7 +51,7 @@ public class MyStep  implements MyEntity{
     }
 
     public TypeOfStep getType(){
-        return this.type.equals("progression")? TypeOfStep.PROGRESSION : this.type.equals("checklist")? TypeOfStep.CHECKLIST: TypeOfStep.OTHER;
+        return this.type.equals("progression")? TypeOfStep.PROGRESSION : TypeOfStep.CHECKLIST;
     }
 
     @Override
