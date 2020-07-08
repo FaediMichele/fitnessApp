@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,6 @@ public class LessonActivity extends AppCompatActivity {
     private VideoView mVideoView;
     private Integer msec = null;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {//macna il back e le informazioni dell'utente
         super.onCreate(savedInstanceState);
@@ -41,11 +41,25 @@ public class LessonActivity extends AppCompatActivity {
         mVideoView.setVideoURI(uri);
 //        mVideoView.start();
 
-        FullScreenMediaController controller = new FullScreenMediaController(this);
+        final FullScreenMediaController controller = new FullScreenMediaController(this);
         mVideoView.setMediaController(controller);
         controller.setAnchorView(mVideoView);
         controller.setMediaPlayer(mVideoView);
 //        mVideoView.seekTo(msec == null ? 0 : msec);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            controller.addOnUnhandledKeyEventListener(new View.OnUnhandledKeyEventListener() {
+                @Override
+                public boolean onUnhandledKeyEvent(View v, KeyEvent event) {
+                    //Handle BACK button
+                    if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)
+                    {
+                        controller.hide();
+                    }
+                    return true;
+                }
+            });
+        }
     }
 
     @Override

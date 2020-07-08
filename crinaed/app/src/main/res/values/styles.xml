@@ -14,10 +14,12 @@
         <item name="colorSecondaryVariant">#c30000</item>
         <item name="colorOnSecondary">#fff</item>
     </style>
+
     <style name="Theme.Social" parent="Theme.MyApp">
         <item name="colorAccent">#ff8800</item>
         <item name="colorPrimary">@color/greenPrimary</item>
     </style>
+
 
 <!--init card style-->
     <style name="MyCard" parent="Widget.MaterialComponents.CardView">
