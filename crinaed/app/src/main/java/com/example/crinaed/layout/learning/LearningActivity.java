@@ -11,6 +11,7 @@ import com.example.crinaed.R;
 
 public class LearningActivity extends AppCompatActivity {
 
+    public static final String KEY_START_PAGER = "KEY_START_PAGER";
     public static final String TAG_LEARNING_BUY = "LEARNING_ACTIVITY_TO_LEARNING_BUY_FRAGMENT";
 
 
@@ -24,6 +25,9 @@ public class LearningActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        boolean startPager = 
+
+
         LearningBuySearchFragment learningBuySearchFragment = new LearningBuySearchFragment();
         learningBuySearchFragment.setArguments(bundle);
 

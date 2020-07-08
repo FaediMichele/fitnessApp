@@ -1,5 +1,6 @@
 package com.example.crinaed.layout.home;
 
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
+import com.example.crinaed.layout.learning.LearningActivity;
+import com.example.crinaed.layout.learning.LearningBuySearchFragment;
 import com.example.crinaed.layout.social.SocialArchiveFragment;
 
 import java.util.ArrayList;
@@ -66,7 +69,7 @@ public class LearningFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull LearningFragment.LearningViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull LearningFragment.LearningViewHolder holder, final int position) {
             if(position > 0) {
                 ModelloCourse.TypeCourse typeCourse = this.modelloFittizio.get(position).typeCourse;
                 switch (typeCourse){
@@ -85,16 +88,12 @@ public class LearningFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         //start acrivity learning fragment del corso gia acquistato
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString(ChatActivity.SOCIAL_KEY_ID, modelloFittizio.id);
-//                        bundle.putString(ChatActivity.SOCIAL_KEY_NAME, modelloFittizio.nome);
-//                        bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME, modelloFittizio.cognome);
-//                        bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL, modelloFittizio.email);
-//                        bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE, modelloFittizio.titoloObbiettivo);
-//                        bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP, modelloFittizio.nome);
-//                        Intent chatIntent = new Intent(getContext(), ChatActivity.class);
-//                        chatIntent.putExtras(bundle);
-//                        startActivity(chatIntent);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(LearningBuySearchFragment.KEY_ID_COURSE,modelloFittizio.get(position).id);
+                        bundle.putBoolean(LearningActivity.KEY_START_PAGER,true);
+                        Intent learningIntent = new Intent(getContext(), LearningActivity.class);
+                        learningIntent.putExtras(bundle);
+                        startActivity(learningIntent);
                     }
                 });
             }else{
