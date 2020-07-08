@@ -25,8 +25,6 @@ public class LearningActivity extends AppCompatActivity {
         LearningBuySearchFragment learningBuyFragment = new LearningBuySearchFragment();
         learningBuyFragment.setArguments(bundle);
 
-        Log.d("cri", "onCreate");
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container_learning, learningBuyFragment, TAG_LEARNING_BUY);
         transaction.addToBackStack(null);

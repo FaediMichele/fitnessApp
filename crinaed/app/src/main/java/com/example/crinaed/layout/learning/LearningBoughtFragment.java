@@ -1,5 +1,7 @@
 package com.example.crinaed.layout.learning;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
+import com.example.crinaed.view.FullScreenVideoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,10 +63,8 @@ public class LearningBoughtFragment extends Fragment {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LessonFragment lessonFragment = new LessonFragment();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.container_learning, lessonFragment, TAG_LESSON);
-                    transaction.commit();
+                    Intent intent = new Intent(getContext(), LessonActivity.class);
+                    ((Activity)getContext()).startActivity(intent);
                 }
             });
         }

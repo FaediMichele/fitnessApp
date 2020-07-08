@@ -3,7 +3,6 @@ package com.example.crinaed.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -52,19 +51,7 @@ public class FullScreenMediaController extends MediaController {
         fullScreen.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                VideoView videoView =  view.findViewById(R.id.video_lesson);
-                if(isFullScreen){
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra(KEY_MINUTE,videoView.getCurrentPosition());
-                    returnIntent.putExtra(KEY_IS_FULL_SCREEN, false);
-                    ((Activity)getContext()).setResult(Activity.RESULT_OK,returnIntent);
-                    ((Activity)getContext()).finish();
-                }else{
-                    Intent intent = new Intent(getContext(),FullScreenVideoActivity.class);
-                    intent.putExtra(KEY_IS_FULL_SCREEN, true);
-                    intent.putExtra(KEY_MINUTE,videoView.getCurrentPosition());
-                    ((Activity)getContext()).startActivity(intent);
-                }
+                onBackPressed(view);
             }
         });
     }
@@ -78,4 +65,19 @@ public class FullScreenMediaController extends MediaController {
     }
 
 
+    public void onBackPressed(View view) {
+        VideoView videoView =  view.findViewById(R.id.video_lesson);
+        if(isFullScreen){
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra(KEY_MINUTE,videoView.getCurrentPosition());
+            returnIntent.putExtra(KEY_IS_FULL_SCREEN, false);
+            ((Activity)getContext()).setResult(Activity.RESULT_OK,returnIntent);
+            ((Activity)getContext()).finish();
+        }else{
+            Intent intent = new Intent(getContext(),FullScreenVideoActivity.class);
+            intent.putExtra(KEY_IS_FULL_SCREEN, true);
+            intent.putExtra(KEY_MINUTE,videoView.getCurrentPosition());
+            ((Activity)getContext()).startActivityForResult(intent,FullScreenVideoActivity.REQUEST_CODE_FULL_SCREEN_VIDEO_ACTIVITY);
+        }
+    }
 }
