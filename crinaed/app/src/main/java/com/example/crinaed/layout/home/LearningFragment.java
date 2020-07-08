@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
 import com.example.crinaed.layout.learning.LearningActivity;
+import com.example.crinaed.layout.learning.LearningArchiveFragment;
 import com.example.crinaed.layout.learning.LearningBuySearchFragment;
 import com.example.crinaed.layout.social.SocialArchiveFragment;
 
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LearningFragment extends Fragment {
-    public static final String TAG_SOCIAL_ARCHIVE = "SOCIAL_FRAGMENT_TO_SOCIAL_ARCHIVE_FRAGMENT";
+    public static final String TAG_LEARNING_ARCHIVE = "LEARNING_FRAGMENT_TO_LEARNING_ARCHIVE_FRAGMENT";
     final public static int TYPE_VIEW_ITEM_VIEW_ARCHIVE = 0;
     final public static int TYPE_VIEW_VIEW_NORMAL = 1;
 
@@ -100,11 +101,10 @@ public class LearningFragment extends Fragment {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         //start archivio learning
-                        SocialArchiveFragment socialArchiveFragment = new SocialArchiveFragment();
+                        LearningArchiveFragment learningArchiveFragment = new LearningArchiveFragment();
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.container, socialArchiveFragment, TAG_SOCIAL_ARCHIVE);
+                        transaction.replace(R.id.container, learningArchiveFragment, TAG_LEARNING_ARCHIVE);
                         transaction.addToBackStack(null);
                         transaction.commit();
                     }
