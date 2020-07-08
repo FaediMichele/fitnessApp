@@ -15,8 +15,8 @@ import java.util.Objects;
 
 public class CommitmentWithMyStep {
     @Embedded public MyCommitment commitment;
-    @Relation(parentColumn = "idCommitment", entityColumn = "idCommitment")
-    public List<MyStep> steps;
+    @Relation(entity = MyStep.class, parentColumn = "idCommitment", entityColumn = "idCommitment")
+    public List<MyStepWithMyStepDone> steps;
 
     @Override
     public boolean equals(Object o) {

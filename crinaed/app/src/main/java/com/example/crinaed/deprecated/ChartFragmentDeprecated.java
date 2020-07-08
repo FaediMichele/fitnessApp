@@ -11,6 +11,7 @@ import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.database.repository.CommitmentRepository;
+import com.example.crinaed.util.Pair;
 import com.github.mikephil.charting.charts.LineChart;
 import com.example.crinaed.util.Category;
 import com.example.crinaed.util.Period;
@@ -21,6 +22,8 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 
 import androidx.fragment.app.Fragment;
 
@@ -153,9 +156,10 @@ public class ChartFragmentDeprecated extends Fragment {
 
     private void setLine(LineChart line, Category c, Period t, String label){
         List<MyStepDoneWithMyStep> data = repo.getStepHistoryList(c, period.daysAgo(), repetition);
-        List<Entry> entries = GraphUtil.getGraphData(data, t);
+        Pair<List<Entry>, IAxisValueFormatter> entries = GraphUtil.getGraphData(data, t);
         LineData lineData = new LineData();
-        setLineDataSet(lineData, new LineDataSet(entries, label), c);
+        setLineDataSet(lineData, new LineDataSet(entries.getX(), label), c);
+        line.getXAxis().setValueFormatter(entries.getY());
         line.setData(lineData);
         line.animateY(300);
         line.animate();

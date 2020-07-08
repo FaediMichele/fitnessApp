@@ -30,7 +30,7 @@ public class ObjectiveFragment  extends Fragment {
         sliderView = view.findViewById(R.id.progressBarSlider);
 
         adapter = new SliderProgressBarAdapter(getContext(), this);
-        sliderView.setSliderAdapter(adapter);// da guardare
+        sliderView.setSliderAdapter(adapter);
 
         //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM
         // or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN

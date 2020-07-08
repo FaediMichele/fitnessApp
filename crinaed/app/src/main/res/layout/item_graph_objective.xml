@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_marginHorizontal="5dp"
+    android:layout_marginVertical="20dp"
+    android:background="@drawable/rounded_container"
+    android:padding="1dp">
+
+    <TextView
+        android:id="@+id/name_objective"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:paddingVertical="5dp"
+        android:text="Nome Obbiettivo"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+            android:id="@+id/button_week"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0.8dp"
+            android:background="@drawable/button_left"
+            android:text="@string/week"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/button_month"
+            app:layout_constraintEnd_toStartOf="@+id/button_month"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name_objective"/>
+
+
+        <Button
+            android:id="@+id/button_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0.8dp"
+            android:background="@drawable/button_center"
+            android:text="@string/month"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/button_year"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toEndOf="@id/button_week"
+            app:layout_constraintTop_toBottomOf="@id/name_objective" />
+
+        <Button
+            android:id="@+id/button_year"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_right"
+            android:text="@string/year"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/button_month"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toEndOf="@id/button_month"
+            app:layout_constraintTop_toBottomOf="@id/name_objective" />
+
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_month" />
+</androidx.constraintlayout.widget.ConstraintLayout>

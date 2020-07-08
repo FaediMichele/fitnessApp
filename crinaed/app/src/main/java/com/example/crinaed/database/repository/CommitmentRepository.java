@@ -16,6 +16,7 @@ import com.example.crinaed.database.entity.MyStepDone;
 import com.example.crinaed.database.entity.join.CommitmentWithMyStep;
 import com.example.crinaed.database.entity.join.MyCommitmentWithMyMotivationalPhrase;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
+import com.example.crinaed.database.entity.join.MyStepWithMyStepDone;
 import com.example.crinaed.util.Category;
 import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Period;
@@ -48,8 +49,8 @@ public class CommitmentRepository extends Repository{
         this.context=context;
     }
 
-    public LiveData<List<CommitmentWithMyStep>> getCommitmentWithSteps() {
-        return commitmentDao.getCommitmentWithMyStep();
+    public LiveData<List<CommitmentWithMyStep>> getCommitmentWithSteps(Category category) {
+        return commitmentDao.getCommitmentWithMyStep(category.ordinal());
     }
 
 
@@ -91,7 +92,10 @@ public class CommitmentRepository extends Repository{
 
     public LiveData<List<MyStepDoneWithMyStep>> getStepHistory(final Category category, final Date date, final Period repetition){
         return commitmentDao.getMyStepDoneWithMyStepWithCategoryAndData(category.ordinal(), date.getTime(), repetition.getDay());
+    }
 
+    public LiveData<List<MyStepDoneWithMyStep>> getStepHistoryForCommitment(final long idCommitment, final Category category, final Date date, final Period repetition){
+        return commitmentDao.getMyStepDoneWithMyStepWithCategoryAndData(idCommitment, category.ordinal(), date.getTime(), repetition.getDay());
     }
 
     public List<MyStepDoneWithMyStep> getStepHistoryList(final Category category, final Date date, final Period repetition){
@@ -229,12 +233,12 @@ public class CommitmentRepository extends Repository{
                     CommitmentWithMyStep c = l.get(i);
                     Log.d("naed" , "size "+ c.commitment.name + ": " + c.steps.size());
                     for(int j = 0; j < c.steps.size(); j++){
-                        MyStep s = c.steps.get(j);
-                        MyStepDone last = commitmentDao.getLastStepDone(s.idMyStep);
-                        Log.d("naed", "last step done= " + last.idMyStep+ "now = " +now + "| " + (now - last.dateStart) + ">=" + (s.repetitionDay * 1000*60*60*24));
+                        MyStepWithMyStepDone s = c.steps.get(j);
+                        MyStepDone last = commitmentDao.getLastStepDone(s.myStep.idMyStep);
+                        Log.d("naed", "last step done= " + last.idMyStep+ "now = " +now + "| " + (now - last.dateStart) + ">=" + (s.myStep.repetitionDay * 1000*60*60*24));
                         // now - last.dateStart is in millisecond
-                        if(last == null || now - last.dateStart >=  s.repetitionDay * 1000*60*60*24){
-                            MyStepDone done = new MyStepDone(s.idMyStep, now, 0);
+                        if(last == null || now - last.dateStart >=  s.myStep.repetitionDay * 1000*60*60*24){
+                            MyStepDone done = new MyStepDone(s.myStep.idMyStep, now, 0);
                             Log.d("naed", "CREATED NEW STEP "+last.idMyStep);
                             commitmentDao.insert(done);
                             ret.add(done);

@@ -15,6 +15,8 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.layout.home.DetailsProgressBarDialog;
 import com.example.crinaed.R;
@@ -34,6 +36,8 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
 import java.util.ArrayList;
@@ -120,6 +124,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
         Button year;
         LineChart chart;
         Period period;
+        RecyclerView recyclerView;
 
         CommitmentRepository repo = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository();
         Category category;
@@ -180,6 +185,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
             week = itemView.findViewById(R.id.button_week);
             month = itemView.findViewById(R.id.button_month);
             year = itemView.findViewById(R.id.button_year);
+            recyclerView = itemView.findViewById(R.id.recycler_view);
 
             this.itemView = itemView;
             this.context=context;
@@ -291,6 +297,8 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
                 progressBarView.setBackgroundColor(color.getY());
                 textView_title_page.setText(context.getString(category.getRes()));
                 textView_graph_title.setText(context.getString(R.string.graph_title, context.getString(category.getRes())));
+                recyclerView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
+                recyclerView.setAdapter(new GraphAdapter(owner, category));
                 updateObserver();
             }
         }
@@ -304,9 +312,10 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
                 newestBoth.addAll(newestWeek);
             }
             //Log.d("naed", category.name() + " -> newest both: " + newestBoth);
-            List<Entry> entries = GraphUtil.getGraphData(newestBoth, period);
+            Pair<List<Entry>, IAxisValueFormatter> entries = GraphUtil.getGraphData(newestBoth, period);
             LineData lineData = new LineData();
-            setLineDataSet(lineData, new LineDataSet(entries, context.getString(category.getRes())), category);
+            setLineDataSet(lineData, new LineDataSet(entries.getX(), context.getString(category.getRes())), category);
+            chart.getXAxis().setValueFormatter(entries.getY());
             chart.setData(lineData);
             chart.animateY(300);
             chart.animate();
@@ -323,7 +332,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
             chart.getXAxis().setDrawGridLines(false);
             chart.getAxisRight().setDrawGridLines(false);
             chart.getAxisLeft().setDrawGridLines(false);
-            chart.getXAxis().setTextSize(20);
+            chart.getXAxis().setTextSize(15);
             chart.setDrawBorders(false);
         }
         private void setLineDataSet(LineData lineData, LineDataSet lineDataSet, Category c){
