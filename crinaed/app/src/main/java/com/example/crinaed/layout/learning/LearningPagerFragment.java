@@ -95,7 +95,7 @@ public class LearningPagerFragment extends Fragment {
             Fragment fragment;
             switch (position) {
                 case DETAIL_FRAGMENT:
-                    if(course.isBuoght){
+                    if(course.isBought){
                         fragment = new LearningBoughtDetailsFragment();
                         fragment.setArguments(dataLearning);
                     }else {
@@ -104,7 +104,7 @@ public class LearningPagerFragment extends Fragment {
                     }
                     break;
                 case BOUGHT_FRAGMENT:
-                    if(course.isBuoght){
+                    if(course.isBought){
                         fragment = new LearningBoughtFragment();
                         fragment.setArguments(dataLearning);
                     }else{
@@ -140,11 +140,11 @@ public class LearningPagerFragment extends Fragment {
 
     public static class ModelloLearnginPager {
         String idCourse;
-        boolean isBuoght;
+        boolean isBought;
 
-        public ModelloLearnginPager(String idCourse, boolean isBuoght) {
+        public ModelloLearnginPager(String idCourse, boolean isBought) {
             this.idCourse = idCourse;
-            this.isBuoght = isBuoght;
+            this.isBought = isBought;
         }
 
         static public List<ModelloLearnginPager> getModello(){

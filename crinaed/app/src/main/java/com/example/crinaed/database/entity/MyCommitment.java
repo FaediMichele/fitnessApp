@@ -10,6 +10,9 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
+/**
+ *  obbiettivo
+ */
 @Entity
 public class MyCommitment  implements MyEntity{
     @PrimaryKey public long idCommitment;

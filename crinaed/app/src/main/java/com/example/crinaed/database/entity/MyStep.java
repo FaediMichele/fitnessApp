@@ -16,6 +16,9 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
+/**
+ * step
+ */
 @Entity
 public class MyStep  implements MyEntity{
     @PrimaryKey  public long idMyStep;
