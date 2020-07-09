@@ -5,4 +5,8 @@
     <dimen name="search_activity_objective">15sp</dimen>
     <dimen name="search_activity_step">15sp</dimen>
     <dimen name="chat_activity_name_last_name">20sp</dimen>
+    <dimen name="h1">20dp</dimen>
+    <dimen name="h2">18dp</dimen>
+    <dimen name="h3">16dp</dimen>
+    <dimen name="p">13dp</dimen>
 </resources>

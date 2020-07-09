@@ -8,6 +8,8 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="tab_objective">obiettivi</string>
     <string name="tab_social">social</string>
     <string name="tab_learning">learning</string>
+    <string name="tab_learnign_details">info</string>
+    <string name="tab_learnign_bought">lezioni</string>
     <string name="sessionId">sessionId</string>
     <string name="social">Social</string>
     <string name="sport">Sport</string>
@@ -48,7 +50,7 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="checklist">Single</string>
     <string name="progression">Progression</string>
     <string name="error_name">The name must not be empty</string>
-    <string name="error_max">Accepted value 1-99999</string>
+    <string name="error_max">Accepted value 1–99999</string>
     <string-array name="unit_measure">
         <item>Km</item>
         <item>m</item>
@@ -60,4 +62,17 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
         <item>L</item>
         <item>lb</item>
     </string-array>
+    <string name="review">Review</string>
+    <string name="info_of_course">info sul corso</string>
+    <string name="descritpion">Descrizione</string>
+    <string name="buy_courese">compra il corso</string>
+    <string name="value_review">Value Review</string>
+    <string name="price">Price</string>
+    <string name="buy_for_view_video">Compra il corso per visualizzare le video lezioni</string>
+    <string name="congratulation">Congratulazioni per aver acquistato il corso</string>
+    <string name="course_bought">Corso acquistato</string>
+    <string name="scrivi_anche_tu_una_recensione">scrivi anche tu una recensione</string>
+    <string name="value_max_10">value max 10</string>
+    <string name="value">value</string>
+    <string name="max_10">max 10</string>
 </resources>

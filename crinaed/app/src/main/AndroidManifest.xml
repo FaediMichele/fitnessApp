@@ -41,6 +41,11 @@
             android:windowSoftInputMode="adjustResize">
 
         </activity>
+        <activity android:name=".layout.learning.LessonFullScreenVideoActivity" android:screenOrientation="landscape" android:configChanges="orientation|keyboardHidden" >
+        </activity>
+        <activity android:name=".layout.learning.LessonActivity">
+        </activity>
+
     </application>
 
 </manifest>

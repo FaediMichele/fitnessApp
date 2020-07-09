@@ -1,5 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-
     <style name="Theme.MyApp" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowBackground">@color/background</item>
         <item name="materialCardViewStyle">@style/MyCard</item>
@@ -21,6 +20,9 @@
         <item name="colorPrimary">@color/greenPrimary</item>
     </style>
 
+    <style name="RoundedCornerMaterialButton">
+        <item name="colorAccent">@color/redPrimary</item>
+    </style>
 
 <!--init card style-->
     <style name="MyCard" parent="Widget.MaterialComponents.CardView">
@@ -28,7 +30,6 @@
         <item name="cardElevation">1dp</item>
         <item name="shapeAppearance">@style/ShapeAppearance.MyApp.MediumComponent</item>
     </style>
-
     <style name="ShapeAppearance.MyApp.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">20dp</item>
@@ -44,5 +45,18 @@
         <item name="android:windowEnterAnimation">@anim/slide_up_dialog</item>
         <item name="android:windowExitAnimation">@anim/slide_out_down</item>
     </style>
+
 <!--init dialog details-->
+
+<!--    style for image circle-->
+    <style name="roundedImageViewRounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="roundedImageViewRoundedVideo">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
 </resources>

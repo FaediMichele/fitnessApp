@@ -54,7 +54,6 @@ public class ChatFragment extends Fragment {
         //delete status bar
         TextView nameAndLastName = view.findViewById(R.id.name_and_last_name);
         final ImageView imageProfile = view.findViewById(R.id.image_profile);
-
         final Bundle dataForChatActivity = getArguments();
         long id = -1;
         if (dataForChatActivity == null || getActivity() == null) {

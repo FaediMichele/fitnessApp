@@ -41,7 +41,7 @@ public class SocialFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_social, container, false);
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -171,7 +171,7 @@ public class SocialFragment extends Fragment {
         public SocialSearchViewHolder(@NonNull View itemView, boolean isArchive, LifecycleOwner owner) {
             super(itemView);
             if(!isArchive){
-                this.imageView = itemView.findViewById(R.id.image_profile);
+                this.imageView = itemView.findViewById(R.id.image_video);
                 this.nameLastName = itemView.findViewById(R.id.name_last_name);
                 this.email = itemView.findViewById(R.id.email);
                 this.objective = itemView.findViewById(R.id.objective);
