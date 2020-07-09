@@ -9,22 +9,23 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
-@Entity(primaryKeys = {"idSchool", "idUser"})
+@Entity(primaryKeys = {"idCourse", "idUser"})
 public class Review  implements MyEntity{
-    public long idSchool;
+    public long idCourse;
     public long idUser;
     public int val;
     public String comment;
 
-    public Review(long idSchool, long idUser, int val, String comment) {
-        this.idSchool = idSchool;
+
+    public Review(long idCourse, long idUser, int val, String comment) {
+        this.idCourse = idCourse;
         this.idUser = idUser;
         this.val = val;
         this.comment = comment;
     }
 
     public Review(JSONObject obj) throws JSONException {
-        this.idSchool = obj.getLong("idSchool");
+        this.idCourse = obj.getLong("idSchool");
         this.idUser = obj.getLong("idUser");
         this.val = obj.getInt("val");
         this.comment = obj.getString("comment");
@@ -32,7 +33,7 @@ public class Review  implements MyEntity{
     @Override
     public JSONObject toJson() throws JSONException {
         JSONObject obj = new JSONObject();
-        obj.put("idSchool", idSchool);
+        obj.put("idCourse", idCourse);
         obj.put("idUser", idUser);
         obj.put("val", val);
         obj.put("comment", comment);
@@ -44,7 +45,7 @@ public class Review  implements MyEntity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Review review = (Review) o;
-        return idSchool == review.idSchool &&
+        return idCourse == review.idCourse &&
                 idUser == review.idUser &&
                 val == review.val &&
                 Objects.equals(comment, review.comment);
@@ -52,6 +53,6 @@ public class Review  implements MyEntity{
 
     @Override
     public int hashCode() {
-        return Objects.hash(idSchool, idUser, val, comment);
+        return Objects.hash(idCourse, idUser, val, comment);
     }
 }

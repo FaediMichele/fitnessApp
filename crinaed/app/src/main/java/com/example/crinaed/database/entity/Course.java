@@ -2,7 +2,12 @@ package com.example.crinaed.database.entity;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
 
+import com.example.crinaed.util.Category;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,61 +16,76 @@ import java.util.Objects;
 @Entity
 public class Course implements MyEntity{
     @PrimaryKey public long idCourse;
-    public String cat;
     public String name;
     public String desc;
-    public int minimumLevel;
     public long idSchool;
-    public String image;
+
+    @TypeConverters(ImagesConverter.class)
+    public String[] images;
+
+    @TypeConverters(MyStep.CategoryConverter.class)
+    public Category cat;
+
     public String video;
-    public boolean imageDownloaded=false;
+    public boolean imagesDownloaded=false;
     public boolean videoDownloaded=false;
 
-    public Course(long idCourse, String cat, String name, String desc, int minimumLevel, long idSchool){
-        this.idSchool = idSchool;
+    public Course(long idCourse, String name, String desc, long idSchool, String[] images, String video, boolean imagesDownloaded, boolean videoDownloaded) {
         this.idCourse = idCourse;
-        this.cat = cat;
         this.name = name;
         this.desc = desc;
-        this.minimumLevel = minimumLevel;
+        this.idSchool = idSchool;
+        this.images = images;
+        this.video = video;
+        this.imagesDownloaded = imagesDownloaded;
+        this.videoDownloaded = videoDownloaded;
     }
 
     public Course(JSONObject obj) throws JSONException {
         idCourse = obj.getLong("idCourse");
-        cat = obj.getString("cat");
+        idSchool = obj.getLong("idSchool");
         name = obj.getString("name");
         desc = obj.getString("desc");
-        minimumLevel = obj.getInt("minimumLevel");
+        video = obj.getString("video");
+        cat = Category.valueOf(obj.getString("cat"));
+        JSONArray images = obj.getJSONArray("image");
+        this.images=new String[images.length()];
+        for(int i=0;i<images.length(); i++){
+            this.images[i]=images.getString(i);
+        }
+        imagesDownloaded=false;
+        videoDownloaded=false;
+    }
+
+    public static class ImagesConverter{
+        @TypeConverter
+        public String[] fromString(String value){
+            String[] ret;
+            try {
+                JSONArray array = new JSONArray(value);
+                ret = new String[array.length()];
+                for(int i=0;i<array.length();i++){
+                    ret[i]=array.getString(i);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                ret = new String[0];
+            }
+            return ret;
+        }
+        @TypeConverter
+        public String toString(String[] c){
+            JSONArray array = new JSONArray();
+            for (String s : c) {
+                array.put(s);
+            }
+            return array.toString();
+        }
     }
 
     @Override
     public JSONObject toJson() throws JSONException {
-        JSONObject obj = new JSONObject();
-        obj.put("idCourse", idCourse);
-        obj.put("cat", cat);
-        obj.put("name", name);
-        obj.put("desc", desc);
-        obj.put("minimumLevel", minimumLevel);
-        return obj;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Course course = (Course) o;
-        return idCourse == course.idCourse &&
-                minimumLevel == course.minimumLevel &&
-                idSchool == course.idSchool &&
-                Objects.equals(cat, course.cat) &&
-                Objects.equals(name, course.name) &&
-                Objects.equals(desc, course.desc);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(idCourse);
+        return new JSONObject();
     }
 
 }

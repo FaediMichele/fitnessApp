@@ -194,17 +194,14 @@ public class SocialFragment extends Fragment {
             if(oldLiveData!=null) {
                 oldLiveData.removeObserver(old);
             }
-            Log.d("naed", "button id : " + idFriend);
             oldLiveData= DatabaseUtil.getInstance().getRepositoryManager().getFriendRepository().getFriendshipByFriend(idFriend);
             old = new Observer<UserWithUser>() {
                     @Override
                     public void onChanged(UserWithUser userWithUser) {
                         if(userWithUser !=null){
-                            Log.d("naed", "button invisible");
                             button.setVisibility(View.INVISIBLE);
                         } else {
                             button.setVisibility(View.VISIBLE);
-                            Log.d("naed", "button visible");
                         }
                     }
                 };

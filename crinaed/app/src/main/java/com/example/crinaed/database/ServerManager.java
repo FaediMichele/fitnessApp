@@ -255,6 +255,8 @@ public class ServerManager {
         TransferFile.downloadFile(SERVER+query, f, receiver);
     }
 
+
+
     public void uploadFile(final File file, long idResource, FileType type, Lambda receiver){
         final String[] format = file.getAbsolutePath().split("\\.");
         final String query="?to=fileManager&idSession="+Util.getInstance().getSessionId()+"&format="+format[format.length-1]+"&"+type.getKey()+"="+idResource;

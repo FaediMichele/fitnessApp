@@ -165,7 +165,6 @@ public class ChatFragment extends Fragment {
                 public void onChanged(List<FriendMessage> friendMessages) {
                     newest=friendMessages;
                     notifyDataSetChanged();
-                    Log.d("naed", "new message arrived");
                 }
             });
             this.idFriend=idFriend;
@@ -194,7 +193,6 @@ public class ChatFragment extends Fragment {
         @Override
         public ChatFragment.ChatVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View itemView;
-            Log.d("naed", "layout message" + viewType + "| sent=" + ChatFragment.SENT_LAYOUT);
             switch(viewType){
                 case ChatFragment.SENT_LAYOUT:
                     itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_sent,parent,false);
@@ -210,7 +208,6 @@ public class ChatFragment extends Fragment {
 
         @Override
         public int getItemViewType(int position) {
-            Log.d("naed", "idSender= " + newest.get(position).idSender);
             if(this.newest.get(position).idSender != Util.getInstance().getIdUser()){
                 return ChatFragment.SENT_LAYOUT;
             }

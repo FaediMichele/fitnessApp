@@ -1,12 +1,9 @@
 package com.example.crinaed.database.repository;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.example.crinaed.database.AppDatabase;
-import com.example.crinaed.database.DatabaseUtil;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,35 +19,23 @@ public class RepositoryManager {
     private UserRepository userRepository;
     private SchoolRepository schoolRepository;
     private CommitmentRepository commitmentRepository;
-    private CourseBoughtRepository courseBoughtRepository;
-    private ExerciseAndStepRepository exerciseAndStepRepository;
-    private ExerciseInProgressRepository exerciseInProgressRepository;
+    private ExerciseRepository exerciseRepository;
     private FriendRepository friendRepository;
-    private HistoryRepository historyRepository;
     private ReviewRepository reviewRepository;
-
-
-    private long idUser = -1;
 
     public RepositoryManager(Context context){
         userRepository = new UserRepository(context);
         schoolRepository = new SchoolRepository(context);
         commitmentRepository = new CommitmentRepository(context);
-        courseBoughtRepository = new CourseBoughtRepository(context);
-        exerciseAndStepRepository = new ExerciseAndStepRepository(context);
-        exerciseInProgressRepository = new ExerciseInProgressRepository(context);
+        exerciseRepository = new ExerciseRepository(context);
         friendRepository = new FriendRepository(context);
-        historyRepository = new HistoryRepository(context);
         reviewRepository = new ReviewRepository(context);
         repositories = new ArrayList<>();
         addRepository(userRepository);
         addRepository(schoolRepository);
         addRepository(commitmentRepository);
-        addRepository(courseBoughtRepository);
-        addRepository(exerciseAndStepRepository);
-        addRepository(exerciseInProgressRepository);
+        addRepository(exerciseRepository);
         addRepository(friendRepository);
-        addRepository(historyRepository);
         addRepository(reviewRepository);
     }
 
@@ -61,7 +46,6 @@ public class RepositoryManager {
     public void loadNewData(AppDatabase db, String data) throws JSONException, ExecutionException, InterruptedException {
         db.clearAllTables();
         JSONObject json = new JSONObject(data);
-        idUser = json.getJSONArray("User").getJSONObject(0).getLong("idUser");
         try {
             for (int i = 0; i < repositories.size(); i++) {
                 repositories.get(i).loadData(json).get();
@@ -108,31 +92,16 @@ public class RepositoryManager {
         return commitmentRepository;
     }
 
-    public CourseBoughtRepository getCourseBoughtRepository() {
-        return courseBoughtRepository;
-    }
 
-    public ExerciseAndStepRepository getExerciseAndStepRepository() {
-        return exerciseAndStepRepository;
-    }
-
-    public ExerciseInProgressRepository getExerciseInProgressRepository() {
-        return exerciseInProgressRepository;
+    public ExerciseRepository getExerciseRepository() {
+        return exerciseRepository;
     }
 
     public FriendRepository getFriendRepository() {
         return friendRepository;
     }
 
-    public HistoryRepository getHistoryRepository() {
-        return historyRepository;
-    }
-
     public ReviewRepository getReviewRepository() {
         return reviewRepository;
-    }
-
-    public long getIdUser() {
-        return idUser;
     }
 }

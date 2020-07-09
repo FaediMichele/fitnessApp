@@ -13,49 +13,42 @@ import java.util.Objects;
 @Entity
 public class Exercise  implements MyEntity{
     @PrimaryKey public long idExercise;
-    public int level;
-    public int PE;
-    public int duration; // minutes
     public String name;
     public String desc;
+    public String image;
+    public boolean imageDownloaded;
     public String video;
     public boolean videoDownloaded;
+    public String importData;
 
     public long idCourse;
 
-    public Exercise(long idExercise, int level, int PE, int duration, String name, String desc, long idCourse) {
+    public Exercise(long idExercise, String name, String desc, String image, boolean imageDownloaded, String video, boolean videoDownloaded, String importData, long idCourse) {
         this.idExercise = idExercise;
-        this.level = level;
-        this.PE = PE;
-        this.duration = duration;
         this.name = name;
         this.desc = desc;
+        this.image = image;
+        this.imageDownloaded = imageDownloaded;
+        this.video = video;
+        this.videoDownloaded = videoDownloaded;
+        this.importData = importData;
         this.idCourse = idCourse;
-        videoDownloaded=false;
     }
 
     public Exercise(JSONObject obj) throws JSONException {
         this.idExercise = obj.getLong("idExercise");
-        this.level = obj.getInt("level");
-        this.PE = obj.getInt("PE");
-        this.duration = obj.getInt("duration");
         this.name = obj.getString("name");
         this.desc = obj.getString("desc");
         this.idCourse = obj.getLong("idCourse");
         this.video = obj.getString("video");
+        this.importData = obj.getString("importData");
         videoDownloaded=false;
+        imageDownloaded=false;
     }
 
     @Override
     public JSONObject toJson() throws JSONException {
         JSONObject obj = new JSONObject();
-        obj.put("idExercise", idExercise);
-        obj.put("level", level);
-        obj.put("PE", PE);
-        obj.put("duration", duration);
-        obj.put("name", name);
-        obj.put("desc", desc);
-        obj.put("idCourse", idCourse);
         return obj;
     }
 
@@ -65,16 +58,18 @@ public class Exercise  implements MyEntity{
         if (o == null || getClass() != o.getClass()) return false;
         Exercise exercise = (Exercise) o;
         return idExercise == exercise.idExercise &&
-                level == exercise.level &&
-                PE == exercise.PE &&
-                duration == exercise.duration &&
+                imageDownloaded == exercise.imageDownloaded &&
+                videoDownloaded == exercise.videoDownloaded &&
                 idCourse == exercise.idCourse &&
                 Objects.equals(name, exercise.name) &&
-                Objects.equals(desc, exercise.desc);
+                Objects.equals(desc, exercise.desc) &&
+                Objects.equals(image, exercise.image) &&
+                Objects.equals(video, exercise.video) &&
+                Objects.equals(importData, exercise.importData);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idExercise, level, PE, duration, name, desc, idCourse);
+        return Objects.hash(idExercise, name, desc, image, imageDownloaded, video, videoDownloaded, importData, idCourse);
     }
 }

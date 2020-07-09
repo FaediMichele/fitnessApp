@@ -1,25 +1,10 @@
 package com.example.crinaed;
 
-import android.app.Application;
 import android.content.Context;
 
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.example.crinaed.database.AppDatabase;
-import com.example.crinaed.database.DatabaseUtil;
-import com.example.crinaed.database.repository.CommitmentRepository;
-import com.example.crinaed.database.repository.CourseBoughtRepository;
-import com.example.crinaed.database.repository.ExerciseAndStepRepository;
-import com.example.crinaed.database.repository.ExerciseInProgressRepository;
-import com.example.crinaed.database.repository.FriendRepository;
-import com.example.crinaed.database.repository.HistoryRepository;
-import com.example.crinaed.database.repository.ReviewRepository;
-import com.example.crinaed.database.repository.SchoolRepository;
-import com.example.crinaed.database.repository.UserRepository;
-
-import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

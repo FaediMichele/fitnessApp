@@ -1,17 +1,16 @@
 package com.example.crinaed.database.repository;
 
 import android.content.Context;
-import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.crinaed.database.AppDatabase;
-import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.database.dao.SchoolDao;
 import com.example.crinaed.database.entity.Course;
 import com.example.crinaed.database.entity.School;
-import com.example.crinaed.database.entity.User;
-import com.example.crinaed.database.entity.join.SchoolData;
 import com.example.crinaed.util.Lambda;
 
 import org.json.JSONArray;
@@ -20,13 +19,13 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 public class SchoolRepository extends Repository {
     private SchoolDao schoolDao;
-    private LiveData<List<SchoolData>> data;
     private long lastSchoolId=-1;
     private long lastCourseId=-1;
     private Context context;
@@ -34,18 +33,8 @@ public class SchoolRepository extends Repository {
     public SchoolRepository(Context context){
         AppDatabase db = AppDatabase.getDatabase(context);
         schoolDao = db.schoolDao();
-        data = schoolDao.get();
         this.context=context;
     }
-
-    public LiveData<List<SchoolData>> getSchool(){
-        return data;
-    }
-
-    public LiveData<List<SchoolData>> getSchoolTrained(int idTrainer){
-        return schoolDao.getSchoolTrained(idTrainer);
-    }
-
 
     public Future<?> insert(final School... school){
         return AppDatabase.databaseWriteExecutor.submit(new Callable<Long[]>() {
@@ -127,31 +116,22 @@ public class SchoolRepository extends Repository {
                     return new Object[0];
                 }
             });
-            downloadVideo(array, i, new Lambda() {
-                @Override
-                public Object[] run(Object... paramether) {
-                    if((Boolean) paramether[0]){
-                        File f = (File) paramether[1];
-                        s.video=f.getAbsolutePath();
-                        s.videoDownloaded=true;
-                        update(s);
-                    }
-                    return new Object[0];
-                }
-            });
         }
         array = data.getJSONArray("Course");
         for(int i = 0; i < array.length(); i++) {
             final Course c = new Course(array.getJSONObject(i));
             courses.add(c);
-            downloadImage(array, i, new Lambda() {
+            downloadImageArray(array, i, new Lambda() {
                 @Override
                 public Object[] run(Object... paramether) {
-                    if((Boolean) paramether[0]){
-                        File f = (File) paramether[1];
-                        c.image=f.getAbsolutePath();
-                        c.imageDownloaded=true;
-                        update(c);
+                    try {
+                        if ((Boolean) paramether[0]) {
+                            c.images = (String[]) paramether[1];
+                            c.imagesDownloaded = true;
+                            update(c);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
                     return new Object[0];
                 }

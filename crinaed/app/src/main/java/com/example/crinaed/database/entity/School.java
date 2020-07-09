@@ -16,37 +16,29 @@ public class School implements MyEntity {
     @PrimaryKey
     public long idSchool;
     public String name;
-    public String email;
-    public String address;
     public long idTrainer;
-    public String video;
     public String image;
-    public boolean videoDownloaded=false;
     public boolean imageDownloaded=false;
+    public String desc;
 
-    public School(long idSchool, String name, String email, String address, long idTrainer) {
+    public School(long idSchool, String name, long idTrainer, String image, boolean imageDownloaded, String desc) {
         this.idSchool = idSchool;
         this.name = name;
-        this.email = email;
-        this.address = address;
         this.idTrainer = idTrainer;
+        this.image = image;
+        this.imageDownloaded = imageDownloaded;
+        this.desc = desc;
     }
+
     public School(JSONObject obj) throws JSONException {
         this.idSchool = obj.getLong("idSchool");
         this.name = obj.getString("name");
-        this.email = obj.getString("email");
-        this.address = obj.getString("address");
         this.idTrainer = obj.getLong("idTrainer");
+        this.image = obj.getString("image");
     }
     @Override
     public JSONObject toJson() throws JSONException {
-        JSONObject obj = new JSONObject();
-        obj.put("idSchool", idSchool);
-        obj.put("name", name);
-        obj.put("email", email);
-        obj.put("address", address);
-        obj.put("idTrainer", idTrainer);
-        return obj;
+        return new JSONObject();
     }
 
     @Override
@@ -56,13 +48,14 @@ public class School implements MyEntity {
         School school = (School) o;
         return idSchool == school.idSchool &&
                 idTrainer == school.idTrainer &&
+                imageDownloaded == school.imageDownloaded &&
                 Objects.equals(name, school.name) &&
-                Objects.equals(email, school.email) &&
-                Objects.equals(address, school.address);
+                Objects.equals(image, school.image) &&
+                Objects.equals(desc, school.desc);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idSchool, name, email, address, idTrainer);
+        return Objects.hash(idSchool, name, idTrainer, image, imageDownloaded, desc);
     }
 }

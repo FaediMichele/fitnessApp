@@ -34,6 +34,6 @@ public interface ReviewDao {
     List<Review> getUserReviewList();
 
     @Transaction
-    @Query("SELECT * FROM Review WHERE idSchool = (:idSchool)")
-    LiveData<List<Review>> getSchoolReview(long idSchool);
+    @Query("SELECT * FROM Review WHERE idCourse = (:idCourse)")
+    LiveData<List<Review>> getSchoolReview(long idCourse);
 }

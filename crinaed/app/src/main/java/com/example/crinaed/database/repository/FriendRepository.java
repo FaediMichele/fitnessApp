@@ -36,7 +36,6 @@ public class FriendRepository extends Repository{
     }
 
     public LiveData<UserWithUser> getFriendshipByFriend(long idFriend){
-         Log.d("naed", "friend asked: "+ idFriend);
         return friendshipDao.getFriendshipByFriend(idFriend);
     }
 

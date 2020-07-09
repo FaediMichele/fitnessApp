@@ -1,10 +1,6 @@
 package com.example.crinaed.deprecated;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,22 +11,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
 import com.example.crinaed.R;
-import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.DatabaseUtil;
-import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.database.entity.Exercise;
-import com.example.crinaed.database.repository.CommitmentRepository;
-import com.example.crinaed.database.repository.ExerciseAndStepRepository;
-import com.example.crinaed.util.Lambda;
-import com.example.crinaed.util.Period;
-import com.github.mikephil.charting.charts.LineChart;
+import com.example.crinaed.database.repository.ExerciseRepository;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,9 +25,9 @@ public class VideoFragmentDeprecated extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_video, container, false);
-        video = view.findViewById(R.id.video_view);
+        /*video = view.findViewById(R.id.video_view);
 
-        ExerciseAndStepRepository repo = DatabaseUtil.getInstance().getRepositoryManager().getExerciseAndStepRepository();
+        ExerciseRepository repo = DatabaseUtil.getInstance().getRepositoryManager().getExerciseRepository();
         final LiveData<List<Exercise>> exercise =repo.getExercise();
 
         exercise.observe(Objects.requireNonNull(getActivity()), new Observer<List<Exercise>>() {
@@ -83,13 +68,13 @@ public class VideoFragmentDeprecated extends Fragment {
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.setDataAndType(fileUri,
-                                URLConnection.guessContentTypeFromName(fileUri.toString()));*/
+                                URLConnection.guessContentTypeFromName(fileUri.toString()));
                         video.setVideoPath(f.getAbsolutePath());
                         video.start();
                     }
                 }
             }
-        });
+        });*/
 
 
         return view;

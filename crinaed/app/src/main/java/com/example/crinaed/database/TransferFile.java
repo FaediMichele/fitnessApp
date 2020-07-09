@@ -70,6 +70,7 @@ public class TransferFile {
                 try {
                     l.run(downloadFile(new URL(from), dest), dest);
                 } catch (MalformedURLException e) {
+                    e.printStackTrace();
                     l.run(false, dest);
                 }
             }

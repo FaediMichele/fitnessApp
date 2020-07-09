@@ -2,7 +2,6 @@ package com.example.crinaed.layout.objective;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +18,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.crinaed.R;
 import com.example.crinaed.database.entity.MyStep;
-import com.example.crinaed.database.entity.Step;
 import com.example.crinaed.util.Category;
 import com.example.crinaed.util.Period;
 import com.example.crinaed.util.TypeOfStep;
-
-import java.util.Arrays;
 
 public class CreateStepFragment extends Fragment {
     TextView mission_text;

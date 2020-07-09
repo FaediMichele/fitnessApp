@@ -9,8 +9,6 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.crinaed.database.entity.Exercise;
-import com.example.crinaed.database.entity.Step;
-import com.example.crinaed.database.entity.join.ExerciseWithStep;
 
 import java.util.List;
 
@@ -19,34 +17,15 @@ public interface ExerciseAndStepDao {
     @Insert
     Long[] insert(Exercise... exercises);
 
-    @Insert
-    Long[] insert(Step... steps);
-
     @Update
     void update(Exercise... exercises);
-
-    @Update
-    void update(Step... steps);
 
     @Delete
     void delete(Exercise... exercises);
 
-    @Delete
-    void delete(Step... steps);
-
-    @Transaction
-    @Query("SELECT * FROM Exercise WHERE idCourse = (:idCourse)")
-    LiveData<List<ExerciseWithStep>> get(long idCourse);
-
-    @Query("SELECT * FROM Step WHERE idExercise = (:idExercise)")
-    List<Step> getStepByIdExercise(long idExercise);
-
-    @Query("SELECT * FROM Step")
-    List<Step> getStepList();
-
     @Query("SELECT * FROM Exercise")
     List<Exercise> getExerciseList();
 
-    @Query("SELECT * FROM Exercise")
-    LiveData<List<Exercise>> getExercise();
+    @Query("SELECT * FROM Exercise WHERE idCourse=(:idCourse)")
+    LiveData<List<Exercise>> getExercise(long idCourse);
 }
