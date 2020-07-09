@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         final Button login = findViewById(R.id.button_login);
-        if(true){ // delete shared preferences ONLY FOR DEBUG
+        if(false){ // delete shared preferences ONLY FOR DEBUG
             SharedPreferences settings = getSharedPreferences(getString(R.string.sessionId), Context.MODE_PRIVATE);
             settings.edit().clear().commit();
         }

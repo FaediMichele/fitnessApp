@@ -2,10 +2,12 @@
 	- mettere un marine tra la tastirea e EditText della chat
 	- da sistemare l'animazione quando si è al primo messaggio(più vecchio) e si invia un messaggio
 	- allineare correttamente le chat quando c'è poco testo.
+	- ricerca quando vai indietro deve andare nel scoial fragment non nel social activity
 - social activity 
 	- da fra funzionare la ricerca
 - lesson
 	-il player musicale non full screen il controller rimane fixed dove compare
 - objective 
 	-lo slidere ha il VH statico deve essere publico non statico
-	
+- login
+	-logo
