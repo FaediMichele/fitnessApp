@@ -171,7 +171,7 @@ public class SocialFragment extends Fragment {
         public SocialSearchViewHolder(@NonNull View itemView, boolean isArchive, LifecycleOwner owner) {
             super(itemView);
             if(!isArchive){
-                this.imageView = itemView.findViewById(R.id.image_video);
+                this.imageView = itemView.findViewById(R.id.image_profile);
                 this.nameLastName = itemView.findViewById(R.id.name_last_name);
                 this.email = itemView.findViewById(R.id.email);
                 this.objective = itemView.findViewById(R.id.objective);
@@ -212,7 +212,7 @@ public class SocialFragment extends Fragment {
         }
 
         public void setUserData(UserData userData, Context context){
-            if(userData.user.imageDownloaded) {
+            if(userData.user.imageDownloaded && imageView!=null) {
                 imageView.setImageURI(Uri.parse(userData.user.image));
             }
             nameLastName.setText(context.getString(R.string.name_surname, userData.user.firstname, userData.user.surname));

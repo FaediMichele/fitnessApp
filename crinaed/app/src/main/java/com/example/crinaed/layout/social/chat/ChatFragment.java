@@ -1,5 +1,6 @@
 package com.example.crinaed.layout.social.chat;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
@@ -87,7 +88,7 @@ public class ChatFragment extends Fragment {
                 if(friendships.user2.imageDownloaded) {
                     imageProfile.setImageURI(Uri.parse(friendships.user2.image));
                 }
-                final ChatFragment.ChatAdapter adapter = new ChatAdapter(getActivity(), friendships.friendship.idFriendship, friendId(friendships));
+                final ChatFragment.ChatAdapter adapter = new ChatAdapter(getContext(), getActivity(), friendships.friendship.idFriendship, friendId(friendships));
                 recyclerView.setAdapter(adapter);
                 if(first.getVal()){
                     first.setVal(false);
@@ -157,7 +158,7 @@ public class ChatFragment extends Fragment {
         private long idFriend;
 
 
-        public ChatAdapter(LifecycleOwner owner, long idFriendship, long idFriend) {
+        public ChatAdapter(Context context, LifecycleOwner owner, long idFriendship, long idFriend) {
             repo = DatabaseUtil.getInstance().getRepositoryManager().getFriendRepository();
             repo.getMessageByIdFriendship(idFriendship).observe(owner, new Observer<List<FriendMessage>>() {
                 @Override
@@ -169,7 +170,7 @@ public class ChatFragment extends Fragment {
             });
             this.idFriend=idFriend;
             this.idFriendship=idFriendship;
-            ServerManager.getInstance(null).startMessagePolling(idFriendship);
+            ServerManager.getInstance(context).startMessagePolling(idFriendship);
         }
 
         public void addItem(String message){
