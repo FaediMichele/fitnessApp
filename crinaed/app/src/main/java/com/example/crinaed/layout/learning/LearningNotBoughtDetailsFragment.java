@@ -29,7 +29,7 @@ public class LearningNotBoughtDetailsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_learning_not_buy_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_learning_not_bought_details, container, false);
         Bundle dataLearning = getArguments();
         idCourse = dataLearning.getString(LearningBuySearchFragment.KEY_ID_COURSE);
 
