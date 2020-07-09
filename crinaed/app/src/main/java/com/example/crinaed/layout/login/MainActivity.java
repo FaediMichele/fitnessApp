@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(activity, HomeActivity.class);
             startActivity(intent);
             return;
+            
         }
 
         password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
