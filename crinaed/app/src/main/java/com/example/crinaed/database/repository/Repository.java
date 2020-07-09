@@ -25,7 +25,7 @@ public abstract class Repository {
         return context;
     }
 
-    public abstract Future<?> loadData(final JSONObject data) throws JSONException;
+    public abstract Future<?> loadData(final JSONObject data) throws Exception;
     public abstract Future<?> extractData(final JSONObject root);
 
     public <T extends MyEntity> JSONArray  listToJSONArray(final List<T> list){

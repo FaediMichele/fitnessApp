@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,8 +21,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.volley.VolleyError;
 import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.NetworkUtil;
 import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.layout.home.HomeActivity;
 import com.example.crinaed.util.Lambda;
@@ -29,6 +32,8 @@ import com.example.crinaed.util.Util;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
         try {
-            ServerManager.getInstance(getApplicationContext()).login(email.getText().toString(), password.getText().toString(), new Lambda() {
+            ServerManager.getInstance(this).login(email.getText().toString(), password.getText().toString(), new Lambda() {
                 @Override
                 public Object[] run(final Object... paramether) {
                     Handler handler = new Handler(Looper.getMainLooper());
@@ -108,13 +113,24 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             if((Boolean) paramether[0]) {
                                 if((Boolean) paramether[1]) {
-                                    Intent intent = new Intent(activity, HomeActivity.class);
-                                    startActivity(intent);
+                                    if(!paramether[2].equals("")){
+                                        Intent intent = new Intent(activity, HomeActivity.class);
+                                        startActivity(intent);
+                                    } else{
+                                        Snackbar.make(root, getString(R.string.wrong_data), Snackbar.LENGTH_LONG).show();
+                                    }
+
                                 } else{
                                     Snackbar.make(root, getString(R.string.wrong_credential), Snackbar.LENGTH_LONG).show();
                                 }
                             } else{
                                 Snackbar.make(root, getString(R.string.cannot_login), Snackbar.LENGTH_LONG).show();
+                                try{
+                                    Log.d("naed", "error on login: " + ((VolleyError) paramether[1]).getMessage());
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
+
                             }
                         }
                     });

@@ -62,8 +62,12 @@ public class RepositoryManager {
         db.clearAllTables();
         JSONObject json = new JSONObject(data);
         idUser = json.getJSONArray("User").getJSONObject(0).getLong("idUser");
-        for(int i = 0; i < repositories.size(); i++){
-            repositories.get(i).loadData(json).get();
+        try {
+            for (int i = 0; i < repositories.size(); i++) {
+                repositories.get(i).loadData(json).get();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 

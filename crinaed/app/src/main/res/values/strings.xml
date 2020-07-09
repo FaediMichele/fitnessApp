@@ -75,4 +75,5 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="value_max_10">value max 10</string>
     <string name="value">value</string>
     <string name="max_10">max 10</string>
+    <string name="wrong_data">The server sent the wrong data</string>
 </resources>

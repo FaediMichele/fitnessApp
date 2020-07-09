@@ -2,6 +2,7 @@ package com.example.crinaed.database;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import com.example.crinaed.database.entity.Friendship;
 import com.example.crinaed.database.entity.User;
 import com.example.crinaed.database.entity.UserLevel;
 import com.example.crinaed.util.Lambda;
+import com.example.crinaed.util.Pair;
 import com.example.crinaed.util.Single;
 import com.example.crinaed.util.Util;
 
@@ -78,6 +80,8 @@ public class ServerManager {
                     instance = new ServerManager(context);
                 }
             }
+        }else if(context!=null){
+            instance.context=context;
         }
         return instance;
     }
@@ -104,7 +108,7 @@ public class ServerManager {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, SERVER+(query.equals("")?"":"?"+query), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //Log.d("ServerManager", "*" + response+ "*");
+                Log.d("ServerManager", "*" + response+ "*");
                 if(onResponseMethod != null) {
                     onResponseMethod.run(response);
                 }
@@ -144,7 +148,7 @@ public class ServerManager {
 
 
     public void login(String username, String password, final Lambda onDone) throws JSONException {
-        if(networkUtil.isConnected()){
+        if(!networkUtil.isConnected()) {
             onDone.run(false);
             return;
         }
@@ -181,9 +185,10 @@ public class ServerManager {
                             DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().createNewStepDone();
 
                             onDone.run(true, true, obj.getString("SessionId"));
-                        } catch (JSONException | ExecutionException | InterruptedException e) {
+                        } catch (Exception e) {
+                            Log.d("naed", "message error : " +e.getMessage());
                             e.printStackTrace();
-                            onDone.run(false);
+                            onDone.run(true,true,false, e);
                         }
                     }
                 });
@@ -194,18 +199,18 @@ public class ServerManager {
             public Object[] run(Object... paramether) {
                 VolleyError error = (VolleyError) paramether[0];
                 if(error.networkResponse != null && error.networkResponse.statusCode == 401){
-                    onDone.run(true, false);
+                    onDone.run(true, false, error);
                 }else{
-                    onDone.run(false);
+                    onDone.run(false, error);
                 }
-                Log.d("login", "Error on login");
+                Log.d("login", "Error on login: " + error.getMessage());
                 return null;
             }
         });
     }
 
     public void logout(final Lambda onDone) throws JSONException{
-        if(networkUtil.isConnected()){
+        if(!networkUtil.isConnected()){
             onDone.run(false);
             return;
         }
