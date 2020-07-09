@@ -26,6 +26,8 @@ public class Course implements MyEntity{
     @TypeConverters(MyStep.CategoryConverter.class)
     public Category cat;
 
+    public double review;
+
     public String video;
     public boolean imagesDownloaded=false;
     public boolean videoDownloaded=false;
@@ -48,6 +50,7 @@ public class Course implements MyEntity{
         desc = obj.getString("desc");
         video = obj.getString("video");
         cat = Category.valueOf(obj.getString("cat"));
+        review = obj.getDouble("review");
         JSONArray images = obj.getJSONArray("image");
         this.images=new String[images.length()];
         for(int i=0;i<images.length(); i++){

@@ -11,6 +11,7 @@ import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.dao.SchoolDao;
 import com.example.crinaed.database.entity.Course;
 import com.example.crinaed.database.entity.School;
+import com.example.crinaed.database.entity.join.CourseWithExercise;
 import com.example.crinaed.util.Lambda;
 
 import org.json.JSONArray;
@@ -46,6 +47,10 @@ public class SchoolRepository extends Repository {
                 return schoolDao.insert(school);
             }
         });
+    }
+
+    public LiveData<List<CourseWithExercise>> getCourse(){
+        return schoolDao.getCourseWithExercise();
     }
 
     public Future<?> insert(final Course... courses){

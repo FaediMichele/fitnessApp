@@ -128,15 +128,16 @@ public class DatabaseTest {
 
     @AfterClass
     public static void clearDatabase(){
-        ApplicationProvider.getApplicationContext().getApplicationContext().deleteDatabase(AppDatabase.DATABASE_NAME);
-        Log.d("DatabaseTest", "database formatted");
-        ApplicationProvider.getApplicationContext().getSharedPreferences(ApplicationProvider.
-                getApplicationContext().getString(R.string.sessionId),
-                Context.MODE_PRIVATE).edit().clear().commit();
+
     }
 
     @BeforeClass
     public static void init(){
+        ApplicationProvider.getApplicationContext().getApplicationContext().deleteDatabase(AppDatabase.DATABASE_NAME);
+        Log.d("DatabaseTest", "database formatted");
+        ApplicationProvider.getApplicationContext().getSharedPreferences(ApplicationProvider.
+                        getApplicationContext().getString(R.string.sessionId),
+                Context.MODE_PRIVATE).edit().clear().commit();
         DatabaseUtil.getInstance().setApplication(ApplicationProvider.getApplicationContext().getApplicationContext());
     }
 }

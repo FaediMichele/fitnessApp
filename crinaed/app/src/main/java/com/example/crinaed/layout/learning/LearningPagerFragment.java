@@ -74,10 +74,8 @@ public class LearningPagerFragment extends Fragment {
             FloatingActionButton fab = getActivity().findViewById(R.id.floating_action_button);
             switch (position) {
                 case DETAIL_FRAGMENT:
-                    //bind delle pagine
                     break;
                 case BOUGHT_FRAGMENT:
-                    //bind delle pagine
                     break;
             }
         }

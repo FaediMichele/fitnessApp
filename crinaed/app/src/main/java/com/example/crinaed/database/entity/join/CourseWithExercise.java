@@ -5,6 +5,7 @@ import androidx.room.Relation;
 
 import com.example.crinaed.database.entity.Course;
 import com.example.crinaed.database.entity.Exercise;
+import com.example.crinaed.database.entity.School;
 
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +14,9 @@ public class CourseWithExercise {
     @Embedded public Course course;
     @Relation(parentColumn = "idCourse", entityColumn = "idCourse")
     public List<Exercise> exercises;
+
+    @Relation(parentColumn = "idSchool", entityColumn = "idSchool")
+    public School school;
 
     @Override
     public boolean equals(Object o) {

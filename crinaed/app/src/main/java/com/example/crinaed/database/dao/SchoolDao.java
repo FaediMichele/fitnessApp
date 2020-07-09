@@ -10,6 +10,7 @@ import androidx.room.Update;
 
 import com.example.crinaed.database.entity.Course;
 import com.example.crinaed.database.entity.School;
+import com.example.crinaed.database.entity.join.CourseWithExercise;
 import com.example.crinaed.database.entity.join.SchoolData;
 
 import java.util.List;
@@ -27,6 +28,11 @@ public interface SchoolDao {
     @Transaction
     @Query("SELECT * FROM Course")
     List<Course> getCourseList();
+
+
+    @Transaction
+    @Query("SELECT * FROM Course")
+    LiveData<List<CourseWithExercise>> getCourseWithExercise();
 
     @Transaction
     @Query("SELECT * FROM School WHERE idSchool = (:idSchool)")
@@ -49,4 +55,6 @@ public interface SchoolDao {
 
     @Delete
     void delete(Course... courses);
+
+
 }
