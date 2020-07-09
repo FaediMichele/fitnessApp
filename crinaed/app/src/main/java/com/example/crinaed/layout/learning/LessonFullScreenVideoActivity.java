@@ -1,30 +1,23 @@
 package com.example.crinaed.layout.learning;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.MediaController;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.crinaed.R;
-import com.example.crinaed.view.FullScreenMediaController;
-
-import static java.security.AccessController.getContext;
 
 public class LessonFullScreenVideoActivity extends AppCompatActivity {
 
     final public static int REQUEST_CODE_FULL_SCREEN_VIDEO_ACTIVITY = 1;
 
     private VideoView videoView;
-    private FullScreenMediaController mediaController;
+    private LessonFullScreenMediaController mediaController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +29,10 @@ public class LessonFullScreenVideoActivity extends AppCompatActivity {
 
         Uri videoUri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.video_simple);
         videoView.setVideoURI(videoUri);
-        mediaController = new FullScreenMediaController(this);
+        mediaController = new LessonFullScreenMediaController(this);
         mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);
-        int minute  = this.getIntent().getIntExtra(FullScreenMediaController.KEY_MINUTE,0);
+        int minute  = this.getIntent().getIntExtra(LessonFullScreenMediaController.KEY_MINUTE,0);
         videoView.seekTo(minute);
         //        videoView.start();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

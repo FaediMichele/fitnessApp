@@ -5,23 +5,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.MediaController;
 import android.widget.VideoView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.crinaed.R;
-import com.example.crinaed.view.FullScreenMediaController;
-import com.example.crinaed.view.FullScreenVideoActivity;
+
 
 public class LessonActivity extends AppCompatActivity {
 
@@ -34,14 +27,14 @@ public class LessonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //int minute  = getIntent().getIntExtra(FullScreenMediaController.KEY_MINUTE,0);
+        //int minute  = getIntent().getIntExtra(LessonFullScreenMediaController.KEY_MINUTE,0);
         mVideoView = findViewById(R.id.video_lesson);
         String path = "android.resource://"+ getPackageName() + "/" + R.raw.video_simple ;  // if your video is not .mp4 change it your video extension
         Uri uri = Uri.parse(path);
         mVideoView.setVideoURI(uri);
 //        mVideoView.start();
 
-        final FullScreenMediaController controller = new FullScreenMediaController(this);
+        final LessonFullScreenMediaController controller = new LessonFullScreenMediaController(this);
         mVideoView.setMediaController(controller);
         controller.setAnchorView(mVideoView);
         controller.setMediaPlayer(mVideoView);
@@ -65,9 +58,9 @@ public class LessonActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == FullScreenVideoActivity.REQUEST_CODE_FULL_SCREEN_VIDEO_ACTIVITY){
+        if(requestCode == LessonFullScreenVideoActivity.REQUEST_CODE_FULL_SCREEN_VIDEO_ACTIVITY){
             if(resultCode == Activity.RESULT_OK){
-                msec = data.getIntExtra(FullScreenMediaController.KEY_MINUTE,0);
+                msec = data.getIntExtra(LessonFullScreenMediaController.KEY_MINUTE,0);
                 mVideoView.seekTo(msec);
             }
         }
