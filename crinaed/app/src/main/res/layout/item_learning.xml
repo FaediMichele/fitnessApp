@@ -41,24 +41,49 @@
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
-            android:id="@+id/title_lesson"
-            android:layout_width="wrap_content"
+            android:id="@+id/title_course"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginHorizontal="10dp"
             android:text="titolo del corso"
             android:textSize="@dimen/search_activity_name_last_name"
+            app:layout_constraintEnd_toStartOf="@id/value_review"
             app:layout_constraintStart_toEndOf="@+id/image_card"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/description_course"
+            android:id="@+id/value_review"
+            android:width="50dp"
+            android:textAlignment="textEnd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:text="description"
+            android:text="10/10"
+            android:textSize="@dimen/h2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/school"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:text="shool"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/image_card"
-            app:layout_constraintTop_toBottomOf="@+id/title_lesson" />
+            app:layout_constraintTop_toBottomOf="@+id/title_course" />
+
+        <TextView
+            android:id="@+id/description_course"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="aaa bbb ccc ddd eee fff ggg hhh jjj kkk lll mmm nnn ooo ppp qqq rrr sss ttt uuu vvv zzzz"
+            app:layout_constraintStart_toEndOf="@+id/image_card"
+            app:layout_constraintTop_toBottomOf="@+id/school"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
