@@ -25,4 +25,8 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="buy_for_view_video">Compra il corso per visualizzare le video lezioni</string>
     <string name="congratulation">Congratulazioni per aver acquistato il corso</string>
     <string name="course_bought">Corso acquistato</string>
+    <string name="scrivi_anche_tu_una_recensione">scrivi anche tu una recensione</string>
+    <string name="value_max_10">value max 10</string>
+    <string name="value">value</string>
+    <string name="max_10">max 10</string>
 </resources>
