@@ -31,7 +31,7 @@
         </activity>
         <activity android:name=".layout.social.chat.ChatActivity">
         </activity>
-        <activity android:name=".view.FullScreenVideoActivity" android:screenOrientation="landscape" android:configChanges="orientation|keyboardHidden" >
+        <activity android:name=".layout.learning.LessonFullScreenVideoActivity" android:screenOrientation="landscape" android:configChanges="orientation|keyboardHidden" >
         </activity>
         <activity android:name=".layout.learning.LessonActivity">
         </activity>

@@ -1,4 +1,4 @@
-package com.example.crinaed.view;
+package com.example.crinaed.layout.learning;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,10 +15,11 @@ import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.crinaed.R;
+import com.example.crinaed.view.FullScreenMediaController;
 
 import static java.security.AccessController.getContext;
 
-public class FullScreenVideoActivity extends AppCompatActivity {
+public class LessonFullScreenVideoActivity extends AppCompatActivity {
 
     final public static int REQUEST_CODE_FULL_SCREEN_VIDEO_ACTIVITY = 1;
 

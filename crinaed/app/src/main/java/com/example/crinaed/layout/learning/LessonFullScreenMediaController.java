@@ -1,4 +1,4 @@
-package com.example.crinaed.view;
+package com.example.crinaed.layout.learning;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,14 +15,14 @@ import androidx.core.content.ContextCompat;
 
 import com.example.crinaed.R;
 
-public class FullScreenMediaController extends MediaController {
+public class LessonFullScreenMediaController extends MediaController {
 
     final public static String KEY_MINUTE = "KEY_MINUTE";
     final private static String KEY_IS_FULL_SCREEN = "KEY_IS_FULL_SCREEN";
     private ImageButton fullScreen;
     private boolean isFullScreen;
 
-    public FullScreenMediaController(Context context) {
+    public LessonFullScreenMediaController(Context context) {
         super(context);
     }
 
@@ -74,10 +74,10 @@ public class FullScreenMediaController extends MediaController {
             ((Activity)getContext()).setResult(Activity.RESULT_OK,returnIntent);
             ((Activity)getContext()).finish();
         }else{
-            Intent intent = new Intent(getContext(),FullScreenVideoActivity.class);
+            Intent intent = new Intent(getContext(),LessonFullScreenVideoActivity.class);
             intent.putExtra(KEY_IS_FULL_SCREEN, true);
             intent.putExtra(KEY_MINUTE,videoView.getCurrentPosition());
-            ((Activity)getContext()).startActivityForResult(intent,FullScreenVideoActivity.REQUEST_CODE_FULL_SCREEN_VIDEO_ACTIVITY);
+            ((Activity)getContext()).startActivityForResult(intent,LessonFullScreenVideoActivity.REQUEST_CODE_FULL_SCREEN_VIDEO_ACTIVITY);
         }
     }
 }
