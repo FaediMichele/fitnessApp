@@ -50,7 +50,7 @@ public class LearningBoughtDetailsFragment extends Fragment {
         });
 
         //costruzione della view modello---------------------------------------------------------------------------
-        TextView title = view.findViewById(R.id.title_lesson);
+        TextView title = view.findViewById(R.id.title_course);
         TextView reviewTopCard = view.findViewById(R.id.review_top_card);
         TextView description_course = view.findViewById(R.id.description_course);
         title.setText("Come non imparare mai nulla");
