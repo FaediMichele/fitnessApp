@@ -17,15 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApp">
-        <activity android:name=".layout.login.MainActivity">
+        <activity android:name=".layout.home.HomeActivity">
         <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".layout.home.HomeActivity">
 
-        </activity>
         <activity android:name=".layout.objective.ObjectiveActivity">
         </activity>
         <activity android:name=".layout.social.SocialSearchActivity">

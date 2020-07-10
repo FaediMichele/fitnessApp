@@ -64,13 +64,15 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences settings = getSharedPreferences(getString(R.string.sessionId), Context.MODE_PRIVATE);
             settings.edit().clear().commit();
         }
+
+
         if(Util.getInstance().checkData(this)){
             Intent intent = new Intent(activity, HomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             ActivityCompat.finishAffinity(this);
             return;
-            
+
         }
 
         password.setOnEditorActionListener(new TextView.OnEditorActionListener() {

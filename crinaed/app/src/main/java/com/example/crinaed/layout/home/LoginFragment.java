@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
@@ -17,6 +18,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,33 +41,29 @@ public class LoginFragment extends Fragment {
     EditText email;
     EditText password;
     View root;
-    final Activity context = getActivity();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        DatabaseUtil.getInstance().setApplication(context);
         email = view.findViewById(R.id.email_edit);
         password = view.findViewById(R.id.password);
         password.setImeActionLabel(getString(R.string.login_action_label), KeyEvent.KEYCODE_ENTER);
         root = view.findViewById(R.id.root);
-
-
-
         final Button login = view.findViewById(R.id.button_login);
         if(false){ // delete shared preferences ONLY FOR DEBUG
-            SharedPreferences settings = context.getSharedPreferences(getString(R.string.sessionId), Context.MODE_PRIVATE);
+            SharedPreferences settings = getContext().getSharedPreferences(getString(R.string.sessionId), Context.MODE_PRIVATE);
             settings.edit().clear().commit();
         }
-        if(Util.getInstance().checkData(context)){
-            Intent intent = new Intent(context, HomeActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            ActivityCompat.finishAffinity(context);
-            return view;
 
-        }
+//        if(Util.getInstance().checkData(context)){
+//            Intent intent = new Intent(context, HomeActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+//            ActivityCompat.finishAffinity(context);
+//            return view;
+//
+//        }
 
         password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -75,13 +73,18 @@ public class LoginFragment extends Fragment {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
                 return onSubmit();
-
             }
         });
 
         login.setOnClickListener(new View.OnClickListener() {
+            private long mLastClickTime = 0;
+
             @Override
             public void onClick(View v) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 onSubmit();
                 login.clearFocus();
             }
@@ -89,9 +92,6 @@ public class LoginFragment extends Fragment {
 
         return view;
     }
-
-
-
 
     private boolean onSubmit(){
         if(!Patterns.EMAIL_ADDRESS.matcher(email.getText()).matches()){
@@ -104,6 +104,9 @@ public class LoginFragment extends Fragment {
             password.requestFocus();
             return false;
         }
+
+        final Context context = getContext();
+
         try {
             ServerManager.getInstance(context).login(email.getText().toString(), password.getText().toString(), new Lambda() {
                 @Override
@@ -116,11 +119,11 @@ public class LoginFragment extends Fragment {
                                 if((Boolean) paramether[1]) {
                                     if(!paramether[2].equals("")){
                                         Intent intent = new Intent(context, HomeActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                     } else{
                                         Snackbar.make(root, getString(R.string.wrong_data), Snackbar.LENGTH_LONG).show();
                                     }
-
                                 } else{
                                     Snackbar.make(root, getString(R.string.wrong_credential), Snackbar.LENGTH_LONG).show();
                                 }
