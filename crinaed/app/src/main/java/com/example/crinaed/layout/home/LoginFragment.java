@@ -24,11 +24,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.VolleyError;
 import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.ServerManager;
+import com.example.crinaed.layout.social.chat.IdentityFragment;
 import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Util;
 import com.google.android.material.snackbar.Snackbar;
@@ -36,6 +38,8 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONException;
 
 public class LoginFragment extends Fragment {
+
+    public static final String TAG_REGISTER = "LOGIN_FRAGMENT_TO_REGISTER_FRAGMENT";
 
     public static final int REQUEST_CODE_CHAT = 1;
     EditText email;
@@ -46,24 +50,16 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        email = view.findViewById(R.id.email_edit);
+        email = view.findViewById(R.id.email);
         password = view.findViewById(R.id.password);
         password.setImeActionLabel(getString(R.string.login_action_label), KeyEvent.KEYCODE_ENTER);
         root = view.findViewById(R.id.root);
+        final Button register = view.findViewById(R.id.button_register);
         final Button login = view.findViewById(R.id.button_login);
         if(false){ // delete shared preferences ONLY FOR DEBUG
             SharedPreferences settings = getContext().getSharedPreferences(getString(R.string.sessionId), Context.MODE_PRIVATE);
             settings.edit().clear().commit();
         }
-
-//        if(Util.getInstance().checkData(context)){
-//            Intent intent = new Intent(context, HomeActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(intent);
-//            ActivityCompat.finishAffinity(context);
-//            return view;
-//
-//        }
 
         password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -73,6 +69,17 @@ public class LoginFragment extends Fragment {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
                 return onSubmit();
+            }
+        });
+
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RegisterFragment registerFragment = new RegisterFragment();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.container, registerFragment, TAG_REGISTER);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 

@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         DatabaseUtil.getInstance().setApplication(this);
-        email = findViewById(R.id.email_edit);
+        email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         password.setImeActionLabel(getString(R.string.login_action_label), KeyEvent.KEYCODE_ENTER);
         root = findViewById(R.id.root);

@@ -37,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
         //delete status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        if(true){ // delete shared preferences ONLY FOR DEBUG
+        if(false){ // delete shared preferences ONLY FOR DEBUG
             SharedPreferences settings = this.getSharedPreferences(getString(R.string.sessionId), Context.MODE_PRIVATE);
             settings.edit().clear().commit();
         }

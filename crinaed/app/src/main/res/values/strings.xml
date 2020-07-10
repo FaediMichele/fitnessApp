@@ -79,4 +79,6 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="info_of_school">info of school</string>
     <string name="login">Login</string>
     <string name="register">register</string>
+    <string name="name">Name</string>
+    <string name="last_name">Last name</string>
 </resources>
