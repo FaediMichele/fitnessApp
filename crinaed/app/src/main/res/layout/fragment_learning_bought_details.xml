@@ -262,14 +262,15 @@
 
                         <EditText
                             android:layout_width="match_parent"
-                            android:id="@+id/editTextNumber"
+                            android:id="@+id/value_review"
                             android:background="@drawable/rounded_edit_text"
                             android:gravity="center"
                             android:hint="@string/max_10"
                             android:layout_height="wrap_content"
                             android:inputType="number"
                             android:paddingVertical="10dp"
-                            android:paddingHorizontal="15dp"/>
+                            android:paddingHorizontal="15dp"
+                            />
                     </LinearLayout>
 
 

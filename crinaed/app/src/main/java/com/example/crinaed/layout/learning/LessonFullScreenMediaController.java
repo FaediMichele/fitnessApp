@@ -21,6 +21,7 @@ public class LessonFullScreenMediaController extends MediaController {
     final private static String KEY_IS_FULL_SCREEN = "KEY_IS_FULL_SCREEN";
     private ImageButton fullScreen;
     private boolean isFullScreen;
+    private String videoPath;
 
     public LessonFullScreenMediaController(Context context) {
         super(context);
@@ -75,9 +76,14 @@ public class LessonFullScreenMediaController extends MediaController {
             ((Activity)getContext()).finish();
         }else{
             Intent intent = new Intent(getContext(),LessonFullScreenVideoActivity.class);
+            intent.putExtra(LessonFullScreenVideoActivity.EXERCISE_VIDEO_PATH, videoPath);
             intent.putExtra(KEY_IS_FULL_SCREEN, true);
             intent.putExtra(KEY_MINUTE,videoView.getCurrentPosition());
             ((Activity)getContext()).startActivityForResult(intent,LessonFullScreenVideoActivity.REQUEST_CODE_FULL_SCREEN_VIDEO_ACTIVITY);
         }
+    }
+
+    public void setVideoPath(String video) {
+        videoPath=video;
     }
 }

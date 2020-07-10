@@ -13,10 +13,8 @@ import com.example.crinaed.database.entity.School;
 import java.util.List;
 import java.util.Objects;
 
-public class CourseWithExercise {
+public class CourseSearchData {
     @Embedded public Course course;
-    @Relation(parentColumn = "idCourse", entityColumn = "idCourse")
-    public List<Exercise> exercises;
 
     @Relation(parentColumn = "idSchool", entityColumn = "idSchool")
     public School school;
@@ -28,13 +26,12 @@ public class CourseWithExercise {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CourseWithExercise that = (CourseWithExercise) o;
-        return Objects.equals(course, that.course) &&
-                Objects.equals(exercises, that.exercises);
+        CourseSearchData that = (CourseSearchData) o;
+        return Objects.equals(course, that.course);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(course, exercises);
+        return Objects.hash(course);
     }
 }

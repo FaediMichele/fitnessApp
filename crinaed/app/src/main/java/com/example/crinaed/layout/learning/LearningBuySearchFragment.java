@@ -1,21 +1,33 @@
 package com.example.crinaed.layout.learning;
 
+import android.content.Context;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
+import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.entity.Course;
+import com.example.crinaed.database.entity.join.CourseSearchData;
+import com.example.crinaed.util.Lambda;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +37,7 @@ public class LearningBuySearchFragment extends Fragment  {
     public static final String TAG_DETAIL = "LEARNING_BUY_FRAGMENT_TO_LEARNING_BUY_DETAIL_FRAGMENT";
     public static final String TAG_LEARNING_PAGER = "LEARNING_ACTIVITY_TO_LEARNING_PAGER_FRAGMENT";
     public static final String KEY_ID_COURSE = "KEY_ID_COURSE";
+    public static final String IS_BOUGHT = "IS_BOUGHT";
     final public static int TYPE_VIEW_ITEM_VIEW_ARCHIVE = 0;
     final public static int TYPE_VIEW_VIEW_NORMAL = 1;
 
@@ -36,41 +49,96 @@ public class LearningBuySearchFragment extends Fragment  {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        LearningBuySearchFragment.LearningAdapter adapter = new LearningBuySearchFragment.LearningAdapter(LearningBuySearchFragment.ModelloCourseBuy.getListModel());
+        final LearningBuySearchFragment.LearningAdapter adapter = new LearningBuySearchFragment.LearningAdapter(getContext(), this);
         recyclerView.setAdapter(adapter);
+
+        SearchView search = view.findViewById(R.id.course_name_search);
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                adapter.search(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return view;
     }
 
     private class LearningAdapter extends RecyclerView.Adapter<LearningBuySearchFragment.LearningViewHolder>{
 
-        private List<LearningBuySearchFragment.ModelloCourseBuy> modelloFittizio;
+        private List<CourseSearchData> search;
+        private LiveData<List<CourseSearchData>> liveData;
 
-        public LearningAdapter(List<LearningBuySearchFragment.ModelloCourseBuy> modelloFittizio){
-            this.modelloFittizio = modelloFittizio;
+        LifecycleOwner owner;
+        SearchHelper helper;
+
+        Observer<List<CourseSearchData>> observer =new Observer<List<CourseSearchData>>() {
+            @Override
+            public void onChanged(List<CourseSearchData> courseSearchData) {
+                search=courseSearchData;
+                Log.d("naed", "search data: " + search.size());
+                notifyDataSetChanged();
+            }
+        };
+
+        public LearningAdapter(Context context, LifecycleOwner owner) {
+            helper=new SearchHelper(context);
+            this.owner=owner;
+        }
+
+        public void search(String text){
+            if(liveData!=null){
+                liveData.removeObserver(observer);
+            }
+
+            helper.search(text, new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+
+                    liveData = DatabaseUtil.getInstance().getRepositoryManager().getSchoolRepository().getSearchData((long[]) paramether[0]);
+                    liveData.observe(owner, observer);
+                    return new Object[0];
+                }
+            });
         }
 
         @NonNull
         @Override
         public LearningBuySearchFragment.LearningViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_learning, parent, false);
-            return new LearningBuySearchFragment.LearningViewHolder(itemView);
+            return new LearningViewHolder(itemView);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull LearningBuySearchFragment.LearningViewHolder holder, final int position) {
-        ModelloCourseBuy.TypeCourse typeCourse = this.modelloFittizio.get(position).typeCourse;
-        switch (typeCourse){
-            case SOCIAL:
-                holder.itemView.findViewById(R.id.course_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_social));
-                break;
-            case LEARNING:
-                holder.itemView.findViewById(R.id.course_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_learning));
-                break;
-            case PHYSICAL:
-                holder.itemView.findViewById(R.id.course_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_physical));
-                break;
-        }
-        holder.imageView.setImageDrawable(getActivity().getDrawable(R.drawable.simple_people));
+        public void onBindViewHolder(@NonNull final LearningBuySearchFragment.LearningViewHolder holder, final int position) {
+            if(this.search!= null){
+                final CourseSearchData course = this.search.get(position);
+                Log.d("naed", "review: " + course.reviews.size());
+                switch (course.course.cat){
+                    case SOCIAL:
+                        holder.itemView.findViewById(R.id.course_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_social));
+                        break;
+                    case MENTAL:
+                        holder.itemView.findViewById(R.id.course_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_learning));
+                        break;
+                    case SPORT:
+                        holder.itemView.findViewById(R.id.course_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_physical));
+                        break;
+                }
+                if(course.course.imagesDownloaded && course.course.images.length>0){
+                    holder.imageView.setImageURI(Uri.parse(course.course.images[0]));
+                }
+                holder.description.setText(course.course.desc);
+                holder.title.setText(course.course.name);
+                holder.setBought(course.course.isBought);
+                holder.school.setText(course.school.name);
+                holder.val.setText(getString(R.string.review_val, course.course.review));
+            }
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -83,7 +151,8 @@ public class LearningBuySearchFragment extends Fragment  {
 
                     LearningPagerFragment learningPagerFragment = new LearningPagerFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString(KEY_ID_COURSE, modelloFittizio.get(position).id);
+                    bundle.putBoolean(LearningBuySearchFragment.IS_BOUGHT, holder.isBought);
+                    bundle.putLong(KEY_ID_COURSE, search.get(position).course.idCourse);
                     learningPagerFragment.setArguments(bundle);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.container_learning, learningPagerFragment, TAG_LEARNING_PAGER);
@@ -95,119 +164,33 @@ public class LearningBuySearchFragment extends Fragment  {
 
         @Override
         public int getItemCount() {
-            return this.modelloFittizio.size();
+            if(search!=null){
+                return search.size();
+            }
+            return 0;
         }
     }
 
-    private class LearningViewHolder extends RecyclerView.ViewHolder{
+    private static class LearningViewHolder extends RecyclerView.ViewHolder{
 
         ImageView imageView;
         TextView title;
         TextView description;
+        TextView school;
+        TextView val;
+        boolean isBought;
 
         public LearningViewHolder(@NonNull View itemView) {
             super(itemView);
-                this.imageView = itemView.findViewById(R.id.image_course);
-                this.title = itemView.findViewById(R.id.title_lesson);
-                this.description = itemView.findViewById(R.id.description_course);
-        }
-    }
-
-    //---------------da qui parte la classe del modello fitizzio che dovra essere sostituita con il db e quindi poi questa classe del modello fittizio verrà eliminata------------------------------------------
-    public static class ModelloCourseBuy {
-        String id;
-        String title;
-        Image image;
-        int price;
-        TypeCourse typeCourse;
-
-        public ModelloCourseBuy(String id, String titleCourse, Image imageCourse, int price, TypeCourse typeCourse ) {
-            this.id = id;
-            this.title = titleCourse;
-            this.image = imageCourse;
-            this.price = price;
-            this.typeCourse = typeCourse;
-
+            this.imageView = itemView.findViewById(R.id.image_course);
+            this.title = itemView.findViewById(R.id.title_course);
+            this.description = itemView.findViewById(R.id.description_course);
+            this.school=itemView.findViewById(R.id.school);
+            this.val=itemView.findViewById(R.id.value_review);
         }
 
-        @Override
-        public String toString() {
-            return "ModelloFittizio{" +
-                    "id='" + id + '\'' +
-                    ", title='" + title + '\'' +
-                    ", image=" + image +
-                    ", price=" + price +
-                    '}';
-        }
-
-        static public List<ModelloCourseBuy> getListModel(){
-            List<ModelloCourseBuy> modelloFittizioList = new ArrayList<>();
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.SOCIAL));
-            modelloFittizioList.add(new ModelloCourseBuy("id_corso","titolo corso",null,1000,TypeCourse.LEARNING));
-            return modelloFittizioList;
-        }
-
-        enum TypeCourse{
-            PHYSICAL,LEARNING,SOCIAL
-        }
-
-        public static class Review {
-            String id;
-            int value; //da 1 a 5
-            String firstName;
-            String lastName;
-            String title;
-            String description;
-
-            public Review(String id, int value, String firstName, String lastName, String title, String description) {
-                this.id = id;
-                this.value = value;
-                this.firstName = firstName;
-                this.lastName = lastName;
-                this.title = title;
-                this.description = description;
-            }
-
-            static public List<Review> getListModel() {
-                List<Review> reviewList = new ArrayList<>();
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-                reviewList.add(new Review("id_review",3,"Nome","Cognome","Titolo Recensione","descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione descrizione della recensione ")) ;
-
-                return reviewList;
-            }
+        public void setBought(boolean isBought) {
+            this.isBought=isBought;
         }
     }
 }

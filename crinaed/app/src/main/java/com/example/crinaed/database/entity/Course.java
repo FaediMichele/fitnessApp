@@ -19,6 +19,9 @@ public class Course implements MyEntity{
     public String name;
     public String desc;
     public long idSchool;
+    public boolean isArchived;
+    public double price;
+    public boolean isBought;
 
     @TypeConverters(ImagesConverter.class)
     public String[] images;
@@ -32,15 +35,7 @@ public class Course implements MyEntity{
     public boolean imagesDownloaded=false;
     public boolean videoDownloaded=false;
 
-    public Course(long idCourse, String name, String desc, long idSchool, String[] images, String video, boolean imagesDownloaded, boolean videoDownloaded) {
-        this.idCourse = idCourse;
-        this.name = name;
-        this.desc = desc;
-        this.idSchool = idSchool;
-        this.images = images;
-        this.video = video;
-        this.imagesDownloaded = imagesDownloaded;
-        this.videoDownloaded = videoDownloaded;
+    public Course(){
     }
 
     public Course(JSONObject obj) throws JSONException {
@@ -51,6 +46,14 @@ public class Course implements MyEntity{
         video = obj.getString("video");
         cat = Category.valueOf(obj.getString("cat"));
         review = obj.getDouble("review");
+        isBought = obj.getBoolean("isBought");
+        if(!isBought){
+            isArchived=false;
+        }else{
+            isArchived = obj.getBoolean("isArchived");
+        }
+        price = obj.getDouble("price");
+
         JSONArray images = obj.getJSONArray("image");
         this.images=new String[images.length()];
         for(int i=0;i<images.length(); i++){

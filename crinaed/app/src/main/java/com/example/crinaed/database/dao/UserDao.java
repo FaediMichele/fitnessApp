@@ -3,6 +3,7 @@ package com.example.crinaed.database.dao;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
@@ -21,11 +22,11 @@ public interface UserDao {
     @Query("SELECT * FROM UserLevel")
     List<UserLevel> getLevelList();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     Long[] insert(User... users);
 
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     Long[] insert(UserLevel... levels);
 
     @Update
@@ -38,6 +39,6 @@ public interface UserDao {
     void deleteAll();
 
     @Transaction
-    @Query("SELECT * FROM User WHERE idUser!=(:idUser)")
+    @Query("SELECT * FROM User WHERE idUser!=(:idUser) AND (idUser IN (SELECT idUser1 FROM Friendship) OR idUser IN (SELECT idUser2 FROM Friendship))")
     LiveData<List<UserData>> getData(long idUser);
 }

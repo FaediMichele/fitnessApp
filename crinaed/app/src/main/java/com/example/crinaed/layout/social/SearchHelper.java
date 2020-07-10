@@ -36,7 +36,7 @@ public class SearchHelper {
     }
 
     public void search(final String text, final Lambda onResultElaborated){
-        final String query = "to=search&text=" + text + "&idUser=" + Util.getInstance().getIdUser();
+        final String query = "to=search&method=social&text=" + text + "&idUser=" + Util.getInstance().getIdUser();
         service.submit(new Callable<JSONObject>() {
             @Override
             public JSONObject call() throws Exception {

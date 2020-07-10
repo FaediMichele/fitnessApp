@@ -1,27 +1,24 @@
 package com.example.crinaed.layout.learning;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.crinaed.R;
+import com.example.crinaed.database.entity.join.CourseWithExercise;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
 public class SliderCourseAdapter extends SliderViewAdapter<SliderCourseAdapter.SliderCourseVH> {
 
-    private final int nummero_recensioni = 10; //da toglire----------------------------------------------
 
-
-    private final String idCourse;  //questo lo messo per te non so se ti serve per caricare le immagini ma
-                                    // comunque ti faccio arrivare l'id del corso fino a qui se non ti serve
-                                    // puoi cancellarlo
+    private CourseWithExercise course;
     private final Activity context;
 
-    public SliderCourseAdapter(Activity context , String idCourse) {
+    public SliderCourseAdapter(Activity context) {
         this.context = context;
-        this.idCourse = idCourse;
     }
 
     @Override
@@ -32,15 +29,25 @@ public class SliderCourseAdapter extends SliderViewAdapter<SliderCourseAdapter.S
 
     @Override
     public void onBindViewHolder(SliderCourseAdapter.SliderCourseVH viewHolder, int position) {
-            viewHolder.imageView.setImageDrawable(context.getDrawable(R.drawable.simple_people));
+        if(course != null && course.course.imagesDownloaded){
+            viewHolder.imageView.setImageURI(Uri.parse(course.course.images[position]));
+        }
     }
 
     @Override
     public int getCount() {
-        return nummero_recensioni;
+        if(course == null || course.course==null || !course.course.imagesDownloaded){
+            return 0;
+        }
+        return course.course.images.length;
     }
 
-    public class SliderCourseVH extends SliderViewAdapter.ViewHolder{
+    public void setCourse(CourseWithExercise course) {
+        this.course=course;
+        notifyDataSetChanged();
+    }
+
+    public static class SliderCourseVH extends SliderViewAdapter.ViewHolder{
 
         ImageView imageView;
 

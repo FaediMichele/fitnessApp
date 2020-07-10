@@ -61,6 +61,7 @@ public class ServerManager {
 
 
 
+
     public enum FileType{
         Commitment("idCommitment"), Course("idCourse"), Exercise("idExercise");
         private String key;
@@ -97,7 +98,22 @@ public class ServerManager {
             public void onErrorResponse(VolleyError error) {
                 onErrorMethod.run(error);
             }
-        });
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=UTF-8");
+                return headers;
+            }
+            @Override
+            protected Response<String> parseNetworkResponse(
+                    NetworkResponse response) {
+                String strUTF8 = null;
+                strUTF8 = new String(response.data, StandardCharsets.UTF_8);
+                return Response.success(strUTF8,
+                        HttpHeaderParser.parseCacheHeaders(response));
+            }
+        };
         Volley.newRequestQueue(this.context).add(request);
     }
 
@@ -245,6 +261,25 @@ public class ServerManager {
     public void downloadFile(final String filename, String directory, Lambda receiver){
         final String query="?to=fileManager&method=getFile&filename="+filename;
         File f = new File(context.getExternalFilesDir(directory), filename);
+        try {
+            f.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Could not download " + filename, Toast.LENGTH_SHORT).show();
+            Log.d("naed", "Could not download " + filename);
+        }
+        TransferFile.downloadFile(SERVER+query, f, receiver);
+    }
+
+    /**
+     * Download a file and save it in the directory
+     * @param filename name of the file to download
+     * @param directory Enviroment.something
+     * @param receiver a lambda function (parameter[0]=boolean, paramether[1]=File)
+     */
+    public void downloadFile(final String filename, File directory, Lambda receiver){
+        final String query="?to=fileManager&method=getFile&filename="+filename;
+        File f = new File(directory, filename);
         try {
             f.createNewFile();
         } catch (IOException e) {
@@ -412,17 +447,73 @@ public class ServerManager {
             body.put("idSession", Util.getInstance().getSessionId());
             body.put("to", "friend");
             body.put("method", "getFriendshipRequest");
-            managePost(body.toString(), new Lambda() {
-                @Override
-                public Object[] run(Object... paramether) {
-                    onSuccess.run(paramether);
-                    return null;
-                }
-            }, onFailure);
+            managePost(body.toString(), onSuccess, onFailure);
             stopMessagePolling();
         } catch (JSONException e) {
             e.printStackTrace();
             onFailure.run();
+        }
+    }
+
+
+    public void buyCourse(long idCourse, final Lambda onSuccess, final Lambda onFailure) {
+        JSONObject body = new JSONObject();
+        try {
+            body.put("idSession", Util.getInstance().getSessionId());
+            body.put("to", "courseBought");
+            body.put("method", "buyCourse");
+            JSONObject data = new JSONObject();
+            data.put("idCourse", idCourse);
+            body.put("data", data);
+            managePost(body.toString(), new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    try {
+                        JSONObject response = new JSONObject(paramether[0].toString());
+                        DatabaseUtil.getInstance().getRepositoryManager().getUserRepository().loadData(response).get();
+                        DatabaseUtil.getInstance().getRepositoryManager().getSchoolRepository().loadData(response).get();
+                        DatabaseUtil.getInstance().getRepositoryManager().getExerciseRepository().loadData(response).get();
+                        DatabaseUtil.getInstance().getRepositoryManager().getReviewRepository().loadData(response).get();
+                        onSuccess.run();
+                    } catch (JSONException | InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                        onFailure.run(e);
+                    }
+                    return new Object[0];
+                }
+            }, onFailure);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addReview(long idCourse, String text, int val, final Lambda onSuccess, final Lambda onFailure){
+        JSONObject body = new JSONObject();
+        try {
+            body.put("idSession", Util.getInstance().getSessionId());
+            body.put("to", "review");
+            body.put("method", "addReview");
+            JSONObject data = new JSONObject();
+            data.put("idCourse", idCourse);
+            data.put("text", text);
+            data.put("val", val);
+            body.put("data", data);
+            managePost(body.toString(), new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    try {
+                        JSONObject response = new JSONObject(paramether[0].toString());
+                        DatabaseUtil.getInstance().getRepositoryManager().getReviewRepository().loadData(response).get();
+                        onSuccess.run();
+                    } catch (JSONException | InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                        onFailure.run(e);
+                    }
+                    return new Object[0];
+                }
+            }, onFailure);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

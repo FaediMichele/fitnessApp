@@ -1,44 +1,85 @@
 package com.example.crinaed.layout.learning;
 
+import android.app.Activity;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
+import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.ServerManager;
+import com.example.crinaed.database.entity.Review;
+import com.example.crinaed.database.entity.join.CourseWithExercise;
+import com.example.crinaed.database.entity.join.ReviewWithUser;
+import com.example.crinaed.util.Lambda;
+import com.example.crinaed.util.Util;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.IndicatorView.draw.controller.DrawController;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
+import java.util.Objects;
+
 public class LearningBoughtDetailsFragment extends Fragment {
 
-    private String idCourse;
+    private long idCourse;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_learning_bought_details, container, false);
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_learning_bought_details, container, false);
         Bundle dataLearning = getArguments();
-        idCourse = dataLearning.getString(LearningBuySearchFragment.KEY_ID_COURSE);
+        if(dataLearning == null){
+            Snackbar.make(view, R.string.unknown_error, BaseTransientBottomBar.LENGTH_LONG).show();
+            return view;
+        }
+        idCourse = dataLearning.getLong(LearningBuySearchFragment.KEY_ID_COURSE);
+
+
+        final SliderCourseAdapter adapter = new SliderCourseAdapter(getActivity());
+        final AdapterReview adapterReview = new AdapterReview();
+        final TextView title = view.findViewById(R.id.title_course);
+        final TextView reviewTopCard = view.findViewById(R.id.review_top_card);
+        final TextView description_course = view.findViewById(R.id.description_course);
+
+        DatabaseUtil.getInstance().getRepositoryManager().getSchoolRepository().getCourseById(idCourse).observe(this, new Observer<CourseWithExercise>() {
+            @Override
+            public void onChanged(CourseWithExercise courseWithExercise) {
+                title.setText(courseWithExercise.course.name);
+                reviewTopCard.setText(getString(R.string.review_val, courseWithExercise.course.review));
+                description_course.setText(courseWithExercise.course.desc);
+                adapter.setCourse(courseWithExercise);
+                adapterReview.setData(courseWithExercise);
+
+            }
+        });
 
         final SliderView sliderView = view.findViewById(R.id.slider_course);
-        SliderViewAdapter adapter = new SliderCourseAdapter(getActivity(),idCourse);
         sliderView.setSliderAdapter(adapter);
         sliderView.setIndicatorAnimation(IndicatorAnimations.THIN_WORM);
         sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
         sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
         sliderView.setIndicatorUnselectedColor(Color.GRAY);
-        sliderView.setIndicatorSelectedColor(ContextCompat.getColor(getContext(),R.color.redPrimary));
+        sliderView.setIndicatorSelectedColor(ContextCompat.getColor(Objects.requireNonNull(getActivity()),R.color.redPrimary));
         //sliderView.setScrollTimeInSec(3);
         //sliderView.setAutoCycle(false);
         //sliderView.startAutoCycle();
@@ -49,32 +90,69 @@ public class LearningBoughtDetailsFragment extends Fragment {
             }
         });
 
-        //costruzione della view modello---------------------------------------------------------------------------
-        TextView title = view.findViewById(R.id.title_course);
-        TextView reviewTopCard = view.findViewById(R.id.review_top_card);
-        TextView description_course = view.findViewById(R.id.description_course);
-        title.setText("Come non imparare mai nulla");
-        reviewTopCard.setText("3,5/5");
-
-        description_course.setText("In questo corso non capire niente e non vi servirà a niente. " +
-                "insengo da diverso tempo come non campire mai ninete e rimanere ignoranti per ciò se non capire niente delle lezioni" +
-                "che ho caricato vuol dire che site gia ad un buon livello di incomprensione e il corso vi è servito semplicemnte come ripasso" +
-                "se invece riuscite a capire qualcosa vi consiglio di ripetere il corso fino a quando non ci capirete più nulla");
-
         //manager RecyclerView
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        LearningBoughtDetailsFragment.AdapterReview adapterReview = new AdapterReview();
         recyclerView.setAdapter(adapterReview);
+
+        final EditText review_text = view.findViewById(R.id.text_send);
+        final EditText review_val = view.findViewById(R.id.value_review);
+        review_val.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length()<=0 || Integer.parseInt(review_val.getText().toString())>10 ||Integer.parseInt(review_val.getText().toString())<=0){
+                    review_val.setError(getString(R.string.review_val_error));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        final View send = view.findViewById(R.id.send);
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                if(review_val.getText().length()<=0 || Integer.parseInt(review_val.getText().toString())>10 ||Integer.parseInt(review_val.getText().toString())<0){
+                    Snackbar.make(view, R.string.review_val_error, BaseTransientBottomBar.LENGTH_LONG).show();
+                    return;
+                }
+                ServerManager.getInstance(getContext()).addReview(idCourse, review_text.getText().toString(), Integer.parseInt(review_val.getText().toString()), new Lambda() {
+                    @Override
+                    public Object[] run(Object... paramether) {
+                        Snackbar.make(view, R.string.review_added, BaseTransientBottomBar.LENGTH_SHORT).show();
+                        return new Object[0];
+                    }
+                }, new Lambda() {
+                    @Override
+                    public Object[] run(Object... paramether) {
+                        /* TODO if the review already exist show that already exist */
+                        Snackbar.make(view, R.string.unknown_error, BaseTransientBottomBar.LENGTH_LONG).show();
+                        return new Object[0];
+                    }
+                });
+            }
+        });
 
         return view;
     }
 
     private class AdapterReview extends RecyclerView.Adapter<ReviewVH>{
 
-        private final int nummero_recensioni = 10; //da toglire-----------------------------------------------------------
+        private CourseWithExercise course;
+        public AdapterReview(){
+        }
+
+        public void setData(CourseWithExercise course){
+            this.course=course;
+            notifyDataSetChanged();
+        }
         @NonNull
         @Override
         public ReviewVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -84,21 +162,26 @@ public class LearningBoughtDetailsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ReviewVH holder, int position) {
-            //qui serve il modello------------------------------------------------------------------
-            // bisogna che venga caricata una lista di recensioni di questo corso (id del corso viene
-            // caricato dall'fragmente nel metoodo on create non so se ti serve)
-            // il position e l'elemento della lista di cui bisogna fare la onBindViewHolder
-            holder.imageProfile.setImageDrawable(getContext().getDrawable(R.drawable.simple_people));
-            holder.nameLastName.setText("Nome Cognome");
-            holder.value.setText("3,5/5");
-            holder.date.setText("15/12/2020");
-            holder.review.setText("Sono davvero contento di aver comprato questo corso perché non imparato niente proprio come da descrzione, " +
-                    "dentro viene spiegato molto bene come non campire niente anche se in realtà non capito bene come si fa");
+            if(course!=null){
+                ReviewWithUser review = course.reviews.get(position);
+                if(review.user.imageDownloaded){
+                    holder.imageProfile.setImageURI(Uri.parse(review.user.image));
+                }
+
+                holder.nameLastName.setText(getString(R.string.name_surname, review.user.firstname, review.user.surname));
+                holder.value.setText(getString(R.string.review_val, review.review.val));
+                holder.date.setText(Util.timestampToIsoPrintable(review.review.date));
+                holder.review.setText(review.review.comment);
+            }
+
         }
 
         @Override
         public int getItemCount() {
-            return nummero_recensioni;
+            if(course!=null){
+                return course.reviews.size();
+            }
+            return 0;
         }
     }
 

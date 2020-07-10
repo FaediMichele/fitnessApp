@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.crinaed.R;
 
 public class LessonFullScreenVideoActivity extends AppCompatActivity {
-
+    public static final String EXERCISE_VIDEO_PATH = "EXERCISE_VIDEO_PATH";
     final public static int REQUEST_CODE_FULL_SCREEN_VIDEO_ACTIVITY = 1;
 
     private VideoView videoView;
@@ -26,9 +26,10 @@ public class LessonFullScreenVideoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fullscreen_video_view);
         videoView = findViewById(R.id.video_lesson);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        Uri videoUri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.video_simple);
-        videoView.setVideoURI(videoUri);
+        Bundle data = getIntent().getExtras();
+        if(data!= null && data.containsKey(EXERCISE_VIDEO_PATH)){
+            videoView.setVideoURI(Uri.parse(data.getString(EXERCISE_VIDEO_PATH)));
+        }
         mediaController = new LessonFullScreenMediaController(this);
         mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);

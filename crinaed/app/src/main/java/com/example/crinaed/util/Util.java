@@ -3,10 +3,16 @@ package com.example.crinaed.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.util.Log;
 
 import com.example.crinaed.R;
+import com.example.crinaed.database.ServerManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -76,6 +82,15 @@ public class Util {
         return timestampToIsoMonth(lo, Locale.ITALY);
     }
 
+
+    public static String timestampToIsoPrintable(long lo, Locale l){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", l);
+        return dateFormat.format(new Date(lo));
+    }
+    public static String timestampToIsoPrintable(long lo){
+        return timestampToIsoPrintable(lo, Locale.ITALY);
+    }
+
     public static String dateToTimestamp(Date l){
         return dateToTimestamp(l, Locale.ITALY);
     }
@@ -113,6 +128,55 @@ public class Util {
             }
         }
         return ret;
+    }
+
+    public static void downloadImage(final JSONArray array, final int i, File directory, Context context, final Lambda l)  {
+        try {
+            final String file=array.getJSONObject(i).getString("image");
+            if(!file.equals("")){
+                ServerManager.getInstance(context).downloadFile(file, directory, l);
+            }
+        } catch (JSONException ignore) {
+        }
+    }
+
+    public static void downloadImage(final JSONArray array, final int i, Context context, final Lambda l)  {
+        downloadImage(array, i, context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), context, l);
+    }
+
+    public static void downloadImageArray(final JSONArray images, File directory, Context context, final Lambda l) {
+        try {
+            final String[] files = new String[images.length()];
+            final Single<Integer> setted = new Single<>(0);
+            for(int j=0;j<images.length();j++){
+                final String file = images.getString(j);
+
+                final int k=j;
+                if(!file.equals("")){
+                    ServerManager.getInstance(context).downloadFile(file, directory, new Lambda() {
+                        @Override
+                        public Object[] run(Object... paramether) {
+                            if((Boolean)paramether[0]){
+                                files[k]=((File) paramether[1]).getAbsolutePath();
+                                synchronized (setted) {
+                                    setted.setVal(setted.getVal() + 1);
+                                }
+                                if(setted.getVal()==images.length()){
+                                    l.run(true, files);
+                                }
+                            }
+                            return new Object[0];
+                        }
+                    });
+                }
+            }
+
+        } catch (JSONException ignore) {
+        }
+    }
+
+    public static void downloadImageArray(final JSONArray images, Context context, final Lambda l)  {
+        downloadImageArray(images, context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), context, l);
     }
 
     public void setSessionId(String sessionId){

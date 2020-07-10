@@ -41,12 +41,11 @@ public class CommitmentRepository extends Repository{
     // used for the insert. (the data created by the app must have negative ids)
     private long lastCommitmentId = -1;
     private long lastStepId = -1;
-    private Context context;
 
     public CommitmentRepository(Context context){
         AppDatabase db = AppDatabase.getDatabase(context);
         commitmentDao = db.commitmentDao();
-        this.context=context;
+        setContext(context);
     }
 
     public LiveData<List<CommitmentWithMyStep>> getCommitmentWithSteps(Category category) {

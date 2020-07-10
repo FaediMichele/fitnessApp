@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Dao
 public interface ExerciseAndStepDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     Long[] insert(Exercise... exercises);
 
     @Update
@@ -28,4 +29,7 @@ public interface ExerciseAndStepDao {
 
     @Query("SELECT * FROM Exercise WHERE idCourse=(:idCourse)")
     LiveData<List<Exercise>> getExercise(long idCourse);
+
+    @Query("SELECT * FROM Exercise WHERE idExercise=(:idExercise)")
+    LiveData<Exercise> getExerciseById(long idExercise);
 }

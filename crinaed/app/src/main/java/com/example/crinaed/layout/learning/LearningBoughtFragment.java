@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +13,19 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
+import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.entity.join.CourseWithExercise;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class LearningBoughtFragment extends Fragment {
 
@@ -26,22 +33,34 @@ public class LearningBoughtFragment extends Fragment {
     private String idCourse;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_learning_bought, container, false);
 
         //to receive model
         Bundle dataLearning = getArguments();
-        idCourse = dataLearning.getString(LearningBuySearchFragment.KEY_ID_COURSE);
+        if(dataLearning == null){
+            Snackbar.make(view, R.string.unknown_error, BaseTransientBottomBar.LENGTH_LONG).show();
+            return view;
+        }
+        long idCourse = dataLearning.getLong(LearningBuySearchFragment.KEY_ID_COURSE);
+
 
         //set view
-        TextView title = view.findViewById(R.id.title_course);
-        title.setText("Titolo del corso scritto in Java");
+        final TextView title = view.findViewById(R.id.title_course);
+        final LessonAdapter adapter = new LessonAdapter();
 
+        DatabaseUtil.getInstance().getRepositoryManager().getSchoolRepository().getCourseById(idCourse).observe(this, new Observer<CourseWithExercise>() {
+            @Override
+            public void onChanged(CourseWithExercise course) {
+                adapter.setCourse(course);
+                title.setText(course.course.name);
+            }
+        });
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        LessonAdapter adapter = new LessonAdapter(ModelloVideoLessonBought.getModello());
+
         recyclerView.setAdapter(adapter);
 
         return view;
@@ -50,9 +69,13 @@ public class LearningBoughtFragment extends Fragment {
 
     private class LessonAdapter extends RecyclerView.Adapter<LearningBoughtVH>{
 
-        private List<ModelloVideoLessonBought> modelloVideoLessonBoughtList;
-        public LessonAdapter(List<ModelloVideoLessonBought> modelloVideoLessonBoughtList) {
-            this.modelloVideoLessonBoughtList = modelloVideoLessonBoughtList;
+        private CourseWithExercise course;
+        public LessonAdapter() {
+        }
+
+        public void setCourse(CourseWithExercise course){
+            this.course=course;
+            notifyDataSetChanged();
         }
 
         @NonNull
@@ -63,25 +86,29 @@ public class LearningBoughtFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull LearningBoughtVH holder, int position) {
-            holder.description.setText(this.modelloVideoLessonBoughtList.get(position).description);
-            holder.title.setText(this.modelloVideoLessonBoughtList.get(position).title);
+        public void onBindViewHolder(@NonNull LearningBoughtVH holder, final int position) {
+            holder.description.setText(this.course.exercises.get(position).desc);
+            holder.title.setText(this.course.exercises.get(position).name);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), LessonActivity.class);
-                    ((Activity)getContext()).startActivity(intent);
+                    intent.putExtra(LessonActivity.ID_LESSON, course.exercises.get(position).idExercise);
+                    ((Activity) Objects.requireNonNull(getContext())).startActivity(intent);
                 }
             });
         }
 
         @Override
         public int getItemCount() {
-            return modelloVideoLessonBoughtList.size();
+            if(course != null){
+                return course.exercises.size();
+            }
+            return 0;
         }
     }
 
-    private class LearningBoughtVH extends RecyclerView.ViewHolder{
+    private static class LearningBoughtVH extends RecyclerView.ViewHolder{
 
         TextView title;
         TextView description;
@@ -92,51 +119,6 @@ public class LearningBoughtFragment extends Fragment {
             this.title = itemView.findViewById(R.id.title_lesson);
             this.description = itemView.findViewById(R.id.description_course);
             this.image = itemView.findViewById(R.id.image_video);
-        }
-    }
-
-//da qui in poi da modello da eliminare----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    private static class ModelloVideoLessonBought {
-        String id;
-        String title;
-        String description;
-        Image image;
-
-        public ModelloVideoLessonBought(String id, String title, String description, Image image) {
-            this.id = id;
-            this.title = title;
-            this.description = description;
-            this.image = image;
-        }
-
-        public static List<ModelloVideoLessonBought> getModello (){
-            List<ModelloVideoLessonBought> modelloList = new ArrayList<>();
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            modelloList.add(new ModelloVideoLessonBought("id","titolo della lezione","descrizione breve del corso descrizione breve del corso descrizione breve del corso descrizione breve del corso",null));
-            return modelloList;
         }
     }
 }

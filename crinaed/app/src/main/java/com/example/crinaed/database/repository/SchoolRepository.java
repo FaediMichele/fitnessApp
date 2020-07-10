@@ -11,6 +11,7 @@ import com.example.crinaed.database.AppDatabase;
 import com.example.crinaed.database.dao.SchoolDao;
 import com.example.crinaed.database.entity.Course;
 import com.example.crinaed.database.entity.School;
+import com.example.crinaed.database.entity.join.CourseSearchData;
 import com.example.crinaed.database.entity.join.CourseWithExercise;
 import com.example.crinaed.util.Lambda;
 
@@ -29,12 +30,11 @@ public class SchoolRepository extends Repository {
     private SchoolDao schoolDao;
     private long lastSchoolId=-1;
     private long lastCourseId=-1;
-    private Context context;
 
     public SchoolRepository(Context context){
         AppDatabase db = AppDatabase.getDatabase(context);
         schoolDao = db.schoolDao();
-        this.context=context;
+        setContext(context);
     }
 
     public Future<?> insert(final School... school){
@@ -51,6 +51,25 @@ public class SchoolRepository extends Repository {
 
     public LiveData<List<CourseWithExercise>> getCourse(){
         return schoolDao.getCourseWithExercise();
+    }
+
+    public LiveData<CourseWithExercise> getCourseById(long id){
+        return schoolDao.getCourseWithExerciseById(id);
+    }
+
+    public LiveData<List<CourseSearchData>> getSearchData(long[] idCourses){
+        return schoolDao.getSearchedCourse(idCourses);
+    }
+
+    public Future<?> deleteOldSearch() {
+        return AppDatabase.databaseWriteExecutor.submit(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        schoolDao.deleteCoursesSearched();
+                        Log.d("naed", "deleted old search");
+                    }
+                });
     }
 
     public Future<?> insert(final Course... courses){
@@ -126,28 +145,33 @@ public class SchoolRepository extends Repository {
         for(int i = 0; i < array.length(); i++) {
             final Course c = new Course(array.getJSONObject(i));
             courses.add(c);
-            downloadImageArray(array, i, new Lambda() {
-                @Override
-                public Object[] run(Object... paramether) {
-                    try {
-                        if ((Boolean) paramether[0]) {
-                            c.images = (String[]) paramether[1];
-                            c.imagesDownloaded = true;
-                            update(c);
+            try {
+                downloadImageArray(array, i, new Lambda() {
+                    @Override
+                    public Object[] run(Object... paramether) {
+                        try {
+                            if ((Boolean) paramether[0]) {
+                                c.images = (String[]) paramether[1];
+                                c.imagesDownloaded = true;
+                                update(c);
+                                Log.d("naed", "update of course done: " + c.idCourse);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    }catch (Exception e){
-                        e.printStackTrace();
+                        return new Object[0];
                     }
-                    return new Object[0];
-                }
-            });
+                });
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             downloadVideo(array, i, new Lambda() {
                 @Override
                 public Object[] run(Object... paramether) {
-                    if((Boolean) paramether[0]){
+                    if ((Boolean) paramether[0]) {
                         File f = (File) paramether[1];
-                        c.video=f.getAbsolutePath();
-                        c.videoDownloaded=true;
+                        c.video = f.getAbsolutePath();
+                        c.videoDownloaded = true;
                         update(c);
                     }
                     return new Object[0];

@@ -86,11 +86,11 @@ public class LearningFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull LearningFragment.LearningViewHolder holder, final int position) {
             if(position > 0) {
-                CourseWithExercise course = newest.get(position-1);
+                final CourseWithExercise course = newest.get(position-1);
                 holder.title.setText(course.course.name);
                 holder.description.setText(course.course.desc);
                 holder.school.setText(course.school.name);
-                holder.review.setText(Objects.requireNonNull(getContext()).getString(R.string.review_val, (int) course.course.review));
+                holder.review.setText(Objects.requireNonNull(getContext()).getString(R.string.review_val, course.course.review));
                 switch (course.course.cat){
                     case SOCIAL:
                         holder.itemView.findViewById(R.id.course_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_social));
@@ -112,7 +112,7 @@ public class LearningFragment extends Fragment {
                     public void onClick(View v) {
                         //start acrivity learning fragment del corso gia acquistato
                         Bundle bundle = new Bundle();
-                        bundle.putLong(LearningBuySearchFragment.KEY_ID_COURSE, newest.get(position).course.idCourse);
+                        bundle.putLong(LearningBuySearchFragment.KEY_ID_COURSE, course.course.idCourse);
                         bundle.putBoolean(LearningActivity.KEY_START_PAGER,true);
                         Intent learningIntent = new Intent(getContext(), LearningActivity.class);
                         learningIntent.putExtras(bundle);

@@ -24,6 +24,7 @@ public class ReviewRepository extends Repository{
     public ReviewRepository(Context context){
         AppDatabase db = AppDatabase.getDatabase(context);
         reviewDao = db.reviewDao();
+        setContext(context);
     }
 
     public LiveData<List<UserReview>> getUserReview(){

@@ -32,7 +32,11 @@ public class User implements MyEntity {
         this.firstname = obj.getString("firstname");
         this.surname = obj.getString("surname");
         this.email = obj.getString("email");
-        this.hashPassword = obj.getString("hashPassword");
+        if(obj.has("hashPassword")) {
+            this.hashPassword = obj.getString("hashPassword");
+        } else{
+            hashPassword="";
+        }
     }
 
     @Override

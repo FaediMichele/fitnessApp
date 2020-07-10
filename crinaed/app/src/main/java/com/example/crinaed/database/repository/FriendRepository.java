@@ -33,6 +33,7 @@ public class FriendRepository extends Repository{
         AppDatabase db = AppDatabase.getDatabase(context);
         friendshipDao = db.friendshipDao();
         friendMessageDao = db.friendMessageDao();
+        setContext(context);
     }
 
     public LiveData<UserWithUser> getFriendshipByFriend(long idFriend){

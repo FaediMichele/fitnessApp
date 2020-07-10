@@ -17,6 +17,7 @@ import com.example.crinaed.database.entity.MyCommitment;
 import com.example.crinaed.database.entity.MyStep;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.database.repository.RepositoryManager;
+import com.example.crinaed.layout.learning.SearchHelper;
 import com.example.crinaed.util.Category;
 import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Period;
@@ -138,6 +139,7 @@ public class DatabaseTest {
         ApplicationProvider.getApplicationContext().getSharedPreferences(ApplicationProvider.
                         getApplicationContext().getString(R.string.sessionId),
                 Context.MODE_PRIVATE).edit().clear().commit();
+        ServerManager.getInstance(ApplicationProvider.getApplicationContext());
         DatabaseUtil.getInstance().setApplication(ApplicationProvider.getApplicationContext().getApplicationContext());
     }
 }

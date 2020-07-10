@@ -9,11 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.Observer;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.crinaed.R;
+import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.entity.join.CourseWithExercise;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -25,23 +30,23 @@ public class LearningPagerFragment extends Fragment {
     private static final int DETAIL_FRAGMENT = 0;
     private static final int BOUGHT_FRAGMENT = 1;
 
-    private ViewPager2 viewPager;
-    private FragmentStateAdapter pagerAdapter;
-    private ModelloLearnginPager course;
-    private Bundle dataLearning;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_learning_pager, container, false);
 
         //manager model
-        dataLearning = getArguments();
-        String id = dataLearning.getString(LearningBuySearchFragment.KEY_ID_COURSE);
-        this.course = findCourseByID(id,ModelloLearnginPager.getModello());
+        Bundle dataLearning = getArguments();
+        if(dataLearning == null){
+            Snackbar.make(view, R.string.unknown_error, BaseTransientBottomBar.LENGTH_LONG).show();
+            return view;
+        }
+        if(!dataLearning.containsKey(LearningBuySearchFragment.IS_BOUGHT)){
+            dataLearning.putBoolean(LearningBuySearchFragment.IS_BOUGHT, true);
+        }
 
-        //configure viewPagger2
-        viewPager = view.findViewById(R.id.container_page);
-        pagerAdapter = new LearningPagerAdapter(getChildFragmentManager(),getLifecycle());
+        //configure viewPager2
+        ViewPager2 viewPager = view.findViewById(R.id.container_page);
+        FragmentStateAdapter pagerAdapter = new LearningPagerAdapter(getChildFragmentManager(), getLifecycle(), dataLearning);
         viewPager.setAdapter(pagerAdapter);
         viewPager.registerOnPageChangeCallback(new LearningPagerFragment.PageChangeListener());
 
@@ -81,10 +86,14 @@ public class LearningPagerFragment extends Fragment {
         }
     }
 
-    private class LearningPagerAdapter extends FragmentStateAdapter{
+    private static class LearningPagerAdapter extends FragmentStateAdapter{
+        private boolean isBought;
+        private Bundle dataLearning;
 
-        public LearningPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+        public LearningPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, Bundle dataLearning) {
             super(fragmentManager, lifecycle);
+            isBought = dataLearning.getBoolean(LearningBuySearchFragment.IS_BOUGHT);
+            this.dataLearning=dataLearning;
         }
 
         @NonNull
@@ -93,28 +102,24 @@ public class LearningPagerFragment extends Fragment {
             Fragment fragment;
             switch (position) {
                 case DETAIL_FRAGMENT:
-                    if(course.isBought){
+                    if(isBought){
                         fragment = new LearningBoughtDetailsFragment();
-                        fragment.setArguments(dataLearning);
                     }else {
                         fragment = new LearningNotBoughtDetailsFragment();
-                        fragment.setArguments(dataLearning);
                     }
                     break;
                 case BOUGHT_FRAGMENT:
-                    if(course.isBought){
+                    if(isBought){
                         fragment = new LearningBoughtFragment();
-                        fragment.setArguments(dataLearning);
                     }else{
                         fragment = new LearningNotBoughtFragment();
-                        fragment.setArguments(dataLearning);
                     }
                     break;
                 default:
                     fragment = new LearningNotBoughtDetailsFragment();
-                    fragment.setArguments(dataLearning);
                     break;
             }
+            fragment.setArguments(dataLearning);
             return fragment;
         }
 
@@ -123,45 +128,5 @@ public class LearningPagerFragment extends Fragment {
             return NUM_PAGES;
         }
     }
-
-    //modelo da eliminare-----------------------------------------------------------------------------------------------------------------------
-
-    private ModelloLearnginPager findCourseByID(String id, List<ModelloLearnginPager> list){
-        for (ModelloLearnginPager m: list) {
-            if(m.idCourse.equals(id)){
-                return m;
-            }
-        }
-        return null;
-    }
-
-
-    public static class ModelloLearnginPager {
-        String idCourse;
-        boolean isBought;
-
-        public ModelloLearnginPager(String idCourse, boolean isBought) {
-            this.idCourse = idCourse;
-            this.isBought = isBought;
-        }
-
-        static public List<ModelloLearnginPager> getModello(){
-            List<ModelloLearnginPager> list = new ArrayList<>();
-            list.add(new ModelloLearnginPager("id_corso",true));
-            list.add(new ModelloLearnginPager("id_course_false",true));
-            list.add(new ModelloLearnginPager("id_course_false",true));
-            list.add(new ModelloLearnginPager("id_course_false",true));
-            list.add(new ModelloLearnginPager("id_course_false",true));
-            list.add(new ModelloLearnginPager("id_course_false",true));
-            list.add(new ModelloLearnginPager("id_course_false",true));
-            list.add(new ModelloLearnginPager("id_course_false",true));
-            list.add(new ModelloLearnginPager("id_course_false",true));
-            list.add(new ModelloLearnginPager("id_course_false",true));
-            list.add(new ModelloLearnginPager("id_course_false",true));
-            return list;
-        }
-    }
-
-
 }
 

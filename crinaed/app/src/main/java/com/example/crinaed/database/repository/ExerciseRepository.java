@@ -27,10 +27,11 @@ public class ExerciseRepository extends Repository{
     public ExerciseRepository(Context context){
         AppDatabase db = AppDatabase.getDatabase(context);
         exerciseAndStepDao = db.exerciseAndStepDao();
+        setContext(context);
     }
 
-    public LiveData<List<Exercise>> getExerciseFromCourse(long idCourse){
-        return exerciseAndStepDao.getExercise(idCourse);
+    public LiveData<Exercise> getExerciseById(long idExercise){
+        return exerciseAndStepDao.getExerciseById(idExercise);
     }
 
     public Future<?> update(final Exercise... exercise){

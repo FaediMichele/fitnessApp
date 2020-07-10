@@ -30,6 +30,7 @@ public class UserRepository extends Repository{
     public UserRepository(Context context){
         AppDatabase db = AppDatabase.getDatabase(context);
         userDao=db.userDao();
+        setContext(context);
     }
 
     public LiveData<List<UserData>> getData() {

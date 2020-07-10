@@ -8,6 +8,7 @@ import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.database.entity.MyEntity;
 import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Single;
+import com.example.crinaed.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,18 +44,11 @@ public abstract class Repository {
     }
 
     protected void downloadImage(final JSONArray array, final int i, final Lambda l)  {
-        try {
-            final String file=array.getJSONObject(i).getString("image");
-            if(!file.equals("")){
-                ServerManager.getInstance(context).downloadFile(file, Environment.DIRECTORY_PICTURES, l);
-            }
-        } catch (JSONException ignore) {
-        }
+        Util.downloadImage(array,i,context,l);
     }
 
     protected void downloadImageArray(final JSONArray array, final int i, final Lambda l)  {
         try {
-
             final JSONArray images=array.getJSONObject(i).getJSONArray("image");
             final String[] files = new String[images.length()];
             final Single<Integer> setted = new Single<>(0);
@@ -66,14 +60,19 @@ public abstract class Repository {
                     ServerManager.getInstance(context).downloadFile(file, Environment.DIRECTORY_PICTURES, new Lambda() {
                         @Override
                         public Object[] run(Object... paramether) {
-                            if((Boolean)paramether[0]){
-                                files[k]=((File) paramether[1]).getAbsolutePath();
-                                synchronized (setted) {
-                                    setted.setVal(setted.getVal() + 1);
+                            try{
+                                if((Boolean)paramether[0]){
+                                    files[k]=((File) paramether[1]).getAbsolutePath();
+                                    Log.d("nade", "downloaded image: " + files[k]);
+                                    synchronized (setted) {
+                                        setted.setVal(setted.getVal() + 1);
+                                    }
+                                    if(setted.getVal()==images.length()){
+                                        l.run(true, files);
+                                    }
                                 }
-                                if(setted.getVal()==images.length()){
-                                    l.run(true, files);
-                                }
+                            } catch (Exception e){
+                                e.printStackTrace();
                             }
                             return new Object[0];
                         }
@@ -81,7 +80,8 @@ public abstract class Repository {
                 }
             }
 
-        } catch (JSONException ignore) {
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

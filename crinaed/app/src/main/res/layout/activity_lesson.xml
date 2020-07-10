@@ -58,12 +58,12 @@
                 android:text="@string/descritpion"
                 android:textSize="@dimen/h2"
                 app:layout_constraintTop_toBottomOf="@id/video_lesson_frame"
-                app:layout_constraintBottom_toTopOf="@id/text_descrition"
+                app:layout_constraintBottom_toTopOf="@id/text_description"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <TextView
-                android:id="@+id/text_descrition"
+                android:id="@+id/text_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
