@@ -99,20 +99,25 @@ public class FriendRepository extends Repository{
         final List<FriendMessage> messages = new ArrayList<>();
         final List<Friendship> friendships = new ArrayList<>();
 
-        try{
-            final JSONArray arrayFriend = data.getJSONArray("Friendship");
-            for(int i = 0; i < arrayFriend.length(); i++){
-                friendships.add(new Friendship(arrayFriend.getJSONObject(i)));
+        if(data.has("Friendship")) {
+            try {
+                final JSONArray arrayFriend = data.getJSONArray("Friendship");
+                for (int i = 0; i < arrayFriend.length(); i++) {
+                    friendships.add(new Friendship(arrayFriend.getJSONObject(i)));
+                }
+            } catch (JSONException ignore) {
             }
-        } catch (JSONException ignore){
         }
 
-        try{
-            final JSONArray arrayMessage = data.getJSONArray("Message");
-            for(int i = 0; i < arrayMessage.length(); i++){
-                messages.add(new FriendMessage(arrayMessage.getJSONObject(i)));
+        if(data.has("Message")) {
+            try {
+                final JSONArray arrayMessage = data.getJSONArray("Message");
+                for (int i = 0; i < arrayMessage.length(); i++) {
+                    messages.add(new FriendMessage(arrayMessage.getJSONObject(i)));
+                }
+            } catch (JSONException ignore) {
+                ignore.printStackTrace();
             }
-        } catch (JSONException ignore){
         }
 
         return AppDatabase.databaseWriteExecutor.submit(new Runnable() {

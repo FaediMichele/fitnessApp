@@ -518,34 +518,22 @@ public class ServerManager {
     }
 
     public void startMessagePolling(long idFriendship){
-        synchronized (pollingMessageOn) {
-            pollingMessageOn.setVal(true);
-        }
-        synchronized (this.idFriendshipPolling) {
-            this.idFriendshipPolling.setVal(idFriendship);
-
-        }
-        synchronized (this.lastDate){
-            this.lastDate.setVal(0L);
-        }
+        pollingMessageOn.setVal(true);
+        this.idFriendshipPolling.setVal(idFriendship);
+        this.lastDate.setVal(0L);
         runLoop();
     }
 
     private void runLoop(){
-        synchronized (pollingMessageOn){
-            if(!pollingMessageOn.getVal()){
-                return;
-            }
+        if(!pollingMessageOn.getVal()){
+            return;
         }
-        synchronized (idFriendshipPolling){
             receiveMessage(idFriendshipPolling.getVal(), new Lambda() {
                 @Override
                 public Object[] run(Object... paramether) {
                     try {
                         JSONObject response = new JSONObject(paramether[0].toString());
-                        synchronized (lastDate){
-                            lastDate.setVal(response.getLong("lastDate"));
-                        }
+                        lastDate.setVal(response.getLong("lastDate"));
                         DatabaseUtil.getInstance().getRepositoryManager().getFriendRepository().loadData(response);
                         new Timer().schedule(new TimerTask() {
                             @Override
@@ -565,8 +553,6 @@ public class ServerManager {
                     return new Object[0];
                 }
             });
-        }
-
     }
 
     public void stopMessagePolling(){
