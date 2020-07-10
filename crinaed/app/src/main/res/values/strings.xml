@@ -78,4 +78,5 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="wrong_data">The server sent the wrong data</string>
     <string name="info_of_school">info of school</string>
     <string name="login">Login</string>
+    <string name="register">register</string>
 </resources>
