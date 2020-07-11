@@ -9,7 +9,7 @@
     android:padding="3dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/course_item"
+        android:id="@+id/step_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="7dp"
@@ -34,12 +34,23 @@
 
 
         <TextView
+            android:id="@+id/repetition_step"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="repetition: week"
+            app:layout_constraintTop_toBottomOf="@id/title_step"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+
+        <TextView
             android:id="@+id/description_step"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="progressivo : 1000000 km"
-            app:layout_constraintTop_toBottomOf="@id/title_step"
+            app:layout_constraintTop_toBottomOf="@id/repetition_step"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 

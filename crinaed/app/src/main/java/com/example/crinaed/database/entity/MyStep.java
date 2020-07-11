@@ -26,8 +26,8 @@ public class MyStep  implements MyEntity{
     public String name;
     public String unitMeasure;
     public double max;
-    public int repetitionDay; // day to reset the progression and save progress
-    public String type;
+    public int repetitionDay; // day to reset the progression and save progress 1, 7, 30, 365
+    public String type;//SOCIAL MENTAL PHYSICAL
 
     @TypeConverters(CategoryConverter.class)
     public Category category;
