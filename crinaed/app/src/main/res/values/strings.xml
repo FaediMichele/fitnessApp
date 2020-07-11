@@ -81,4 +81,5 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="register">register</string>
     <string name="name">Name</string>
     <string name="last_name">Last name</string>
+    <string name="title_objective">Title objective</string>
 </resources>
