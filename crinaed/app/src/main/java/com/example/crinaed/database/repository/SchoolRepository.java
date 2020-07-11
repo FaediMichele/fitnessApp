@@ -49,8 +49,8 @@ public class SchoolRepository extends Repository {
         });
     }
 
-    public LiveData<List<CourseWithExercise>> getCourse(){
-        return schoolDao.getCourseWithExercise();
+    public LiveData<List<CourseWithExercise>> getCourse(boolean archived){
+        return schoolDao.getCourseWithExercise(archived);
     }
 
     public LiveData<CourseWithExercise> getCourseById(long id){

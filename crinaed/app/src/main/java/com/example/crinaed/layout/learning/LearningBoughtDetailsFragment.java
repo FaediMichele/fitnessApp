@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -22,6 +23,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.VolleyError;
 import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.ServerManager;
@@ -42,7 +44,7 @@ import java.util.Objects;
 
 public class LearningBoughtDetailsFragment extends Fragment {
 
-    private long idCourse;
+    private CourseWithExercise course;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class LearningBoughtDetailsFragment extends Fragment {
             Snackbar.make(view, R.string.unknown_error, BaseTransientBottomBar.LENGTH_LONG).show();
             return view;
         }
-        idCourse = dataLearning.getLong(LearningBuySearchFragment.KEY_ID_COURSE);
+        long idCourse = dataLearning.getLong(LearningBuySearchFragment.KEY_ID_COURSE);
 
 
         final SliderCourseAdapter adapter = new SliderCourseAdapter(getActivity());
@@ -60,6 +62,8 @@ public class LearningBoughtDetailsFragment extends Fragment {
         final TextView title = view.findViewById(R.id.title_course);
         final TextView reviewTopCard = view.findViewById(R.id.review_top_card);
         final TextView description_course = view.findViewById(R.id.description_course);
+        final Button archive= view.findViewById(R.id.button_archive);
+
 
         DatabaseUtil.getInstance().getRepositoryManager().getSchoolRepository().getCourseById(idCourse).observe(this, new Observer<CourseWithExercise>() {
             @Override
@@ -69,7 +73,8 @@ public class LearningBoughtDetailsFragment extends Fragment {
                 description_course.setText(courseWithExercise.course.desc);
                 adapter.setCourse(courseWithExercise);
                 adapterReview.setData(courseWithExercise);
-
+                course=courseWithExercise;
+                archive.setText(course.course.isArchived?R.string.remove_archive:R.string.add_archive);
             }
         });
 
@@ -123,7 +128,7 @@ public class LearningBoughtDetailsFragment extends Fragment {
                     Snackbar.make(view, R.string.review_val_error, BaseTransientBottomBar.LENGTH_LONG).show();
                     return;
                 }
-                ServerManager.getInstance(getContext()).addReview(idCourse, review_text.getText().toString(), Integer.parseInt(review_val.getText().toString()), new Lambda() {
+                ServerManager.getInstance(getContext()).addReview(course.course.idCourse, review_text.getText().toString(), Integer.parseInt(review_val.getText().toString()), new Lambda() {
                     @Override
                     public Object[] run(Object... paramether) {
                         Snackbar.make(view, R.string.review_added, BaseTransientBottomBar.LENGTH_SHORT).show();
@@ -132,14 +137,41 @@ public class LearningBoughtDetailsFragment extends Fragment {
                 }, new Lambda() {
                     @Override
                     public Object[] run(Object... paramether) {
-                        /* TODO if the review already exist show that already exist */
+                        try {
+                            VolleyError error = (VolleyError) paramether[0];
+                            if (error.networkResponse.statusCode == 401) {
+                                Snackbar.make(view, R.string.review_exist, BaseTransientBottomBar.LENGTH_LONG).show();
+                            }
+                        }catch (Exception ignore) {
+                            Snackbar.make(view, R.string.unknown_error, BaseTransientBottomBar.LENGTH_LONG).show();
+                        }
+                        return new Object[0];
+                    }
+                });
+            }
+        });
+        archive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ServerManager.getInstance(getContext()).archiveCourse(course.course, new Lambda() {
+                    @Override
+                    public Object[] run(Object... paramether) {
+                        if((Boolean) paramether[0]){
+                            Snackbar.make(view, R.string.archived, BaseTransientBottomBar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(view, R.string.not_archived, BaseTransientBottomBar.LENGTH_LONG).show();
+                        }
+                        return new Object[0];
+                    }
+                }, new Lambda() {
+                    @Override
+                    public Object[] run(Object... paramether) {
                         Snackbar.make(view, R.string.unknown_error, BaseTransientBottomBar.LENGTH_LONG).show();
                         return new Object[0];
                     }
                 });
             }
         });
-
         return view;
     }
 
@@ -185,7 +217,7 @@ public class LearningBoughtDetailsFragment extends Fragment {
         }
     }
 
-    private class ReviewVH extends RecyclerView.ViewHolder {
+    private static class ReviewVH extends RecyclerView.ViewHolder {
 
         ImageView imageProfile;
         TextView nameLastName;

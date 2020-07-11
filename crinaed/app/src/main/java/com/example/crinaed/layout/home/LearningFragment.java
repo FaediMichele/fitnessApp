@@ -56,7 +56,7 @@ public class LearningFragment extends Fragment {
         private List<CourseWithExercise> newest;
 
         public LearningAdapter(LifecycleOwner owner){
-            DatabaseUtil.getInstance().getRepositoryManager().getSchoolRepository().getCourse().observe(owner, new Observer<List<CourseWithExercise>>() {
+            DatabaseUtil.getInstance().getRepositoryManager().getSchoolRepository().getCourse(false).observe(owner, new Observer<List<CourseWithExercise>>() {
                 @Override
                 public void onChanged(List<CourseWithExercise> courseWithExercises) {
                     newest = courseWithExercises;

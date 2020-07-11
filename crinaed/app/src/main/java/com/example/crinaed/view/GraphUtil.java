@@ -76,7 +76,9 @@ public class GraphUtil {
             }
             ret.get(index).setY(sum[index]/count[index]);
         }
-
+        if(startIndex == ret.size()){
+            return new Pair<>(ret.subList(startIndex-1, ret.size()), getFormatter(t));
+        }
         return new Pair<>(ret.subList(startIndex, ret.size()), getFormatter(t));
     }
 

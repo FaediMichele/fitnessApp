@@ -12,6 +12,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.example.crinaed.R;
+import com.example.crinaed.database.entity.Course;
 import com.example.crinaed.database.entity.FriendMessage;
 import com.example.crinaed.database.entity.Friendship;
 import com.example.crinaed.database.entity.User;
@@ -506,6 +507,35 @@ public class ServerManager {
                         DatabaseUtil.getInstance().getRepositoryManager().getReviewRepository().loadData(response).get();
                         onSuccess.run();
                     } catch (JSONException | InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                        onFailure.run(e);
+                    }
+                    return new Object[0];
+                }
+            }, onFailure);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void archiveCourse(final Course course, final Lambda onSuccess, final Lambda onFailure){
+        JSONObject body = new JSONObject();
+        try {
+            body.put("idSession", Util.getInstance().getSessionId());
+            body.put("to", "courseBought");
+            body.put("method", "archiveCourse");
+            JSONObject data = new JSONObject();
+            data.put("idCourse", course.idCourse);
+            body.put("data", data);
+            managePost(body.toString(), new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    try {
+                        JSONObject response = new JSONObject(paramether[0].toString());
+                        course.isArchived= response.getBoolean("value");
+                        DatabaseUtil.getInstance().getRepositoryManager().getSchoolRepository().update(course);
+                        onSuccess.run(course.isArchived);
+                    } catch (JSONException e) {
                         e.printStackTrace();
                         onFailure.run(e);
                     }

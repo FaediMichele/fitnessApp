@@ -111,4 +111,7 @@ public interface MyCommitmentDao {
 
     @Query("SELECT * FROM MyStepDone")
     List<MyStepDone> getMyStepDoneList();
+
+    @Query("SELECT * FROM MyCommitment WHERE name=(:name)")
+    LiveData<List<MyCommitment>> getCommitmentWithName(String name);
 }

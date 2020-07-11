@@ -22,8 +22,6 @@ public class MyCommitment  implements MyEntity{
     public long endDate;
     public boolean ended;
     public long idUser;
-    public String image;
-    public boolean imageDownloaded=false;
 
     public MyCommitment(long idCommitment, String name, String desc, long creationDate, long idUser) {
         this.idCommitment = idCommitment;
@@ -38,7 +36,13 @@ public class MyCommitment  implements MyEntity{
         this.idCommitment = obj.getLong("idCommitment");
         this.name = obj.getString("name");
         this.desc = obj.getString("desc");
-        this.creationDate = Util.isoFormatToTimestamp(obj.getString("creationDate"));
+        String date = obj.getString("creationDate");
+        if(date.equals("0")){
+            this.creationDate=0;
+        } else{
+            this.creationDate = Util.isoFormatToTimestamp(date);
+        }
+
         this.idUser = obj.getLong("idUser");
         String endDate=obj.getString("endDate");
         if(endDate.equals("0")){

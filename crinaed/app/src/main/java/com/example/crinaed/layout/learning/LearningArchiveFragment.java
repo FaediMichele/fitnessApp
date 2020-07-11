@@ -2,6 +2,7 @@ package com.example.crinaed.layout.learning;
 
 import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
+import com.example.crinaed.database.DatabaseUtil;
+import com.example.crinaed.database.entity.join.CourseWithExercise;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,47 +38,59 @@ public class LearningArchiveFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        LearningArchiveFragment.LearningAdapter adapter = new LearningArchiveFragment.LearningAdapter(LearningArchiveFragment.ModelloCourse.getListModel());
+        LearningArchiveFragment.LearningAdapter adapter = new LearningArchiveFragment.LearningAdapter(this);
         recyclerView.setAdapter(adapter);
         return view;
     }
 
     private class LearningAdapter extends RecyclerView.Adapter<LearningArchiveFragment.LearningViewHolder>{
 
-        private List<LearningArchiveFragment.ModelloCourse> modelloFittizio;
+        private List<CourseWithExercise> course;
 
-        public LearningAdapter(List<LearningArchiveFragment.ModelloCourse> modelloFittizio){
-            this.modelloFittizio = modelloFittizio;
+        public LearningAdapter(LifecycleOwner owner){
+            DatabaseUtil.getInstance().getRepositoryManager().getSchoolRepository().getCourse(true).observe(owner, new Observer<List<CourseWithExercise>>() {
+                @Override
+                public void onChanged(List<CourseWithExercise> courseWithExercises) {
+                    course=courseWithExercises;
+                    notifyDataSetChanged();
+                }
+            });
         }
 
         @NonNull
         @Override
         public LearningArchiveFragment.LearningViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_learning, parent, false);
-            return new LearningArchiveFragment.LearningViewHolder(itemView);
+            return new LearningViewHolder(itemView);
         }
 
         @Override
         public void onBindViewHolder(@NonNull LearningArchiveFragment.LearningViewHolder holder, final int position) {
-                LearningArchiveFragment.ModelloCourse.TypeCourse typeCourse = this.modelloFittizio.get(position).typeCourse;
-                switch (typeCourse){
+                final CourseWithExercise course = this.course.get(position);
+                switch (course.course.cat){
                     case SOCIAL:
                         holder.itemView.findViewById(R.id.course_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_social));
                         break;
-                    case LEARNING:
+                    case MENTAL:
                         holder.itemView.findViewById(R.id.course_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_learning));
                         break;
-                    case PHYSICAL:
+                    case SPORT:
                         holder.itemView.findViewById(R.id.course_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_physical));
                         break;
                 }
-                holder.imageView.setImageDrawable(getActivity().getDrawable(R.drawable.simple_people));
+                if(course.course.imagesDownloaded){
+                    holder.imageView.setImageURI(Uri.parse(course.course.images[0]));
+                }
+                holder.title.setText(course.course.name);
+                holder.school.setText(course.school.name);
+                holder.description.setText(course.course.desc);
+                holder.review.setText(getString(R.string.review_val, course.course.review));
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //start acrivity learning fragment del corso gia acquistato
                         Bundle bundle = new Bundle();
-                        bundle.putString(LearningBuySearchFragment.KEY_ID_COURSE,modelloFittizio.get(position).id);
+                        bundle.putLong(LearningBuySearchFragment.KEY_ID_COURSE, course.course.idCourse);
                         bundle.putBoolean(LearningActivity.KEY_START_PAGER,true);
                         Intent learningIntent = new Intent(getContext(), LearningActivity.class);
                         learningIntent.putExtras(bundle);
@@ -85,80 +103,28 @@ public class LearningArchiveFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return this.modelloFittizio.size();
+            if(course!=null){
+                return course.size();
+            }
+            return 0;
         }
     }
 
-    private class LearningViewHolder extends RecyclerView.ViewHolder{
+    private static class LearningViewHolder extends RecyclerView.ViewHolder{
 
         ImageView imageView;
         TextView title;
         TextView description;
+        TextView review;
+        TextView school;
 
         public LearningViewHolder(@NonNull View itemView) {
             super(itemView);
             this.imageView = itemView.findViewById(R.id.image_course);
-            this.title = itemView.findViewById(R.id.title_lesson);
+            this.title = itemView.findViewById(R.id.title_course);
             this.description = itemView.findViewById(R.id.description_course);
-        }
-    }
-
-
-    //---------------da qui parte la classe del modello fitizzio che dovra essere sostituita con il db e quindi poi questa classe del modello fittizio verrà eliminata------------------------------------------
-    public static class ModelloCourse {
-        String id;
-        String title;
-        Image image;
-        int price;
-        LearningArchiveFragment.ModelloCourse.TypeCourse typeCourse;
-
-        public ModelloCourse(String id, String titleCourse, Image imageCourse, int price, LearningArchiveFragment.ModelloCourse.TypeCourse typeCourse ) {
-            this.id = id;
-            this.title = titleCourse;
-            this.image = imageCourse;
-            this.price = price;
-            this.typeCourse = typeCourse;
-
-        }
-
-        @Override
-        public String toString() {
-            return "ModelloFittizio{" +
-                    "id='" + id + '\'' +
-                    ", title='" + title + '\'' +
-                    ", image=" + image +
-                    ", price=" + price +
-                    '}';
-        }
-
-        static public List<LearningArchiveFragment.ModelloCourse> getListModel(){
-            List<LearningArchiveFragment.ModelloCourse> modelloFittizioList = new ArrayList<>();
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.LEARNING));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.SOCIAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.SOCIAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.LEARNING));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.SOCIAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.LEARNING));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.SOCIAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.LEARNING));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.SOCIAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.SOCIAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.LEARNING));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.LEARNING));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.PHYSICAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.SOCIAL));
-            modelloFittizioList.add(new LearningArchiveFragment.ModelloCourse("id_corso","titolo corso",null,1000, LearningArchiveFragment.ModelloCourse.TypeCourse.LEARNING));
-            return modelloFittizioList;
-        }
-
-        enum   TypeCourse{
-            PHYSICAL,LEARNING,SOCIAL
+            review = itemView.findViewById(R.id.value_review);
+            school = itemView.findViewById(R.id.school);
         }
     }
 }

@@ -56,6 +56,9 @@ public class CommitmentRepository extends Repository{
         return commitmentDao.getCommitmentEndedWithMyStep(category.ordinal());
     }
 
+    public LiveData<List<MyCommitment>> getCommitmentWithName(String name){
+        return commitmentDao.getCommitmentWithName(name);
+    }
 
     public List<MyStepDoneWithMyStep> getStepHistoryList(final Category category){
         Future<List<MyStepDoneWithMyStep>> future;
@@ -153,7 +156,7 @@ public class CommitmentRepository extends Repository{
         return ret;
     }
 
-    public Future<Pair<Long, Long[]>> insert(final Lambda l, final MyCommitment commitment, final MyStep... steps){
+    public Future<Pair<Long, Long[]>> insert(final MyCommitment commitment, final MyStep[] steps, final Lambda l){
         return AppDatabase.databaseWriteExecutor.submit(new Callable<Pair<Long, Long[]>>() {
                         @Override
                         public Pair<Long, Long[]> call() {
@@ -170,6 +173,7 @@ public class CommitmentRepository extends Repository{
                     myStepsDone[i] = new MyStepDone(ret.second[i], now, 0);
                 }
                 commitmentDao.insert(myStepsDone);
+                l.run();
                 return ret;
             }
         });
@@ -254,18 +258,6 @@ public class CommitmentRepository extends Repository{
         for(int i = 0; i < array.length(); i++){
             final MyCommitment c=new MyCommitment(array.getJSONObject(i));
             commitmentList.add(c);
-            downloadImage(array, i, new Lambda() {
-                @Override
-                public Object[] run(Object... paramether) {
-                    if((Boolean) paramether[0]){
-                        File f = (File) paramether[1];
-                        c.image=f.getAbsolutePath();
-                        c.imageDownloaded=true;
-                        updateCommitment(c);
-                    }
-                    return new Object[0];
-                }
-            });
         }
         array = data.getJSONArray("MyStep");
         for(int i = 0; i < array.length(); i++){

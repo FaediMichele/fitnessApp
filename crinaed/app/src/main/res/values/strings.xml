@@ -82,4 +82,15 @@ Curabitur vel velit id ante volutpat porta.
     <string name="course_name">Course name</string>
     <string name="review_val_error">The value mus be from 0 to 10</string>
     <string name="review_added">The review has been adde with success</string>
+    <string name="review_exist">You can make only one review for this course</string>
+    <string name="archived">The course is now archived</string>
+    <string name="not_archived">The course is not archived</string>
+    <string name="remove_archive">Restore</string>
+    <string name="add_archive">Archive</string>
+    <string name="add_to_my_objective">Add to my objective</string>
+    <string name="warning">Warning</string>
+    <string name="commitment_exist">Already exist an objective with the same name. Are you sure you want to add another one?</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="objective_added">The objective is added in the main page</string>
 </resources>

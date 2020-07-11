@@ -32,8 +32,8 @@ public interface SchoolDao {
     List<Course> getCourseList();
 
     @Transaction
-    @Query("SELECT * FROM Course WHERE isBought=1")
-    LiveData<List<CourseWithExercise>> getCourseWithExercise();
+    @Query("SELECT * FROM Course WHERE isBought=1 AND isArchived=(:archived)")
+    LiveData<List<CourseWithExercise>> getCourseWithExercise(boolean archived);
 
     @Transaction
     @Query("SELECT * FROM Course WHERE idCourse IN (:idCourses)")
