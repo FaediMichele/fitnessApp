@@ -82,4 +82,8 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="name">Name</string>
     <string name="last_name">Last name</string>
     <string name="title_objective">Title objective</string>
+    <string name="create_management">Create management</string>
+    <string name="create_objective">create objective</string>
+    <string name="objective_management">Objective management</string>
+    <string name="delete_objective">delete objective</string>
 </resources>
