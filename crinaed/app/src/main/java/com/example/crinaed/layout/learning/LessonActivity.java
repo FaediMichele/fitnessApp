@@ -74,8 +74,13 @@ public class LessonActivity extends AppCompatActivity {
                     pageExercise=exercise;
                     title.setText(exercise.name);
                     desc.setText(exercise.desc);
+                    if(exercise.importData.length()<=2){
+                        addToCommitment.setText(R.string.no_import_data);
+                        addToCommitment.setEnabled(false);
+                    }
                 }
             });
+
             addToCommitment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -93,4 +93,5 @@ Curabitur vel velit id ante volutpat porta.
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="objective_added">The objective is added in the main page</string>
+    <string name="no_import_data">This course not support the import of the objective</string>
 </resources>
