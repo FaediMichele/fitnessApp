@@ -86,4 +86,5 @@ Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam n
     <string name="create_objective">create objective</string>
     <string name="objective_management">Objective management</string>
     <string name="delete_objective">delete objective</string>
+    <string name="select_objective_to_delete">Select objective to delete</string>
 </resources>

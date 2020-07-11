@@ -9,47 +9,36 @@
     android:padding="3dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/step_item"
+        android:id="@+id/objective_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="7dp"
         android:padding="10dp"
-        android:elevation="2dp"
-        android:background="@drawable/course_learning"
+        android:background="@drawable/course_social"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
 
         <TextView
-            android:id="@+id/title_step"
+            android:id="@+id/title_objective"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="titolo step"
+            android:text="titolo del corso"
             android:textSize="@dimen/search_activity_name_last_name"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
         <TextView
-            android:id="@+id/repetition_step"
+            android:id="@+id/description_objective"
             android:layout_width="0dp"
+            android:layout_marginTop="5dp"
             android:layout_height="wrap_content"
-            android:text="repetition: week"
-            app:layout_constraintTop_toBottomOf="@id/title_step"
+            android:text="aaa bbb ccc ddd eee fff ggg hhh jjj kkk lll mmm nnn ooo ppp qqq rrr sss ttt uuu vvv zzzz"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-
-        <TextView
-            android:id="@+id/description_step"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="progressivo : 1000000 km"
-            app:layout_constraintTop_toBottomOf="@id/repetition_step"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toEndOf="@+id/image_card"
+            app:layout_constraintTop_toBottomOf="@+id/title_objective" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
