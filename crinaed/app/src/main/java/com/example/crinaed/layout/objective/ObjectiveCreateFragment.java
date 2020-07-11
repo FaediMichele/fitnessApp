@@ -18,22 +18,22 @@ import com.example.crinaed.database.entity.MyStep;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateCommitmentFragment extends Fragment {
+public class ObjectiveCreateFragment extends Fragment {
     private StepAdapter adapter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_create_objective, container, false);
+        final View view = inflater.inflate(R.layout.fragment_objective_create, container, false);
 
         RecyclerView recyclerSteps = view.findViewById(R.id.recycler_steps);
         recyclerSteps.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-        adapter = new CreateCommitmentFragment.StepAdapter(getContext());
+        adapter = new ObjectiveCreateFragment.StepAdapter(getContext());
         recyclerSteps.setAdapter(adapter);
         return view;
     }
 
 
-    private class StepAdapter extends RecyclerView.Adapter<CreateCommitmentFragment.StepVH> {
+    private class StepAdapter extends RecyclerView.Adapter<ObjectiveCreateFragment.StepVH> {
         List<MyStep> steps = new ArrayList<>();
         Context context;
         public StepAdapter(Context context){
@@ -46,12 +46,12 @@ public class CreateCommitmentFragment extends Fragment {
 
         @NonNull
         @Override
-        public CreateCommitmentFragment.StepVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public ObjectiveCreateFragment.StepVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return null;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull CreateCommitmentFragment.StepVH holder, int position) {
+        public void onBindViewHolder(@NonNull ObjectiveCreateFragment.StepVH holder, int position) {
 
         }
 

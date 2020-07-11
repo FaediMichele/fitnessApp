@@ -85,7 +85,7 @@
         app:cornerRadius="20dp"
         android:backgroundTint="@color/bluPrimary"
         android:textColor="@color/white"
-        android:text="Create new step"
+        android:text="add step"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/description_objective"/>
@@ -110,7 +110,7 @@
         app:cornerRadius="20dp"
         android:backgroundTint="@color/bluPrimary"
         android:textColor="@color/white"
-        android:text="Create new step"
+        android:text="Create new objective"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

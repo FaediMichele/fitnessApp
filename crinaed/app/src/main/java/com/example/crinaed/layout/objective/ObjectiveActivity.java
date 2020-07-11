@@ -17,7 +17,14 @@ public class ObjectiveActivity extends AppCompatActivity {
         //delete status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        CreateCommitmentFragment createCommitmentFragment = new CreateCommitmentFragment();
+//        CreateCommitmentFragment createCommitmentFragment = new CreateCommitmentFragment();
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.replace(R.id.container, createCommitmentFragment);
+//        //transaction.addToBackStack(null);
+//        transaction.commit();
+
+
+        ObjectiveStepCreateFragment createCommitmentFragment = new ObjectiveStepCreateFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, createCommitmentFragment);
         //transaction.addToBackStack(null);
