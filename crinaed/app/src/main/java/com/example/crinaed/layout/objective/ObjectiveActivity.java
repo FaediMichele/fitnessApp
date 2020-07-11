@@ -10,6 +10,8 @@ import com.example.crinaed.R;
 
 public class ObjectiveActivity extends AppCompatActivity {
 
+    public static final String TAG_MANAGEMENT = "OBJECTIVE_ACTIVITY_TO_OBJECTIVE_MANAGEMENT_FRAGMENT";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,17 +19,17 @@ public class ObjectiveActivity extends AppCompatActivity {
         //delete status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-//        CreateCommitmentFragment createCommitmentFragment = new CreateCommitmentFragment();
+        ObjectivesManagementFragment objectivesManagementFragment = new ObjectivesManagementFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, objectivesManagementFragment,TAG_MANAGEMENT);
+        //transaction.addToBackStack(null);
+        transaction.commit();
+
+
+//        ObjectiveStepCreateFragment createCommitmentFragment = new ObjectiveStepCreateFragment();
 //        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 //        transaction.replace(R.id.container, createCommitmentFragment);
 //        //transaction.addToBackStack(null);
 //        transaction.commit();
-
-
-        ObjectiveStepCreateFragment createCommitmentFragment = new ObjectiveStepCreateFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, createCommitmentFragment);
-        //transaction.addToBackStack(null);
-        transaction.commit();
     }
 }

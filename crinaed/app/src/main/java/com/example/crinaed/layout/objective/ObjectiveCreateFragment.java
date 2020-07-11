@@ -11,22 +11,39 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crinaed.R;
 import com.example.crinaed.database.entity.MyStep;
+import com.example.crinaed.util.Category;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ObjectiveCreateFragment extends Fragment {
+
+    public static final String TAG_STEP = "OBJECTIVE_CREATE_FRAGMENT_TO_OBJECTIVE_STEP_CREATE_FRAGMENT";
+
     private StepAdapter adapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_objective_create, container, false);
+
+        view.findViewById(R.id.add_step).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ObjectiveStepCreateFragment objectiveStepCreateFragment = new ObjectiveStepCreateFragment();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.container, objectiveStepCreateFragment, TAG_STEP);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
         RecyclerView recyclerSteps = view.findViewById(R.id.recycler_steps);
         recyclerSteps.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
@@ -45,11 +62,12 @@ public class ObjectiveCreateFragment extends Fragment {
         static public final int MONTH = 30;
         static public final int YEAR = 365;
 
-        private final List<MyStep> steps = new ArrayList<>();
+        private final List<MyStep> steps;
         private final Context context;
 
         public StepAdapter(Context context){
             this.context=context;
+            this.steps = ObjectiveCreateFragment.getModel();//----------------------------------------------------------------------------------------da modificare
         }
 
         public void addStep(MyStep step){
@@ -66,20 +84,20 @@ public class ObjectiveCreateFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ObjectiveCreateFragment.StepVH holder, int position) {
             MyStep step = this.steps.get(position);
-            switch (step.type){
+            switch (step.type) {
                 case SOCIAL:
-                    holder.itemView.findViewById(R.id.step_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_social));
+                    holder.itemView.findViewById(R.id.step_item).setBackground(ContextCompat.getDrawable(getContext(), R.drawable.course_social));
                     break;
                 case MENTAL:
-                    holder.itemView.findViewById(R.id.step_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_learning));
+                    holder.itemView.findViewById(R.id.step_item).setBackground(ContextCompat.getDrawable(getContext(), R.drawable.course_learning));
                     break;
                 case PHYSICAL:
-                    holder.itemView.findViewById(R.id.step_item).setBackground(ContextCompat.getDrawable(getContext(),R.drawable.course_physical));
+                    holder.itemView.findViewById(R.id.step_item).setBackground(ContextCompat.getDrawable(getContext(), R.drawable.course_physical));
                     break;
             }
 
             holder.title.setText(step.name);
-            switch (step.repetitionDay){
+            switch (step.repetitionDay) {
                 case DAY:
                     holder.repetition.setText("day");
                     break;
@@ -93,13 +111,19 @@ public class ObjectiveCreateFragment extends Fragment {
                     holder.repetition.setText("year");
                     break;
             }
-            holder.description.setText("Progressive : "+ step.max + step.unitMeasure);//---------------------------------------------------------------------------------------------------------------------------------------------da cambiare
-        }
 
+            boolean isProgressive = (position % 2) == 0;//---------------------------------------------------------------------------------------------------------------------------------------------da cambiare
+            if (isProgressive) {
+                holder.description.setText("Progressive : " + step.max + step.unitMeasure);
+            }else {
+                holder.description.setText("Single");
+            }//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------fine pezzo da cambiare
+        }
         @Override
         public int getItemCount() {
             return steps.size();
         }
+
     }
 
      private class StepVH extends RecyclerView.ViewHolder{
@@ -112,8 +136,34 @@ public class ObjectiveCreateFragment extends Fragment {
              super(itemView);
              this.title = itemView.findViewById(R.id.title_step);
              this.repetition = itemView.findViewById(R.id.repetition_step);
-             this.description = itemView.findViewById(R.id.description_objective);
+             this.description = itemView.findViewById(R.id.description_step);
          }
      }
+
+    static public List<MyStep> getModel(){
+        List<MyStep> modelList = new ArrayList<>();
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.MONTH, StepAdapter.MENTAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.WEEK, StepAdapter.MENTAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.MONTH, StepAdapter.PHYSICAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.DAY, StepAdapter.MENTAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.DAY, StepAdapter.SOCIAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.MONTH, StepAdapter.PHYSICAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.WEEK, StepAdapter.SOCIAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.DAY, StepAdapter.MENTAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.MONTH, StepAdapter.SOCIAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.DAY, StepAdapter.PHYSICAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.YEAR, StepAdapter.MENTAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.DAY, StepAdapter.SOCIAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.WEEK, StepAdapter.MENTAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.DAY, StepAdapter.PHYSICAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.MONTH, StepAdapter.SOCIAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.WEEK, StepAdapter.PHYSICAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.YEAR, StepAdapter.PHYSICAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.DAY, StepAdapter.SOCIAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.MONTH, StepAdapter.MENTAL, null));
+        modelList.add(new MyStep(-1, -1, "title step", "m", 5000, StepAdapter.DAY, StepAdapter.SOCIAL, null));
+        return modelList;
+    }
+
 
 }

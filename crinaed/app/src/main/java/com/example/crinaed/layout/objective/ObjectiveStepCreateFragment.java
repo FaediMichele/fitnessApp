@@ -36,7 +36,7 @@ public class ObjectiveStepCreateFragment extends Fragment {
         final Spinner cat = view.findViewById(R.id.spinner_cat);
         final Spinner repeat = view.findViewById(R.id.spinner_repeat);
         unit = view.findViewById(R.id.spinner_unit);
-        mission_text = view.findViewById(R.id.text_mission);
+        mission_text = view.findViewById(R.id.mission_header);
         max = view.findViewById(R.id.result);
         final EditText name = view.findViewById(R.id.name_step);
 
