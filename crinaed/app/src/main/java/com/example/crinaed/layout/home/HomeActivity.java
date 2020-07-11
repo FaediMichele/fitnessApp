@@ -13,10 +13,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
-import com.example.crinaed.database.ServerManager;
+import com.example.crinaed.layout.home.login.LoginFragment;
 import com.example.crinaed.util.Util;
-
-import org.json.JSONException;
 
 public class HomeActivity extends AppCompatActivity {
 

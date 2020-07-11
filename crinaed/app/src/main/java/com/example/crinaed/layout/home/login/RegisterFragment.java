@@ -1,4 +1,4 @@
-package com.example.crinaed.layout.home;
+package com.example.crinaed.layout.home.login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.EditText;
 import androidx.fragment.app.Fragment;
 
 import com.example.crinaed.R;
+import com.example.crinaed.layout.home.HomeActivity;
 
 public class RegisterFragment extends Fragment {
 

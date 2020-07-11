@@ -33,8 +33,10 @@
         android:layout_margin="16dp"
         android:scaleType="center"
         app:maxImageSize="35dp"
+        app:elevation="0dp"
+        android:visibility="invisible"
+        app:backgroundTint="@color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/setting" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

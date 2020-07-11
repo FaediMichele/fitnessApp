@@ -16,10 +16,11 @@ public class ObjectiveActivity extends AppCompatActivity {
         setContentView(R.layout.activity_objective);
         //delete status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        CreateStepFragment fragment = new CreateStepFragment();
+
+        CreateCommitmentFragment createCommitmentFragment = new CreateCommitmentFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.container, createCommitmentFragment);
+        //transaction.addToBackStack(null);
         transaction.commit();
     }
 }

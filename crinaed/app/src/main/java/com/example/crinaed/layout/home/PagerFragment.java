@@ -78,10 +78,10 @@ public class PagerFragment extends Fragment {
         @Override
         public void onPageSelected(int position) {
             super.onPageSelected(position);
-            FloatingActionButton fab = getActivity().findViewById(R.id.floating_action_button);
+            final FloatingActionButton fab = getActivity().findViewById(R.id.floating_action_button);
             switch (position) {
                 case OBJECTIVE_FRAGMENT:
-                    fabAnimation(R.drawable.setting,R.color.bluPrimary);
+                    this.fabAnimation(R.drawable.setting,R.color.bluPrimary);
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -91,7 +91,7 @@ public class PagerFragment extends Fragment {
                     });
                     break;
                 case SOCIAL_FRAGMENT:
-                    fabAnimation(R.drawable.ic_baseline_search_24,R.color.greenPrimary);
+                    this.fabAnimation(R.drawable.ic_baseline_search_24,R.color.greenPrimary);
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -101,7 +101,7 @@ public class PagerFragment extends Fragment {
                     });
                     break;
                 case LEARNING_FRAGMENT:
-                    fabAnimation(R.drawable.ic_baseline_search_24,R.color.redPrimary);
+                    this.fabAnimation(R.drawable.ic_baseline_search_24,R.color.redPrimary);
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -115,6 +115,7 @@ public class PagerFragment extends Fragment {
 
         private void fabAnimation(final int drawable, final int color){
             final FloatingActionButton fab = getActivity().findViewById(R.id.floating_action_button);
+            fab.setVisibility(View.VISIBLE);
             fab.clearAnimation();
             // Scale down animation
             ScaleAnimation shrink =  new ScaleAnimation(1f, 0.0f, 1f, 0.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -135,6 +136,7 @@ public class PagerFragment extends Fragment {
                     expand.setDuration(100);     // animation duration in milliseconds
                     expand.setInterpolator(new AccelerateInterpolator());
                     fab.startAnimation(expand);
+                    fab.setElevation(6);
                 }
 
                 @Override

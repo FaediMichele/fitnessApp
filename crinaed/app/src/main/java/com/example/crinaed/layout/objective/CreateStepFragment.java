@@ -35,7 +35,7 @@ public class CreateStepFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.create_step, container, false);
+        final View view = inflater.inflate(R.layout.fragment_create_step, container, false);
         final Spinner type = view.findViewById(R.id.spinner_type);
         final Spinner cat = view.findViewById(R.id.spinner_cat);
         final Spinner repeat = view.findViewById(R.id.spinner_repeat);
