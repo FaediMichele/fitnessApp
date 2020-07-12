@@ -14,10 +14,7 @@ import com.example.crinaed.util.Period;
 import com.smarteist.autoimageslider.SliderView;
 
 public class SliderProgressBar extends SliderView {
-
-
-    private SliderProgressBarAdapter sliderProgressBarAdapter;
-
+    
     public SliderProgressBar(Context context) {
         super(context);
     }
@@ -36,14 +33,13 @@ public class SliderProgressBar extends SliderView {
     @Override
     public void onPageSelected(int position) {
         super.onPageSelected(position);
-        this.sliderProgressBarAdapter = (SliderProgressBarAdapter) super.getSliderAdapter();
+        SliderProgressBarAdapter sliderProgressBarAdapter = (SliderProgressBarAdapter) super.getSliderAdapter();
         Pair<Integer,Integer> color = sliderProgressBarAdapter.getCategoryForPosition(position).toColor(getContext());
         super.setIndicatorSelectedColor(color.getX());
     }
 
     @Override
     public boolean onTouchEvent(final MotionEvent ev) {
-        Log.d("cri","funzioni ??");
         this.getParent().requestDisallowInterceptTouchEvent(false);
         super.onTouchEvent(ev);
         return true;
