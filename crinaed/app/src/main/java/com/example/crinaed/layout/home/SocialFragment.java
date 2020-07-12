@@ -202,7 +202,7 @@ public class SocialFragment extends Fragment {
                     @Override
                     public void onChanged(UserWithUser userWithUser) {
                         if(userWithUser !=null){
-                            button.setVisibility(View.VISIBLE);
+                            button.setVisibility(View.INVISIBLE);
                         } else {
                             button.setVisibility(View.VISIBLE);
                         }

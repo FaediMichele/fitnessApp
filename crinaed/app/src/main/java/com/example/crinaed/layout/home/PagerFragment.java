@@ -84,6 +84,9 @@ public class PagerFragment extends Fragment {
             super.onPageSelected(position);
             final FloatingActionButton fab = getActivity().findViewById(R.id.floating_action_button);
             switch (position) {
+                case SETTING_FRAGMENT:
+                    fab.setVisibility(View.INVISIBLE);
+                    break;
                 case OBJECTIVE_FRAGMENT:
                     this.fabAnimation(R.drawable.setting,R.color.bluPrimary);
                     fab.setOnClickListener(new View.OnClickListener() {
