@@ -35,6 +35,8 @@
 
 
 - cambiare l'icona impostazione dagli obbiettivi
+
+- controllare la animazione da scuola a corso che sembra tornare indietro ma dovrebbe andare avanti(questo evita il loop infinito. se vuoi cè un todo che indica la causa della animazione brutta)
 ------------
 logins
 riga 57 true
