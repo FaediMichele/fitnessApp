@@ -43,6 +43,8 @@
         </activity>
         <activity android:name=".layout.learning.LessonActivity">
         </activity>
+        <activity android:name=".layout.learning.SchoolActivity">
+        </activity>
 
     </application>
 

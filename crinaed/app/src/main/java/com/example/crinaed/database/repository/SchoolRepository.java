@@ -13,6 +13,7 @@ import com.example.crinaed.database.entity.Course;
 import com.example.crinaed.database.entity.School;
 import com.example.crinaed.database.entity.join.CourseSearchData;
 import com.example.crinaed.database.entity.join.CourseWithExercise;
+import com.example.crinaed.database.entity.join.SchoolData;
 import com.example.crinaed.util.Lambda;
 
 import org.json.JSONArray;
@@ -51,6 +52,10 @@ public class SchoolRepository extends Repository {
 
     public LiveData<List<CourseWithExercise>> getCourse(boolean archived){
         return schoolDao.getCourseWithExercise(archived);
+    }
+
+    public LiveData<SchoolData> getSchoolById(long idSchool){
+        return schoolDao.getSchoolById(idSchool);
     }
 
     public LiveData<CourseWithExercise> getCourseById(long id){

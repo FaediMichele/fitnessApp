@@ -1,6 +1,7 @@
 package com.example.crinaed.layout.learning;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.database.entity.Review;
+import com.example.crinaed.database.entity.School;
 import com.example.crinaed.database.entity.join.CourseWithExercise;
 import com.example.crinaed.database.entity.join.ReviewWithUser;
 import com.example.crinaed.util.Lambda;
@@ -41,6 +43,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class LearningNotBoughtDetailsFragment extends Fragment {
+    private CourseWithExercise pageCourse;
+
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_learning_not_bought_details, container, false);
@@ -56,7 +60,16 @@ public class LearningNotBoughtDetailsFragment extends Fragment {
             return view;
         }
         final long idCourse = dataLearning.getLong(LearningBuySearchFragment.KEY_ID_COURSE);
-
+        final View school_button = view.findViewById(R.id.button_school);
+        school_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent newIntent = new Intent(getContext(), SchoolActivity.class);
+                newIntent.putExtra(SchoolActivity.TAG_ID_COURSE_FROM, idCourse);
+                newIntent.putExtra(SchoolActivity.TAG_ID_SCHOOL, pageCourse.school.idSchool);
+                startActivity(newIntent);
+            }
+        });
 
 
         final SliderView sliderView = view.findViewById(R.id.slider_course);
@@ -68,7 +81,7 @@ public class LearningNotBoughtDetailsFragment extends Fragment {
             public void onChanged(CourseWithExercise course) {
                 adapter.setCourse(course);
                 adapterReview.setData(course);
-
+                pageCourse=course;
 
 
                 title.setText(course.course.name);

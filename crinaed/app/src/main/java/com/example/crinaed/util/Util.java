@@ -28,6 +28,7 @@ public class Util {
     private String sessionId="";
     private long idUser=-1;
 
+
     public String getSessionId(){
         return sessionId;
     }
@@ -129,6 +130,11 @@ public class Util {
         }
         return ret;
     }
+
+    public void deleteSharedPreferences(Context context) {
+        context.getSharedPreferences(context.getString(R.string.sessionId), Context.MODE_PRIVATE).edit().clear().apply();
+    }
+
 
     public static void downloadImage(final JSONArray array, final int i, File directory, Context context, final Lambda l)  {
         try {

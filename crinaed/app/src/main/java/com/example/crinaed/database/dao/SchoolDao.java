@@ -45,7 +45,7 @@ public interface SchoolDao {
 
     @Transaction
     @Query("SELECT * FROM School WHERE idSchool = (:idSchool)")
-    LiveData<List<SchoolData>> getSchoolById(long idSchool);
+    LiveData<SchoolData> getSchoolById(long idSchool);
 
     @Query("DELETE FROM Course WHERE isBought=0")
     void deleteCoursesSearched();

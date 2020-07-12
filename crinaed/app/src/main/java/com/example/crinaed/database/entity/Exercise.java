@@ -2,6 +2,7 @@ package com.example.crinaed.database.entity;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.example.crinaed.util.Util;
@@ -12,7 +13,8 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 @Entity(foreignKeys ={@ForeignKey(entity = Course.class,
-        parentColumns = "idCourse", childColumns = "idCourse", onDelete = ForeignKey.CASCADE)})
+        parentColumns = "idCourse", childColumns = "idCourse", onDelete = ForeignKey.CASCADE)},
+        indices = {@Index("idCourse")})
 public class Exercise  implements MyEntity{
     @PrimaryKey public long idExercise;
     public String name;

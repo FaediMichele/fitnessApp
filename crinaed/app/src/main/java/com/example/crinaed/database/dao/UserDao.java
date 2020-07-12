@@ -41,4 +41,8 @@ public interface UserDao {
     @Transaction
     @Query("SELECT * FROM User WHERE idUser!=(:idUser) AND (idUser IN (SELECT idUser1 FROM Friendship) OR idUser IN (SELECT idUser2 FROM Friendship))")
     LiveData<List<UserData>> getData(long idUser);
+
+    @Transaction
+    @Query("SELECT * FROM User WHERE idUser=(:idUser)")
+    LiveData<UserData> getUserById(long idUser);
 }

@@ -1,5 +1,6 @@
 package com.example.crinaed.ProgressBar;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -11,19 +12,26 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.layout.home.DetailsProgressBarDialog;
 import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.database.repository.CommitmentRepository;
+import com.example.crinaed.layout.home.HomeActivity;
+import com.example.crinaed.layout.home.login.LoginFragment;
 import com.example.crinaed.util.Category;
+import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Pair;
 import com.example.crinaed.util.Period;
 import com.example.crinaed.util.Single;
@@ -38,7 +46,11 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.smarteist.autoimageslider.SliderViewAdapter;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,7 +190,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
             }
         };
 
-        public SliderProgressBarVH(View itemView, final Context context, LifecycleOwner owner) {
+        public SliderProgressBarVH(final View itemView, final Context context, LifecycleOwner owner) {
             super(itemView);
             chart= itemView.findViewById(R.id.lineChart);
             chart.setBackgroundColor(ContextCompat.getColor(context, R.color.white));

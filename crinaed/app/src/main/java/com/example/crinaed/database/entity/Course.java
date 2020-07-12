@@ -1,6 +1,7 @@
 package com.example.crinaed.database.entity;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
@@ -13,7 +14,7 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
-@Entity
+@Entity(indices = {@Index("idCourse")})
 public class Course implements MyEntity{
     @PrimaryKey public long idCourse;
     public String name;

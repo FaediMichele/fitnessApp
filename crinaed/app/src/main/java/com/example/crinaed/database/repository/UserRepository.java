@@ -37,6 +37,10 @@ public class UserRepository extends Repository{
         return userDao.getData(Util.getInstance().getIdUser());
     }
 
+    public LiveData<UserData> getUserById(long idUser){
+        return userDao.getUserById(idUser);
+    }
+
     public Future<?> addUser(final User user, final UserLevel... levels){
         return AppDatabase.databaseWriteExecutor.submit(new Callable<Long>() {
             @Override

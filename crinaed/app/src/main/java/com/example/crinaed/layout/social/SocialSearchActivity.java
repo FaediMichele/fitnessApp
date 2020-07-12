@@ -251,7 +251,6 @@ public class SocialSearchActivity extends AppCompatActivity {
                                                     sendRequest.setEnabled(false);
                                                 }
                                             } catch (Exception e){
-                                                e.printStackTrace();
                                                 try{
                                                     Toast.makeText(getBaseContext(), getString(R.string.request_accepted), Toast.LENGTH_SHORT).show();
                                                     sendRequest.setVisibility(View.GONE);

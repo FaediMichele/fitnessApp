@@ -17,6 +17,9 @@ public class SchoolData {
     @Relation(parentColumn = "idTrainer", entityColumn = "idUser")
     public User user;
 
+    @Relation(entity = Course.class, parentColumn = "idSchool", entityColumn = "idSchool")
+    public List<CourseWithExercise> courseData;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
