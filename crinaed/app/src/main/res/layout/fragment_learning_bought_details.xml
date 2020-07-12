@@ -128,7 +128,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button_archive"
-            app:cornerRadius="200dp"
+            app:cornerRadius="20dp"
             android:backgroundTint="@color/redPrimary"
             android:textColor="@color/white"
             android:layout_marginTop="10dp"

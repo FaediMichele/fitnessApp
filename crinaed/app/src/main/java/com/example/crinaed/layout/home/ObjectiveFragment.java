@@ -15,6 +15,7 @@ import com.example.crinaed.ProgressBar.SliderProgressBarAdapterNew;
 import com.example.crinaed.ProgressBar.SliderProgressBarNew;
 import com.example.crinaed.R;
 import com.example.crinaed.util.Period;
+import com.example.crinaed.view.ObjectiveCharterAdapter;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.IndicatorView.draw.controller.DrawController;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -45,6 +46,42 @@ public class ObjectiveFragment  extends Fragment {
         //sliderViewNew.setScrollTimeInSec(3);
         sliderViewNew.setAutoCycle(false);
         //sliderViewNew.startAutoCycle();
+
+
+        SliderView currentSlider = view.findViewById(R.id.slider_currently_objective);
+        ObjectiveCharterAdapter adapterCurrent = new ObjectiveCharterAdapter();
+        currentSlider.setSliderAdapter(adapterCurrent);
+        //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM
+        // or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN
+        // or SLIDE and SWAP!!
+        currentSlider.setIndicatorAnimation(IndicatorAnimations.THIN_WORM);
+        currentSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+        currentSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+        currentSlider.setIndicatorUnselectedColor(Color.GRAY);
+        //sliderViewNew.setScrollTimeInSec(3);
+        currentSlider.setAutoCycle(false);
+        //sliderViewNew.startAutoCycle();
+
+
+
+        SliderView oldSlider = view.findViewById(R.id.slider_old_objective);
+        ObjectiveCharterAdapter oldCurrent = new ObjectiveCharterAdapter();
+        oldSlider.setSliderAdapter(oldCurrent);
+        //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM
+        // or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN
+        // or SLIDE and SWAP!!
+        oldSlider.setIndicatorAnimation(IndicatorAnimations.THIN_WORM);
+        oldSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+        oldSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+        oldSlider.setIndicatorUnselectedColor(Color.GRAY);
+        //sliderViewNew.setScrollTimeInSec(3);
+        oldSlider.setAutoCycle(false);
+        //sliderViewNew.startAutoCycle();
+
+
+
+
+
 
 
 
