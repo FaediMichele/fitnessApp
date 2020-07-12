@@ -116,6 +116,7 @@ public interface MyCommitmentDao {
     @Query("SELECT * FROM MyCommitment WHERE name=(:name)")
     LiveData<List<MyCommitment>> getCommitmentWithName(String name);
 
+    @Transaction
     @Query("SELECT * From MyCommitment WHERE ended=0")
     LiveData<List<CommitmentWithMyStep>> getCommitmentNotArchived();
 }

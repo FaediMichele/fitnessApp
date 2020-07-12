@@ -1,5 +1,6 @@
 package com.example.crinaed.ProgressBar;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -11,19 +12,26 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.crinaed.database.ServerManager;
 import com.example.crinaed.layout.home.DetailsProgressBarDialog;
 import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.database.repository.CommitmentRepository;
+import com.example.crinaed.layout.home.HomeActivity;
+import com.example.crinaed.layout.home.login.LoginFragment;
 import com.example.crinaed.util.Category;
+import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Pair;
 import com.example.crinaed.util.Period;
 import com.example.crinaed.util.Single;
@@ -38,7 +46,11 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.smarteist.autoimageslider.SliderViewAdapter;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,12 +63,14 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
     private Context context;
     private LifecycleOwner owner;
     private SliderProgressBarVH[] created = new SliderProgressBarVH[Category.values().length];
+    private FragmentActivity activity;
 
-    public SliderProgressBarAdapter(Context context, LifecycleOwner owner) {
+    public SliderProgressBarAdapter(Context context, LifecycleOwner owner, FragmentActivity activity) {
         CommitmentRepository repo = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository();
         this.owner=owner;
         this.context = context;
         repo.updateMyStepDone();
+        this.activity=activity;
     }
 
     public Category getCategoryForPosition(int position){
@@ -67,7 +81,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
     public SliderProgressBarVH onCreateViewHolder(ViewGroup parent) {
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_bar_item, null);
         Log.d("naed", "creating view holder");
-        return new SliderProgressBarVH(inflate, context, owner);
+        return new SliderProgressBarVH(inflate, context, owner, activity);
     }
 
     @NonNull
@@ -178,7 +192,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
             }
         };
 
-        public SliderProgressBarVH(View itemView, final Context context, LifecycleOwner owner) {
+        public SliderProgressBarVH(final View itemView, final Context context, LifecycleOwner owner, final FragmentActivity activity) {
             super(itemView);
             chart= itemView.findViewById(R.id.lineChart);
             chart.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
@@ -222,6 +236,36 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
             });
 
             this.period=Period.WEEK;
+
+            /* TODO move this in the logout section */
+            Button button = itemView.findViewById(R.id.logout);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        ServerManager.getInstance(itemView.getContext()).logout(new Lambda() {
+                            @Override
+                            public Object[] run(Object... paramether) {
+                                if((Boolean) paramether[0]) {
+                                    Snackbar.make(itemView, R.string.logout_done, BaseTransientBottomBar.LENGTH_LONG);
+                                    LoginFragment loginFragment = new LoginFragment();
+                                    FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.container, loginFragment, HomeActivity.TAG_LOGIN);
+                                    //            transaction.addToBackStack(null);
+                                    transaction.commit();
+                                } else{
+                                    Snackbar.make(itemView, R.string.unknown_error, BaseTransientBottomBar.LENGTH_LONG);
+                                }
+                                return new Object[0];
+                            }
+                        });
+                    } catch (JSONException e) {
+                        Snackbar.make(itemView, R.string.unknown_error, BaseTransientBottomBar.LENGTH_LONG);
+                        e.printStackTrace();
+                    }
+                }
+            });
+            /* */
         }
 
         public void update(){

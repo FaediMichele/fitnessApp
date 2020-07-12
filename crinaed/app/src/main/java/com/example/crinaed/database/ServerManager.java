@@ -246,14 +246,14 @@ public class ServerManager {
         managePost(body.toString(), new Lambda() {
             @Override
             public Object[] run(Object... paramether) {
-                context.deleteDatabase(AppDatabase.DATABASE_NAME);
-                onDone.run(true);
+                Util.getInstance().deleteSharedPreferences(context);
+                onDone.run(context.deleteDatabase(AppDatabase.DATABASE_NAME));
                 return new Object[0];
             }
         }, new Lambda() {
             @Override
             public Object[] run(Object... paramether) {
-                onDone.run(true);
+                onDone.run(false);
                 return new Object[0];
             }
         });

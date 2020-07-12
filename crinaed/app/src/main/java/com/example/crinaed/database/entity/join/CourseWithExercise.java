@@ -18,7 +18,7 @@ public class CourseWithExercise {
     @Relation(parentColumn = "idCourse", entityColumn = "idCourse")
     public List<Exercise> exercises;
 
-    @Relation(parentColumn = "idSchool", entityColumn = "idSchool")
+    @Relation(entity = School.class, parentColumn = "idSchool", entityColumn = "idSchool")
     public School school;
 
     @Relation(entity = Review.class, parentColumn = "idCourse", entityColumn = "idCourse")

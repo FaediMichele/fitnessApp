@@ -96,6 +96,10 @@ public class ExerciseRepository extends Repository{
 
     @Override
     public Future<?> extractData(final JSONObject root) {
-        return null;
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+            }
+        });
     }
 }

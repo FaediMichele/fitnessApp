@@ -111,6 +111,7 @@ Curabitur vel velit id ante volutpat porta.
     <string name="error_lastname">The surname must not be empty</string>
     <string name="error_email">The email must not be empty</string>
     <string name="error_password">The password must not be empty</string>
+    <string name="logout_done">The logout is succesfull</string>
     <plurals name="commitment_ended">
         <item quantity="one">%d commitment is archived</item>
         <item quantity="other">%d commitments is archived</item>

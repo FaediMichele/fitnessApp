@@ -17,7 +17,7 @@ public class SchoolData {
     @Relation(parentColumn = "idTrainer", entityColumn = "idUser")
     public User user;
 
-    @Relation(parentColumn = "idSchool", entityColumn = "idSchool")
+    @Relation(entity = Course.class, parentColumn = "idSchool", entityColumn = "idSchool")
     public List<CourseWithExercise> courseData;
 
     @Override
