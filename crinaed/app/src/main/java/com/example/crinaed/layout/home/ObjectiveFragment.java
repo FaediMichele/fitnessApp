@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.crinaed.ProgressBar.SliderProgressBar;
 import com.example.crinaed.ProgressBar.SliderProgressBarAdapter;
+import com.example.crinaed.ProgressBar.SliderProgressBarAdapterNew;
+import com.example.crinaed.ProgressBar.SliderProgressBarNew;
 import com.example.crinaed.R;
 import com.example.crinaed.util.Period;
 import com.smarteist.autoimageslider.IndicatorAnimations;
@@ -23,15 +25,32 @@ public class ObjectiveFragment  extends Fragment {
      SliderProgressBar sliderView;
      SliderProgressBarAdapter adapter;
 
+    SliderProgressBarNew sliderViewNew;
+    SliderProgressBarAdapterNew adapterNew;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_objective, container, false);
 
-        sliderView = view.findViewById(R.id.progressBarSlider);
+        sliderViewNew = view.findViewById(R.id.progress_bar_slider);
+        adapterNew = new SliderProgressBarAdapterNew(getContext());
+        sliderViewNew.setSliderAdapter(adapterNew);
+        //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM
+        // or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN
+        // or SLIDE and SWAP!!
+        sliderViewNew.setIndicatorAnimation(IndicatorAnimations.THIN_WORM);
+        sliderViewNew.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+        sliderViewNew.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+        sliderViewNew.setIndicatorUnselectedColor(Color.GRAY);
+        //sliderViewNew.setScrollTimeInSec(3);
+        sliderViewNew.setAutoCycle(false);
+        //sliderViewNew.startAutoCycle();
 
+
+
+        sliderView = view.findViewById(R.id.progressBarSlider);
         adapter = new SliderProgressBarAdapter(getContext(), this);
         sliderView.setSliderAdapter(adapter);
-
         //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM
         // or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN
         // or SLIDE and SWAP!!

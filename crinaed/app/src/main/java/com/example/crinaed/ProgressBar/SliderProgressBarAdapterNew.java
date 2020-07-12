@@ -82,6 +82,7 @@ public class SliderProgressBarAdapterNew extends SliderViewAdapter<SliderProgres
         });
         viewHolder.description.setText(myCommitment.desc);
         viewHolder.title.setText(myCommitment.name);
+        viewHolder.title.setTextColor(primaryColor);
     }
 
     @Override
