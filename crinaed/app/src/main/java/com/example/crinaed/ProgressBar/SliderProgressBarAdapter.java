@@ -63,14 +63,12 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
     private Context context;
     private LifecycleOwner owner;
     private SliderProgressBarVH[] created = new SliderProgressBarVH[Category.values().length];
-    private FragmentActivity activity;
 
-    public SliderProgressBarAdapter(Context context, LifecycleOwner owner, FragmentActivity activity) {
+    public SliderProgressBarAdapter(Context context, LifecycleOwner owner) {
         CommitmentRepository repo = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository();
         this.owner=owner;
         this.context = context;
         repo.updateMyStepDone();
-        this.activity=activity;
     }
 
     public Category getCategoryForPosition(int position){
@@ -81,7 +79,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
     public SliderProgressBarVH onCreateViewHolder(ViewGroup parent) {
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_bar_item, null);
         Log.d("naed", "creating view holder");
-        return new SliderProgressBarVH(inflate, context, owner, activity);
+        return new SliderProgressBarVH(inflate, context, owner);
     }
 
     @NonNull
@@ -192,7 +190,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
             }
         };
 
-        public SliderProgressBarVH(final View itemView, final Context context, LifecycleOwner owner, final FragmentActivity activity) {
+        public SliderProgressBarVH(final View itemView, final Context context, LifecycleOwner owner) {
             super(itemView);
             chart= itemView.findViewById(R.id.lineChart);
             chart.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
@@ -236,36 +234,6 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
             });
 
             this.period=Period.WEEK;
-
-            /* TODO move this in the logout section */
-            Button button = itemView.findViewById(R.id.logout);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        ServerManager.getInstance(itemView.getContext()).logout(new Lambda() {
-                            @Override
-                            public Object[] run(Object... paramether) {
-                                if((Boolean) paramether[0]) {
-                                    Snackbar.make(itemView, R.string.logout_done, BaseTransientBottomBar.LENGTH_LONG);
-                                    LoginFragment loginFragment = new LoginFragment();
-                                    FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.container, loginFragment, HomeActivity.TAG_LOGIN);
-                                    //            transaction.addToBackStack(null);
-                                    transaction.commit();
-                                } else{
-                                    Snackbar.make(itemView, R.string.unknown_error, BaseTransientBottomBar.LENGTH_LONG);
-                                }
-                                return new Object[0];
-                            }
-                        });
-                    } catch (JSONException e) {
-                        Snackbar.make(itemView, R.string.unknown_error, BaseTransientBottomBar.LENGTH_LONG);
-                        e.printStackTrace();
-                    }
-                }
-            });
-            /* */
         }
 
         public void update(){

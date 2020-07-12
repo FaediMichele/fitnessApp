@@ -114,6 +114,9 @@ Curabitur vel velit id ante volutpat porta.
     <string name="logout_done">The logout is succesfull</string>
     <string name="go_to_school">go to school</string>
     <string name="logout">Logout</string>
+    <string name="name_formatted">Name: %s</string>
+    <string name="last_name_formatted">Last name: %s</string>
+    <string name="email_formatted">"E-mail: %s"</string>
     <plurals name="commitment_ended">
         <item quantity="one">%d commitment is archived</item>
         <item quantity="other">%d commitments is archived</item>

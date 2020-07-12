@@ -39,7 +39,7 @@ public class ObjectiveFragment  extends Fragment {
 
         sliderView = view.findViewById(R.id.progressBarSlider);
 
-        adapter = new SliderProgressBarAdapter(getContext(), this, getActivity());
+        adapter = new SliderProgressBarAdapter(getContext(), this);
         sliderView.setSliderAdapter(adapter);
 
         //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM
