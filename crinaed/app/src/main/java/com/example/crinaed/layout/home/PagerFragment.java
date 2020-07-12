@@ -27,7 +27,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class PagerFragment extends Fragment {
 
-    private static final int NUM_PAGES = 3;
+    private static final int NUM_PAGES = 4;
     private static final int SETTING_FRAGMENT = 0;
     private static final int OBJECTIVE_FRAGMENT = 1;
     private static final int SOCIAL_FRAGMENT = 2;
@@ -53,6 +53,9 @@ public class PagerFragment extends Fragment {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 switch (position)   {
+                    case SETTING_FRAGMENT:
+                        tab.setIcon(getActivity().getDrawable(R.drawable.ic_baseline_settings_24_icon));
+                        break;
                      case OBJECTIVE_FRAGMENT:
                          //tab.setText(R.string.tab_objective);
                          tab.setIcon(getActivity().getDrawable(R.drawable.ic_baseline_flag_24_icon_objective));
@@ -154,6 +157,7 @@ public class PagerFragment extends Fragment {
     }
 
     private class HomePagerAdapter extends FragmentStateAdapter{
+        SettingFragment settingFragment;
         ObjectiveFragment objectiveFragment;
         SocialFragment socialFragment;
         LearningFragment learningFragment;
@@ -166,6 +170,9 @@ public class PagerFragment extends Fragment {
         @Override
         public Fragment createFragment(int position) {
             switch (position) {
+                case SETTING_FRAGMENT:
+                    settingFragment = new SettingFragment();
+                    return settingFragment;
                 case SOCIAL_FRAGMENT:
                     socialFragment = new SocialFragment();
                     return socialFragment;

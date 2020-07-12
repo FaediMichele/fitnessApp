@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:id="@+id/root"
-    android:background="#FFF">
+    android:id="@+id/root">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"

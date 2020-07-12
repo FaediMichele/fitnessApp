@@ -3,98 +3,101 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="10dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#FFFFFF">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_social"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:paddingBottom="12dp"
-        android:paddingTop="10dp"
-        android:background="@drawable/text_bottom_line"
+        android:padding="10dp"
+        android:background="@drawable/course_social"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/image_card"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image_video"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_centerHorizontal="true"
-            android:elevation="12dp"
-            app:cardCornerRadius="40dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/simple_people"
+            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/image_video"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:layout_editor_absoluteX="53dp"
-                tools:layout_editor_absoluteY="278dp"
-                tools:srcCompat="@tools:sample/avatars" />
-
-        </com.google.android.material.card.MaterialCardView>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars"/>
 
         <TextView
             android:id="@+id/name_last_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:hint="nome persona"
             android:textSize="@dimen/search_activity_name_last_name"
-            app:layout_constraintStart_toEndOf="@+id/image_card"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image_video"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/email"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:hint="Email"
             android:textSize="@dimen/search_activity_email"
-            app:layout_constraintStart_toEndOf="@+id/image_card"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image_video"
             app:layout_constraintTop_toBottomOf="@+id/name_last_name" />
 
         <TextView
             android:id="@+id/objective"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:text="testoda contoda"
             android:textSize="@dimen/search_activity_objective"
-            app:layout_constraintStart_toEndOf="@+id/image_card"
+            app:layout_constraintEnd_toStartOf="@+id/button_friend_request"
+            app:layout_constraintStart_toEndOf="@+id/image_video"
             app:layout_constraintTop_toBottomOf="@+id/email" />
 
         <TextView
             android:id="@+id/step"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:text="testoda contoda"
             android:textSize="@dimen/search_activity_step"
-            app:layout_constraintStart_toEndOf="@+id/image_card"
-            app:layout_constraintTop_toBottomOf="@+id/objective"/>
+            app:layout_constraintEnd_toStartOf="@+id/button_friend_request"
+            app:layout_constraintStart_toEndOf="@+id/image_video"
+            app:layout_constraintTop_toBottomOf="@+id/objective" />
 
         <TextView
             android:id="@+id/level3"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:text="testoda contoda"
             android:textSize="@dimen/search_activity_step"
-            android:visibility="gone"
-            app:layout_constraintStart_toEndOf="@+id/image_card"
-            app:layout_constraintTop_toBottomOf="@+id/step"/>
+            app:layout_constraintEnd_toStartOf="@+id/button_friend_request"
+            app:layout_constraintStart_toEndOf="@+id/image_video"
+            app:layout_constraintTop_toBottomOf="@+id/step" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_friend_request"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="31dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/greenPrimary"
             android:text="@string/request_friendship"
+            android:textColor="@color/white"
+            app:cornerRadius="200dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/email" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

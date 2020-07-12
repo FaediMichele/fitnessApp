@@ -9,12 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.view.menu.MenuView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Constraints;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
@@ -177,7 +180,7 @@ public class SocialFragment extends Fragment {
                 this.objective = itemView.findViewById(R.id.objective);
                 this.step = itemView.findViewById(R.id.step);
                 this.level3 = itemView.findViewById(R.id.level3);
-                button = itemView.findViewById(R.id.button_unblock);
+                this.button = itemView.findViewById(R.id.button_unblock);
             }
             this.owner=owner;
             this.itemView=itemView;
@@ -199,7 +202,7 @@ public class SocialFragment extends Fragment {
                     @Override
                     public void onChanged(UserWithUser userWithUser) {
                         if(userWithUser !=null){
-                            button.setVisibility(View.INVISIBLE);
+                            button.setVisibility(View.VISIBLE);
                         } else {
                             button.setVisibility(View.VISIBLE);
                         }
