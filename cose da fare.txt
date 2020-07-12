@@ -23,6 +23,9 @@
 
 - creazione dell'utente
 
+
+- sistemare la dialog creazione step
+
 ------------
 logins
 riga 57 true
