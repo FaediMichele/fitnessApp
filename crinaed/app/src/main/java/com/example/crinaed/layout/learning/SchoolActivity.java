@@ -30,8 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SchoolActivity  extends AppCompatActivity {
-    private final static String TAG_ID_SCHOOL="TAG_ID_SCHOOL";
-
+    public final static String TAG_ID_SCHOOL="TAG_ID_SCHOOL";
+    public final static String TAG_ID_COURSE_FROM="TAG_ID_COURSE_FROM";
+    private long idCourseFrom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,30 +50,35 @@ public class SchoolActivity  extends AppCompatActivity {
         final SchoolActivity.CourseAdapter adapterReview = new SchoolActivity.CourseAdapter();
 
         Bundle bundle = getIntent().getExtras();
-        if(bundle!= null && bundle.containsKey(TAG_ID_SCHOOL)){
-            long idSchool = bundle.getLong(TAG_ID_SCHOOL);
-            DatabaseUtil.getInstance().getRepositoryManager().getSchoolRepository().getSchoolById(idSchool).observe(this, new Observer<SchoolData>() {
-                @Override
-                public void onChanged(SchoolData schoolData) {
-                    title.setText(schoolData.school.name);
-                    if(schoolData.school.imageDownloaded){
-                        imageView.setImageURI(Uri.parse(schoolData.school.image));
+        if(bundle!= null){
+            if(bundle.containsKey(TAG_ID_COURSE_FROM)){
+                idCourseFrom=bundle.getLong(TAG_ID_COURSE_FROM);
+            }
+             if(bundle.containsKey(TAG_ID_SCHOOL)){
+                long idSchool = bundle.getLong(TAG_ID_SCHOOL);
+                DatabaseUtil.getInstance().getRepositoryManager().getSchoolRepository().getSchoolById(idSchool).observe(this, new Observer<SchoolData>() {
+                    @Override
+                    public void onChanged(SchoolData schoolData) {
+                        title.setText(schoolData.school.name);
+                        if(schoolData.school.imageDownloaded){
+                            imageView.setImageURI(Uri.parse(schoolData.school.image));
+                        }
+                        if(schoolData.user.imageDownloaded){
+                            imageProfileFounder.setImageURI(Uri.parse(schoolData.user.image));
+                        }
+                        nameAndLastName.setText(getString(R.string.name_surname, schoolData.user.firstname, schoolData.user.surname));
+                        email.setText(schoolData.user.email);
+                        descriptionFounder.setText(schoolData.school.desc);
+                        descriptionSchool.setText(schoolData.school.desc);
+                        double sum=0;
+                        for(CourseWithExercise c : schoolData.courseData){
+                            sum+=c.course.review;
+                        }
+                        reviewValue.setText(getString(R.string.review_val, (sum/schoolData.courseData.size())));
+                        adapterReview.setCourse(schoolData.courseData);
                     }
-                    if(schoolData.user.imageDownloaded){
-                        imageProfileFounder.setImageURI(Uri.parse(schoolData.user.image));
-                    }
-                    nameAndLastName.setText(getString(R.string.name_surname, schoolData.user.firstname, schoolData.user.surname));
-                    email.setText(schoolData.user.email);
-                    descriptionFounder.setText(schoolData.school.desc);
-                    descriptionSchool.setText(schoolData.school.desc);
-                    double sum=0;
-                    for(CourseWithExercise c : schoolData.courseData){
-                        sum+=c.course.review;
-                    }
-                    reviewValue.setText(getString(R.string.review_val, (sum/schoolData.courseData.size())));
-                    adapterReview.setCourse(schoolData.courseData);
-                }
-            });
+                });
+            }
         }
 
         //manager RecyclerView
@@ -81,6 +87,11 @@ public class SchoolActivity  extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapterReview);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     private class CourseAdapter extends RecyclerView.Adapter<SchoolActivity.LearningViewHolder>{
@@ -116,6 +127,11 @@ public class SchoolActivity  extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //start acrivity learning fragment del corso gia acquistato
+                    if(idCourseFrom == course.idCourse){
+                        /* TODO bad animation here */
+                        onBackPressed();
+                        return;
+                    }
                     Bundle bundle = new Bundle();
                     bundle.putLong(LearningBuySearchFragment.KEY_ID_COURSE, course.idCourse);
                     bundle.putBoolean(LearningActivity.KEY_START_PAGER,true);
@@ -151,7 +167,7 @@ public class SchoolActivity  extends AppCompatActivity {
         public LearningViewHolder(@NonNull View itemView) {
             super(itemView);
             this.imageView = itemView.findViewById(R.id.image_course);
-            this.title = itemView.findViewById(R.id.title_lesson);
+            this.title = itemView.findViewById(R.id.title_course);
             this.description = itemView.findViewById(R.id.description_course);
         }
     }

@@ -1,6 +1,7 @@
 package com.example.crinaed.layout.learning;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,9 +20,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Index;
 
 import com.android.volley.VolleyError;
 import com.example.crinaed.R;
@@ -54,16 +57,23 @@ public class LearningBoughtDetailsFragment extends Fragment {
             Snackbar.make(view, R.string.unknown_error, BaseTransientBottomBar.LENGTH_LONG).show();
             return view;
         }
-        long idCourse = dataLearning.getLong(LearningBuySearchFragment.KEY_ID_COURSE);
-
-
+        final long idCourse = dataLearning.getLong(LearningBuySearchFragment.KEY_ID_COURSE);
         final SliderCourseAdapter adapter = new SliderCourseAdapter(getActivity());
         final AdapterReview adapterReview = new AdapterReview();
         final TextView title = view.findViewById(R.id.title_course);
         final TextView reviewTopCard = view.findViewById(R.id.review_top_card);
         final TextView description_course = view.findViewById(R.id.description_course);
         final Button archive= view.findViewById(R.id.button_archive);
-
+        final View school_button = view.findViewById(R.id.button_school);
+        school_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent newIntent = new Intent(getContext(), SchoolActivity.class);
+                newIntent.putExtra(SchoolActivity.TAG_ID_COURSE_FROM, idCourse);
+                newIntent.putExtra(SchoolActivity.TAG_ID_SCHOOL, course.school.idSchool);
+                startActivity(newIntent);
+            }
+        });
 
         DatabaseUtil.getInstance().getRepositoryManager().getSchoolRepository().getCourseById(idCourse).observe(this, new Observer<CourseWithExercise>() {
             @Override
