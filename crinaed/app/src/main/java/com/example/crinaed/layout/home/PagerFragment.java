@@ -27,10 +27,11 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class PagerFragment extends Fragment {
 
-    private static final int NUM_PAGES = 3;
-    private static final int OBJECTIVE_FRAGMENT = 0;
-    private static final int SOCIAL_FRAGMENT = 1;
-    private static final int LEARNING_FRAGMENT = 2;
+    private static final int NUM_PAGES = 4;
+    private static final int SETTING_FRAGMENT = 0;
+    private static final int OBJECTIVE_FRAGMENT = 1;
+    private static final int SOCIAL_FRAGMENT = 2;
+    private static final int LEARNING_FRAGMENT = 3;
 
     private ViewPager2 viewPager;
     private HomePagerAdapter pagerAdapter;
@@ -44,22 +45,28 @@ public class PagerFragment extends Fragment {
         viewPager = view.findViewById(R.id.container_page);
         pagerAdapter = new HomePagerAdapter(getChildFragmentManager(),getLifecycle());
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(OBJECTIVE_FRAGMENT,false);
         viewPager.registerOnPageChangeCallback(new PageChangeListener());
-
         //configure tab layout
         TabLayout tabs = view.findViewById(R.id.tabs);
         new TabLayoutMediator(tabs, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 switch (position)   {
+                    case SETTING_FRAGMENT:
+                        tab.setIcon(getActivity().getDrawable(R.drawable.ic_baseline_settings_24_icon));
+                        break;
                      case OBJECTIVE_FRAGMENT:
-                         tab.setText(R.string.tab_objective);
+                         //tab.setText(R.string.tab_objective);
+                         tab.setIcon(getActivity().getDrawable(R.drawable.ic_baseline_flag_24_icon_objective));
                          break;
                      case SOCIAL_FRAGMENT:
-                         tab.setText(R.string.tab_social);
+                         //tab.setText(R.string.tab_social);
+                         tab.setIcon(getActivity().getDrawable(R.drawable.ic_baseline_supervisor_account_24_icon_social));
                          break;
                      case LEARNING_FRAGMENT:
-                         tab.setText(R.string.tab_learning);
+                         //tab.setText(R.string.tab_learning);
+                         tab.setIcon(getActivity().getDrawable(R.drawable.ic_baseline_school_24_icon_learning));
                          break;
                      default:
                          tab.setText("undefine");
@@ -67,9 +74,6 @@ public class PagerFragment extends Fragment {
                  }
             }
         }).attach();
-
-
-
         return view;
     }
 
@@ -80,6 +84,9 @@ public class PagerFragment extends Fragment {
             super.onPageSelected(position);
             final FloatingActionButton fab = getActivity().findViewById(R.id.floating_action_button);
             switch (position) {
+                case SETTING_FRAGMENT:
+                    fab.setVisibility(View.INVISIBLE);
+                    break;
                 case OBJECTIVE_FRAGMENT:
                     this.fabAnimation(R.drawable.setting,R.color.bluPrimary);
                     fab.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +160,7 @@ public class PagerFragment extends Fragment {
     }
 
     private class HomePagerAdapter extends FragmentStateAdapter{
+        SettingFragment settingFragment;
         ObjectiveFragment objectiveFragment;
         SocialFragment socialFragment;
         LearningFragment learningFragment;
@@ -165,6 +173,9 @@ public class PagerFragment extends Fragment {
         @Override
         public Fragment createFragment(int position) {
             switch (position) {
+                case SETTING_FRAGMENT:
+                    settingFragment = new SettingFragment();
+                    return settingFragment;
                 case SOCIAL_FRAGMENT:
                     socialFragment = new SocialFragment();
                     return socialFragment;

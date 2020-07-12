@@ -26,6 +26,15 @@
 
 - sistemare la dialog creazione step
 
+
+
+- dialgo create -> deve essere stondata
+- pulsante acetta chat da sistemare
+
+- la ricerca deve avere il testo binaco !!!! 
+
+
+- cambiare l'icona impostazione dagli obbiettivi
 ------------
 logins
 riga 57 true

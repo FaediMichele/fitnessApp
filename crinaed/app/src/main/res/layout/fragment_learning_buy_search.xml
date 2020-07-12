@@ -30,9 +30,9 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:hint="@string/course_name"
-                android:textCursorDrawable="@color/orange"
+                android:textCursorDrawable="@color/white"
                 android:background="@android:color/transparent"
-                android:textColor="#FFF"/>
+                android:textColor="@color/white"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
