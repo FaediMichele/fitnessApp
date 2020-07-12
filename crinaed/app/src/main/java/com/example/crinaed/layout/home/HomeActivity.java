@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
@@ -12,40 +13,52 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.crinaed.R;
 import com.example.crinaed.database.DatabaseUtil;
-import com.example.crinaed.database.ServerManager;
+import com.example.crinaed.layout.home.login.LoginFragment;
 import com.example.crinaed.util.Util;
-
-import org.json.JSONException;
 
 public class HomeActivity extends AppCompatActivity {
 
-    public static final String TAG_PAGER = "MAIN_ACTIVITY_TO_OBJECTIVE_FRAGMENT";
+    public static final String TAG_PAGER = "MAIN_ACTIVITY_TO_PAGER_FRAGMENT";
+    public static final String TAG_LOGIN = "MAIN_ACTIVITY_TO_LOGIN_FRAGMENT";
     public static final int REQUEST_CODE_CHAT = 1;
-    PagerFragment pagerFragment;
+    public PagerFragment pagerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d("cri","parte HomeActivity");
+
+        DatabaseUtil.getInstance().setApplication(this);
+
         setContentView(R.layout.activity_main);
         //delete status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        pagerFragment = new PagerFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, pagerFragment, TAG_PAGER);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        if(false){ // delete shared preferences ONLY FOR DEBUG
+            SharedPreferences settings = this.getSharedPreferences(getString(R.string.sessionId), Context.MODE_PRIVATE);
+            settings.edit().clear().commit();
+        }
 
-        DatabaseUtil.getInstance().setApplication(this);
+        if(!Util.getInstance().checkData(this)){
+            LoginFragment loginFragment= new LoginFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container, loginFragment, TAG_LOGIN);
+//            transaction.addToBackStack(null);
+            transaction.commit();
+        }else{
+            pagerFragment = new PagerFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container, pagerFragment, TAG_PAGER);
+//            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+    }
 
-
-
-
-//        ObjectiveFragment objectiveFragment = new ObjectiveFragment();
-//        FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
-//        transaction1.replace(R.id.container_page, objectiveFragment, TAG_CONTAINER);
-//        transaction1.addToBackStack(null);
-//        transaction1.commit();
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d("cri","onBackPressed");
     }
 
     @Override

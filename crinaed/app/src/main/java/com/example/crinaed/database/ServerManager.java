@@ -60,7 +60,40 @@ public class ServerManager {
         networkUtil = new NetworkUtil(context);
     }
 
+    final Lambda loginLambda = new Lambda() {
+        @Override
+        public Object[] run(final Object... paramether) {
+            final Lambda onDone = (Lambda) paramether[1];
+            AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        DatabaseUtil.getInstance().getRepositoryManager().loadNewData(AppDatabase.getDatabase(context), paramether[0].toString());
+                        JSONObject obj = new JSONObject(paramether[0].toString());
 
+                        // Save in the sharedPreferences the sessionid
+                        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.sessionId), Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor= preferences.edit();
+                        editor.putString("value", obj.getString("SessionId"));
+                        editor.putLong("idUser", obj.getLong("idUser"));
+                        editor.apply();
+
+                        Util.getInstance().setSessionId(obj.getString("SessionId"));
+                        Util.getInstance().setIdUser(obj.getLong("idUser"));
+
+                        DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().createNewStepDone();
+
+                        onDone.run(true, true, obj.getString("SessionId"));
+                    } catch (Exception e) {
+                        Log.d("naed", "message error : " +e.getMessage());
+                        e.printStackTrace();
+                        onDone.run(true,true,false, e);
+                    }
+                }
+            });
+            return null;
+        }
+    };
 
 
     public enum FileType{
@@ -181,43 +214,17 @@ public class ServerManager {
 
         managePost(param.toString(), new Lambda() {
             @Override
-            public Object[] run(final Object... paramether) {
-                AppDatabase.databaseWriteExecutor.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            DatabaseUtil.getInstance().getRepositoryManager().loadNewData(AppDatabase.getDatabase(context), paramether[0].toString());
-                            JSONObject obj = new JSONObject(paramether[0].toString());
-
-                            // Save in the sharedPreferences the sessionid
-                            SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.sessionId), Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor= preferences.edit();
-                            editor.putString("value", obj.getString("SessionId"));
-                            editor.putLong("idUser", obj.getLong("idUser"));
-                            editor.apply();
-
-                            Util.getInstance().setSessionId(obj.getString("SessionId"));
-                            Util.getInstance().setIdUser(obj.getLong("idUser"));
-
-                            DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().createNewStepDone();
-
-                            onDone.run(true, true, obj.getString("SessionId"));
-                        } catch (Exception e) {
-                            Log.d("naed", "message error : " +e.getMessage());
-                            e.printStackTrace();
-                            onDone.run(true,true,false, e);
-                        }
-                    }
-                });
-                return null;
+            public Object[] run(Object... paramether) {
+                loginLambda.run(paramether[0], onDone);
+                return new Object[0];
             }
         }, new Lambda() {
             @Override
             public Object[] run(Object... paramether) {
                 VolleyError error = (VolleyError) paramether[0];
-                if(error.networkResponse != null && error.networkResponse.statusCode == 401){
+                if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
                     onDone.run(true, false, error);
-                }else{
+                } else {
                     onDone.run(false, error);
                 }
                 Log.d("login", "Error on login: " + error.getMessage());
@@ -539,6 +546,33 @@ public class ServerManager {
                         e.printStackTrace();
                         onFailure.run(e);
                     }
+                    return new Object[0];
+                }
+            }, onFailure);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void createUser(String firstname, String surname, String email, String password, final Lambda onDone, final Lambda onFailure){
+        String hashPassword = Util.hash(password);
+        JSONObject body = new JSONObject();
+        try {
+            body.put("idSession", Util.getInstance().getSessionId());
+            body.put("to", "user");
+            body.put("method", "addUser");
+            JSONObject data = new JSONObject();
+            data.put("firstname", firstname);
+            data.put("surname", surname);
+            data.put("email", email);
+            data.put("firstname", firstname);
+            data.put("hashPassword", hashPassword);
+            body.put("data", data);
+            managePost(body.toString(), new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    loginLambda.run(paramether[0], onDone);
                     return new Object[0];
                 }
             }, onFailure);

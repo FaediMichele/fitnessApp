@@ -60,6 +60,10 @@ public class CommitmentRepository extends Repository{
         return commitmentDao.getCommitmentWithName(name);
     }
 
+    public LiveData<List<CommitmentWithMyStep>> getCommitmentNotArchived(){
+        return commitmentDao.getCommitmentNotArchived();
+    }
+
     public List<MyStepDoneWithMyStep> getStepHistoryList(final Category category){
         Future<List<MyStepDoneWithMyStep>> future;
         List<MyStepDoneWithMyStep> ret=null;
@@ -180,7 +184,7 @@ public class CommitmentRepository extends Repository{
     }
 
     // Not implemented in the server
-    public Future<?> updateCommitment(final MyCommitment commitment){
+    public Future<?> updateCommitment(final MyCommitment... commitment){
         return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override
             public void run() {

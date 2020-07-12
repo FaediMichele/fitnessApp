@@ -94,4 +94,25 @@ Curabitur vel velit id ante volutpat porta.
     <string name="cancel">Cancel</string>
     <string name="objective_added">The objective is added in the main page</string>
     <string name="no_import_data">This course not support the import of the objective</string>
+    <string name="info_of_school">info of school</string>
+    <string name="login">Login</string>
+    <string name="register">register</string>
+    <string name="name">Name</string>
+    <string name="last_name">Last name</string>
+    <string name="title_objective">Title objective</string>
+    <string name="create_management">Create management</string>
+    <string name="create_objective">create objective</string>
+    <string name="objective_management">Objective management</string>
+    <string name="delete_objective">delete objective</string>
+    <string name="select_objective_to_delete">Select objective to delete</string>
+    <string name="progressive_format">Progressive : %d%s</string>
+    <string name="error_description">The description must not be empty</string>
+    <string name="no_step">The Objective must contain at least one step</string>
+    <string name="error_lastname">The surname must not be empty</string>
+    <string name="error_email">The email must not be empty</string>
+    <string name="error_password">The password must not be empty</string>
+    <plurals name="commitment_ended">
+        <item quantity="one">%d commitment is archived</item>
+        <item quantity="other">%d commitments is archived</item>
+    </plurals>
 </resources>

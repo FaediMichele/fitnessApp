@@ -45,4 +45,14 @@ public enum Period {
     public static Period getRepetition(int position){
         return position==0 ? Period.DAY: Period.WEEK;
     }
+
+    public static Period fromDays(int days){
+        Period[] val = values();
+        for(int i=0;i<val.length;i++){
+            if(val[i].getDay()==days){
+                return val[i];
+            }
+        }
+        return null;
+    }
 }

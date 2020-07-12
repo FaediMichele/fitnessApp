@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.VolleyError;
@@ -46,12 +47,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        setContentView(R.layout.fragment_login);
         //delete status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         DatabaseUtil.getInstance().setApplication(this);
-        email = findViewById(R.id.email_edit);
+        email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         password.setImeActionLabel(getString(R.string.login_action_label), KeyEvent.KEYCODE_ENTER);
         root = findViewById(R.id.root);
@@ -63,10 +64,15 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences settings = getSharedPreferences(getString(R.string.sessionId), Context.MODE_PRIVATE);
             settings.edit().clear().commit();
         }
+
+
         if(Util.getInstance().checkData(this)){
             Intent intent = new Intent(activity, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            ActivityCompat.finishAffinity(this);
             return;
+
         }
 
         password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -88,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
                 login.clearFocus();
             }
         });
-
-
     }
 
     private boolean onSubmit(){
@@ -126,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                             } else{
                                 Snackbar.make(root, getString(R.string.cannot_login), Snackbar.LENGTH_LONG).show();
                                 try{
-                                    Log.d("naed", "error on login: " + ((VolleyError) paramether[1]).getMessage());
+                                   Log.d("naed", "error on login: " + ((VolleyError) paramether[1]).getMessage());
                                 } catch (Exception e){
                                     e.printStackTrace();
                                 }
