@@ -207,4 +207,15 @@ public class SchoolRepository extends Repository {
             }
         });
     }
+
+    @Override
+    public Future<?> deleteAll() {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                schoolDao.deleteCourse();
+                schoolDao.deleteSchool();
+            }
+        });
+    }
 }

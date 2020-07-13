@@ -27,6 +27,12 @@ public interface SchoolDao {
     @Query("SELECT * FROM School")
     List<School> getSchoolList();
 
+    @Query("DELETE FROM School")
+    void deleteSchool();
+
+    @Query("DELETE FROM Course")
+    void deleteCourse();
+
     @Transaction
     @Query("SELECT * FROM Course WHERE isBought=1")
     List<Course> getCourseList();

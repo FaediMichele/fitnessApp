@@ -102,4 +102,14 @@ public class ExerciseRepository extends Repository{
             }
         });
     }
+
+    @Override
+    public Future<?> deleteAll() {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                exerciseAndStepDao.deleteExercise();
+            }
+        });
+    }
 }

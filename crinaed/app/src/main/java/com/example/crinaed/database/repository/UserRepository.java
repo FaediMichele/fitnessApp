@@ -121,4 +121,15 @@ public class UserRepository extends Repository{
             }
         });
     }
+
+    @Override
+    public Future<?> deleteAll() {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                userDao.deleteUserLevel();
+                userDao.deleteUser();
+            }
+        });
+    }
 }

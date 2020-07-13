@@ -36,7 +36,10 @@ public interface UserDao {
     void update(UserLevel level);
 
     @Query("DELETE FROM User")
-    void deleteAll();
+    void deleteUser();
+
+    @Query("DELETE FROM UserLevel")
+    void deleteUserLevel();
 
     @Transaction
     @Query("SELECT * FROM User WHERE idUser!=(:idUser) AND (idUser IN (SELECT idUser1 FROM Friendship) OR idUser IN (SELECT idUser2 FROM Friendship))")

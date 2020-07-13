@@ -1,5 +1,6 @@
 package com.example.crinaed.layout.home;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -49,7 +50,7 @@ public class SocialFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        SocialFragment.SocialSearchAdapter adapter = new SocialFragment.SocialSearchAdapter();
+        SocialFragment.SocialSearchAdapter adapter = new SocialFragment.SocialSearchAdapter(this, getContext(), getActivity());
         recyclerView.setAdapter(adapter);
         return view;
     }
@@ -60,19 +61,25 @@ public class SocialFragment extends Fragment {
         }
     }
 
-    private class SocialSearchAdapter extends RecyclerView.Adapter<SocialFragment.SocialSearchViewHolder>{
+    private static class SocialSearchAdapter extends RecyclerView.Adapter<SocialFragment.SocialSearchViewHolder>{
 
         private List<UserData> newest;
         private List<SocialSearchViewHolder> holders = new ArrayList<>();
+        private Context context;
+        private LifecycleOwner owner;
+        private Activity activity;
 
-        public SocialSearchAdapter(){
-            DatabaseUtil.getInstance().getRepositoryManager().getUserRepository().getData().observe(getActivity(), new Observer<List<UserData>>() {
+        public SocialSearchAdapter(LifecycleOwner owner, final Context context, Activity activity){
+            this.context=context;
+            this.owner=owner;
+            this.activity=activity;
+            DatabaseUtil.getInstance().getRepositoryManager().getUserRepository().getData().observe(owner, new Observer<List<UserData>>() {
                 @Override
                 public void onChanged(List<UserData> userData) {
                     newest=userData;
                     notifyDataSetChanged();
                     for(int i=0; i< holders.size();i++){
-                        holders.get(i).updateData(i, newest, getContext());
+                        holders.get(i).updateData(i, newest, context);
                     }
                 }
             });
@@ -94,14 +101,14 @@ public class SocialFragment extends Fragment {
                     itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_social_search, parent, false);
                     break;
             }
-            return new SocialSearchViewHolder(itemView, viewType == TYPE_VIEW_ITEM_VIEW_ARCHIVE, getActivity());
+            return new SocialSearchViewHolder(itemView, viewType == TYPE_VIEW_ITEM_VIEW_ARCHIVE, owner);
         }
 
         @Override
         public void onBindViewHolder(@NonNull final SocialFragment.SocialSearchViewHolder holder, int position) {
             if(newest !=null){
                 holders.add(holder);
-                holder.updateData(position, newest, getContext());
+                holder.updateData(position, newest, context);
                 final UserData data = this.newest.get(position);
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -117,19 +124,19 @@ public class SocialFragment extends Fragment {
                             if (data.user.imageDownloaded) {
                                 bundle.putString(ChatActivity.SOCIAL_KEY_IMAGE_PATH, data.user.image);
                             }
-                            Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                            Intent chatIntent = new Intent(context, ChatActivity.class);
                             chatIntent.putExtras(bundle);
-                            startActivityForResult(chatIntent, HomeActivity.REQUEST_CODE_CHAT);
+                            activity.startActivityForResult(chatIntent, HomeActivity.REQUEST_CODE_CHAT);
                         }
                     }
                 });
                 holder.button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ServerManager.getInstance(getContext()).unblockUser(data.user.idUser, new Lambda() {
+                        ServerManager.getInstance(context).unblockUser(data.user.idUser, new Lambda() {
                             @Override
                             public Object[] run(Object... paramether) {
-                                Toast.makeText(getContext(), getString(R.string.unblock_ok), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, context.getString(R.string.unblock_ok), Toast.LENGTH_SHORT).show();
                                 holder.setIdFriendship(Long.parseLong(paramether[0].toString()));
                                 return new Object[0];
                             }

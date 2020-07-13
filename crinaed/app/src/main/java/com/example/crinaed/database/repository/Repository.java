@@ -31,6 +31,7 @@ public abstract class Repository {
 
     public abstract Future<?> loadData(final JSONObject data) throws Exception;
     public abstract Future<?> extractData(final JSONObject root);
+    public abstract Future<?> deleteAll();
 
     public <T extends MyEntity> JSONArray  listToJSONArray(final List<T> list){
         JSONArray ret = new JSONArray();
@@ -95,4 +96,6 @@ public abstract class Repository {
         } catch (JSONException ignore) {
         }
     }
+
+
 }

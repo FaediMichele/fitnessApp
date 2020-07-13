@@ -238,22 +238,33 @@ public class ServerManager {
             onDone.run(false);
             return;
         }
-        JSONObject body = new JSONObject();
+        final JSONObject body = new JSONObject();
         body.put("to", "logout");
         body.put("idSession", Util.getInstance().getSessionId());
-        body.put("data", DatabaseUtil.getInstance().getRepositoryManager().getData());
-
-        managePost(body.toString(), new Lambda() {
+        DatabaseUtil.getInstance().getRepositoryManager().getData(new Lambda() {
             @Override
             public Object[] run(Object... paramether) {
-                Util.getInstance().deleteSharedPreferences(context);
-                onDone.run(context.deleteDatabase(AppDatabase.DATABASE_NAME));
-                return new Object[0];
-            }
-        }, new Lambda() {
-            @Override
-            public Object[] run(Object... paramether) {
-                onDone.run(false);
+                try {
+                    body.put("data", paramether[0].toString());
+                    managePost(body.toString(), new Lambda() {
+                        @Override
+                        public Object[] run(Object... paramether) {
+                            Log.d("naed", "deleting all data");
+                            Util.getInstance().deleteSharedPreferences(context);
+                            DatabaseUtil.getInstance().getRepositoryManager().deleteAll(onDone);
+                            //onDone.run(context.deleteDatabase(AppDatabase.DATABASE_NAME));
+                            return new Object[0];
+                        }
+                    }, new Lambda() {
+                        @Override
+                        public Object[] run(Object... paramether) {
+                            onDone.run(false);
+                            return new Object[0];
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 return new Object[0];
             }
         });

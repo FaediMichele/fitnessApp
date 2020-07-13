@@ -1,10 +1,12 @@
 package com.example.crinaed.database.repository;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.crinaed.database.AppDatabase;
+import com.example.crinaed.util.Lambda;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,20 +59,41 @@ public class RepositoryManager {
         }
     }
 
-    public JSONObject getData(){
-        JSONObject root = new JSONObject();
-        List<Future<?>> futureList = new ArrayList<>();
-        for(Repository r : repositories){
-            futureList.add(r.extractData(root));
-        }
-        for(Future<?> r : futureList){
-            try {
-                r.get();
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
+    public void getData(final Lambda onDone){
+        AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                final JSONObject root = new JSONObject();
+                List<Future<?>> futureList = new ArrayList<>();
+                for(Repository r : repositories){
+                    futureList.add(r.extractData(root));
+                }
+                for(Future<?> r : futureList){
+                    try {
+                        r.get();
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                onDone.run(root);
             }
-        }
-        return root;
+        });
+    }
+
+    public void deleteAll(final Lambda onDone) {
+        AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    for(int i=repositories.size()-1; i>=0; i--){
+                        repositories.get(i).deleteAll().get();
+                    }
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+                onDone.run(true);
+            }
+        });
     }
 
     public List<Repository> getAllRepository(){
@@ -106,4 +129,6 @@ public class RepositoryManager {
     public ReviewRepository getReviewRepository() {
         return reviewRepository;
     }
+
+
 }

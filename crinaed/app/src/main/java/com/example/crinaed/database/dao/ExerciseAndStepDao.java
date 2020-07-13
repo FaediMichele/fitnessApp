@@ -24,6 +24,9 @@ public interface ExerciseAndStepDao {
     @Delete
     void delete(Exercise... exercises);
 
+    @Query("DELETE FROM Exercise")
+    void deleteExercise();
+
     @Query("SELECT * FROM Exercise")
     List<Exercise> getExerciseList();
 

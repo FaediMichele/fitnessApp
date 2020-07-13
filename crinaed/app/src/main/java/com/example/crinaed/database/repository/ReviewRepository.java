@@ -84,4 +84,14 @@ public class ReviewRepository extends Repository{
             }
         });
     }
+
+    @Override
+    public Future<?> deleteAll() {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                reviewDao.deleteReview();
+            }
+        });
+    }
 }

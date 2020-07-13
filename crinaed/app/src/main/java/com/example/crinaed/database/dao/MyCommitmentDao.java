@@ -42,6 +42,13 @@ public interface MyCommitmentDao {
     @Delete
     void delete(MyCommitment... commitments);
 
+    @Query("DELETE FROM MyStep")
+    void deleteMyStep();
+    @Query("DELETE FROM MyStepDone")
+    void deleteMyStepDone();
+    @Query("DELETE FROM MyCommitment")
+    void deleteMyCommitment();
+
     @Query("DELETE FROM MYSTEP WHERE idCommitment=(:idCommitment)")
     void deleteStepByCommitment(long idCommitment);
 

@@ -26,6 +26,9 @@ public interface FriendMessageDao {
     @Delete
     void delete(FriendMessage... friendMessages);
 
+    @Query("DELETE FROM FriendMessage")
+    void deleteFriendMessage();
+
     @Query("SELECT * FROM FriendMessage")
     List<FriendMessage> getMessageList();
 }

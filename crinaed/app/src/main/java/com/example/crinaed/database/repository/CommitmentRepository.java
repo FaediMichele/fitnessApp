@@ -294,4 +294,16 @@ public class CommitmentRepository extends Repository{
             }
         });
     }
+
+    @Override
+    public Future<?> deleteAll() {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                commitmentDao.deleteMyStepDone();
+                commitmentDao.deleteMyStep();
+                commitmentDao.deleteMyCommitment();
+            }
+        });
+    }
 }

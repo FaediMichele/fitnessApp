@@ -23,6 +23,9 @@ public interface FriendshipDao {
     @Delete
     void delete(Friendship... friendships);
 
+    @Query("DELETE FROM Friendship")
+    void deleteFriendship();
+
     @Query("DELETE FROM Friendship WHERE idFriendship=(:idFriendship)")
     void deleteFriendship(long idFriendship);
 
