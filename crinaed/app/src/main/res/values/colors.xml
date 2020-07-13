@@ -10,7 +10,7 @@
     <color name="transparent">#00000000</color>
     <color name="grey">#BABABA</color>
     <color name="settingIcon">#949494</color>
-    <color name="background">#f0f0f0</color>
+    <color name="background">#e9e9e9</color>
     <color name="backgroundItem">#fff</color>
     <color name="redPrimary">#F26179 </color>
     <color name="redSecondary">#FF96CE</color>
