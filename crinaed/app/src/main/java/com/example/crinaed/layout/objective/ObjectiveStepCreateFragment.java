@@ -44,6 +44,9 @@ public class ObjectiveStepCreateFragment extends Dialog {
         setContentView(R.layout.fragment_objective_step_create);
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
         getWindow().setGravity(Gravity.BOTTOM);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
         final Spinner type = findViewById(R.id.spinner_type);
         final Spinner repeat = findViewById(R.id.spinner_repeat);
         unit = findViewById(R.id.spinner_unit);

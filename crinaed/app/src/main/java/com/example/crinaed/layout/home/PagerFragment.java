@@ -75,6 +75,15 @@ public class PagerFragment extends Fragment {
                  }
             }
         }).attach();
+
+        final FloatingActionButton fab = view.findViewById(R.id.floating_action_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent objectiveIntent = new Intent(getContext(), ObjectiveActivity.class);
+                    startActivity(objectiveIntent);
+                }
+            });
         return view;
     }
 
