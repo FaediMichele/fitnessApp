@@ -27,8 +27,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d("cri","parte HomeActivity");
-
         DatabaseUtil.getInstance().setApplication(this);
 
         setContentView(R.layout.activity_main);

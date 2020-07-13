@@ -2,6 +2,7 @@ package com.example.crinaed.layout.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,6 @@ public class PagerFragment extends Fragment {
         viewPager = view.findViewById(R.id.container_page);
         pagerAdapter = new HomePagerAdapter(getChildFragmentManager(),getLifecycle());
         viewPager.setAdapter(pagerAdapter);
-        viewPager.setCurrentItem(OBJECTIVE_FRAGMENT,false);
         viewPager.registerOnPageChangeCallback(new PageChangeListener());
         //configure tab layout
         TabLayout tabs = view.findViewById(R.id.tabs);
@@ -77,6 +77,12 @@ public class PagerFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewPager.setCurrentItem(OBJECTIVE_FRAGMENT,false);
+    }
+
     private class PageChangeListener extends ViewPager2.OnPageChangeCallback{
 
         @Override
@@ -85,7 +91,7 @@ public class PagerFragment extends Fragment {
             final FloatingActionButton fab = getActivity().findViewById(R.id.floating_action_button);
             switch (position) {
                 case SETTING_FRAGMENT:
-                    fab.setVisibility(View.INVISIBLE);
+                    this.fabInvisible();
                     break;
                 case OBJECTIVE_FRAGMENT:
                     this.fabAnimation(R.drawable.ic_baseline_add_24,R.color.bluPrimary);
@@ -120,13 +126,13 @@ public class PagerFragment extends Fragment {
             }
         }
 
-        private void fabAnimation(final int drawable, final int color){
+
+        private void fabInvisible(){
             final FloatingActionButton fab = getActivity().findViewById(R.id.floating_action_button);
-            fab.setVisibility(View.VISIBLE);
             fab.clearAnimation();
             // Scale down animation
             ScaleAnimation shrink =  new ScaleAnimation(1f, 0.0f, 1f, 0.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            shrink.setDuration(150);     // animation duration in milliseconds
+            shrink.setDuration(100);     // animation duration in milliseconds
             shrink.setInterpolator(new DecelerateInterpolator());
             shrink.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -134,24 +140,84 @@ public class PagerFragment extends Fragment {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    // Change FAB color and icon
-                    fab.setBackgroundTintList(getResources().getColorStateList(color));
-                    fab.setImageDrawable(getResources().getDrawable(drawable, null));
-
-                    // Scale up animation
-                    ScaleAnimation expand =  new ScaleAnimation(0.0f, 1f, 0.0f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                    expand.setDuration(100);     // animation duration in milliseconds
-                    expand.setInterpolator(new AccelerateInterpolator());
-                    fab.startAnimation(expand);
-                    fab.setElevation(6);
+                    fab.setVisibility(View.INVISIBLE);
                 }
+
 
                 @Override
                 public void onAnimationRepeat(Animation animation) {
-
                 }
             });
             fab.startAnimation(shrink);
+        }
+
+
+
+        private void fabAnimation(final int drawable, final int color){
+            final FloatingActionButton fab = getActivity().findViewById(R.id.floating_action_button);
+            if(fab.getVisibility() == View.INVISIBLE){
+                fab.clearAnimation();
+                // Scale down animation
+                ScaleAnimation shrink =  new ScaleAnimation(0f, 0.0f, 0f, 0.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                shrink.setDuration(0);     // animation duration in milliseconds
+                shrink.setInterpolator(new DecelerateInterpolator());
+                shrink.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {}
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        // Change FAB color and icon
+                        fab.setBackgroundTintList(getResources().getColorStateList(color));
+                        fab.setImageDrawable(getResources().getDrawable(drawable, null));
+
+                        // Scale up animation
+                        ScaleAnimation expand =  new ScaleAnimation(0.0f, 1f, 0.0f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                        expand.setDuration(100);     // animation duration in milliseconds
+                        expand.setInterpolator(new AccelerateInterpolator());
+                        fab.startAnimation(expand);
+                        fab.setVisibility(View.VISIBLE);
+                        fab.setElevation(6);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                fab.startAnimation(shrink);
+            }else{
+                fab.setVisibility(View.VISIBLE);
+                fab.clearAnimation();
+                // Scale down animation
+                ScaleAnimation shrink =  new ScaleAnimation(1f, 0.0f, 1f, 0.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                shrink.setDuration(150);     // animation duration in milliseconds
+                shrink.setInterpolator(new DecelerateInterpolator());
+                shrink.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {}
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        // Change FAB color and icon
+                        fab.setBackgroundTintList(getResources().getColorStateList(color));
+                        fab.setImageDrawable(getResources().getDrawable(drawable, null));
+
+                        // Scale up animation
+                        ScaleAnimation expand =  new ScaleAnimation(0.0f, 1f, 0.0f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                        expand.setDuration(100);     // animation duration in milliseconds
+                        expand.setInterpolator(new AccelerateInterpolator());
+                        fab.startAnimation(expand);
+                        fab.setElevation(6);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                fab.startAnimation(shrink);
+            }
         }
     }
 
