@@ -106,7 +106,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
                 // viewHolder.progressBarView.setProgress(progress);
                 //build data for dialog
                 if(!viewHolder.status){
-                    DetailsProgressBarDialog dialog = new DetailsProgressBarDialog(context, context.getString(getCategoryForPosition(position).getRes()), getCategoryForPosition(position), owner);
+                    /*DetailsProgressBarDialog dialog = new DetailsProgressBarDialog(context, context.getString(getCategoryForPosition(position).getRes()), getCategoryForPosition(position), owner);
                     dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
@@ -114,7 +114,7 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
                         }
                     });
                     viewHolder.status=true;
-                    dialog.show();
+                    dialog.show();*/
                 }
             }
         });

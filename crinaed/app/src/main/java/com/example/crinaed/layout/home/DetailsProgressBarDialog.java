@@ -39,18 +39,16 @@ import java.util.List;
  * The logic is in the {@link ProgressBarDetailsAdapter}
  */
 public class DetailsProgressBarDialog extends Dialog{
-
     private Activity activity;
-    private Dialog d;
     private ProgressBarDetailsAdapter adapter;
     private LifecycleOwner owner;
     private String title;
-    private Category category;
+    private long idCommitment;
 
-    public DetailsProgressBarDialog(Context context, String title, Category category, LifecycleOwner owner) {
+    public DetailsProgressBarDialog(Context context, String title, long idCommitment, LifecycleOwner owner) {
         super(context, R.style.DialogSlideTheme);
         this.activity = (Activity) context;
-        this.category = category;
+        this.idCommitment = idCommitment;
         this.title=title;
         this.owner=owner;
     }
@@ -64,61 +62,54 @@ public class DetailsProgressBarDialog extends Dialog{
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView title = findViewById(R.id.title_details);
         title.setText(this.title);
-        final Single<Boolean> firstDay=new Single<>(true);
-        final Single<Boolean> firstWeek=new Single<>(true);
-        final Single<Boolean> zeroDay=new Single<>(false);
-        final Single<Boolean> zeroWeek=new Single<>(false);
         final RecyclerView recyclerView = findViewById(R.id.recycler_view);
-
-        final List<MyStepDoneWithMyStep> stepsBoth = new ArrayList<>();
-
-        final LiveData<List<MyStepDoneWithMyStep>> stepsDay = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getStepOnGoing(category, Period.DAY);
-        final LiveData<List<MyStepDoneWithMyStep>> stepsWeek = DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getStepOnGoing(category, Period.WEEK);
-
-        stepsDay.observe(owner, new Observer<List<MyStepDoneWithMyStep>>() {
+        final Single<Boolean> first = new Single<>(true);
+        final List<MyStepDoneWithMyStep> both = new ArrayList<>();
+        final List<MyStepDoneWithMyStep> newestDay = new ArrayList<>();
+        final List<MyStepDoneWithMyStep> newestWeek = new ArrayList<>();
+        DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getStepOnGoingByIdCommitment(idCommitment, Period.DAY).observe(owner, new Observer<List<MyStepDoneWithMyStep>>() {
             @Override
             public void onChanged(List<MyStepDoneWithMyStep> steps) {
-                if(firstDay.getVal()) {
-                    synchronized (stepsBoth) {
-                        if (stepsBoth.size() == 0 && !zeroWeek.getVal()) {
-                            stepsBoth.addAll(steps);
-                            zeroDay.setVal(true);
-                            return;
-                        }
-                        stepsBoth.addAll(steps);
-                        recyclerView.setHasFixedSize(true);
-                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
-                        recyclerView.setLayoutManager(layoutManager);
-                        adapter = new ProgressBarDetailsAdapter(stepsBoth, getContext());
-                        recyclerView.setAdapter(adapter);
-                        firstDay.setVal(false);
-                    }
+                newestDay.clear();
+                newestDay.addAll(steps);
+                both.clear();
+                if(newestWeek!=null){
+                    both.addAll(newestWeek);
+                }
+                both.addAll(newestDay);
+
+                if(first.getVal()) {
+                    recyclerView.setHasFixedSize(true);
+                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
+                    recyclerView.setLayoutManager(layoutManager);
+                    adapter = new ProgressBarDetailsAdapter(both, getContext());
+                    recyclerView.setAdapter(adapter);
+                    first.setVal(false);
                 } else {
-                    adapter.update(steps);
+                    adapter.update(both);
                 }
             }
         });
-
-        stepsWeek.observe(owner, new Observer<List<MyStepDoneWithMyStep>>() {
+        DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getStepOnGoingByIdCommitment(idCommitment, Period.WEEK).observe(owner, new Observer<List<MyStepDoneWithMyStep>>() {
             @Override
             public void onChanged(List<MyStepDoneWithMyStep> steps) {
-                if(firstWeek.getVal()) {
-                    synchronized (stepsBoth) {
-                        if (stepsBoth.size() == 0 && !zeroDay.getVal()) {
-                            stepsBoth.addAll(steps);
-                            zeroWeek.setVal(true);
-                            return;
-                        }
-                        stepsBoth.addAll(steps);
-                        recyclerView.setHasFixedSize(true);
-                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
-                        recyclerView.setLayoutManager(layoutManager);
-                        adapter = new ProgressBarDetailsAdapter(stepsBoth, getContext());
-                        recyclerView.setAdapter(adapter);
-                        firstWeek.setVal(false);
-                    }
+                newestWeek.clear();
+                newestWeek.addAll(steps);
+                both.clear();
+                if(newestDay!=null){
+                    both.addAll(newestDay);
+                }
+                both.addAll(newestWeek);
+
+                if(first.getVal()) {
+                    recyclerView.setHasFixedSize(true);
+                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
+                    recyclerView.setLayoutManager(layoutManager);
+                    adapter = new ProgressBarDetailsAdapter(both, getContext());
+                    recyclerView.setAdapter(adapter);
+                    first.setVal(false);
                 } else {
-                    adapter.update(steps);
+                    adapter.update(both);
                 }
             }
         });
