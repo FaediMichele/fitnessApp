@@ -63,9 +63,9 @@
             android:layout_marginHorizontal="10dp"
             android:id="@+id/delete_button"
             app:cornerRadius="20dp"
-            android:backgroundTint="@color/bluPrimary"
-            android:textColor="@color/white"
-            android:text="@string/delete"
+            android:backgroundTint="@color/bluSecondary"
+            android:textColor="@color/black"
+            android:text="@string/cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"/>
