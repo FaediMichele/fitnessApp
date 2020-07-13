@@ -73,12 +73,15 @@ public class ObjectiveCreateFragment extends Fragment {
             public void onClick(final View v) {
                 if(name.getText().length()==0){
                     name.setError(getString(R.string.error_name));
+                    return;
                 }
                 if(desc.getText().length()==0){
                     desc.setError(getString(R.string.error_description));
+                    return;
                 }
                 if(adapter.steps.size()==0){
                     button.setError(getString(R.string.no_step));
+                    return;
                 }
                 MyCommitment commitment = new MyCommitment(-1, name.getText().toString(), desc.getText().toString(), new Date().getTime(), Util.getInstance().getIdUser());
                 DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().insert(commitment, adapter.steps.toArray(new MyStep[0]), new Lambda() {

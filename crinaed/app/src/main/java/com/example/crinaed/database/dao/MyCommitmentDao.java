@@ -42,6 +42,12 @@ public interface MyCommitmentDao {
     @Delete
     void delete(MyCommitment... commitments);
 
+    @Query("SELECT MIN(idCommitment) FROM MyCommitment")
+    long getMinIdCommitment();
+    @Query("SELECT MIN(idMyStep) FROM MyStep")
+    long getMinIdStep();
+
+
     @Query("DELETE FROM MyStep")
     void deleteMyStep();
     @Query("DELETE FROM MyStepDone")

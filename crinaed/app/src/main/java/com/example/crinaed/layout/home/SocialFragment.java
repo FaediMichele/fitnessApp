@@ -208,10 +208,12 @@ public class SocialFragment extends Fragment {
             old = new Observer<UserWithUser>() {
                     @Override
                     public void onChanged(UserWithUser userWithUser) {
-                        if(userWithUser.friendship.blocked == Util.getInstance().getIdUser()){
-                            button.setVisibility(View.VISIBLE);
-                        } else {
-                            button.setVisibility(View.INVISIBLE);
+                        if(userWithUser!=null) {
+                            if (userWithUser.friendship.blocked == Util.getInstance().getIdUser()) {
+                                button.setVisibility(View.VISIBLE);
+                            } else {
+                                button.setVisibility(View.INVISIBLE);
+                            }
                         }
                     }
                 };

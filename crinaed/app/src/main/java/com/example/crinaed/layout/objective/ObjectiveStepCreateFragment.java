@@ -81,10 +81,12 @@ public class ObjectiveStepCreateFragment extends Dialog {
             public void onClick(View v) {
                 if(name.getText().length()==0){
                     name.setError(context.getString(R.string.error_name));
+                    return;
                 }
                 if(type.getSelectedItemPosition()!=TypeOfStep.CHECKLIST.ordinal()){
                     if(max.getText().length()>=6 || max.getText().length()==0){
                         max.setError(context.getString(R.string.error_max));
+                        return;
                     }
                 }
                 result= new MyStep(-1, -1, name.getText().toString(),

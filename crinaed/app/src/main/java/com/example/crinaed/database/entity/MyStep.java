@@ -67,7 +67,7 @@ public class MyStep  implements MyEntity{
         obj.put("max", max);
         obj.put("repetitionDay", repetitionDay);
         obj.put("type", type);
-        obj.put("category", category);
+        obj.put("category", category.name());
         return obj;
     }
 

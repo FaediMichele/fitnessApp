@@ -179,6 +179,14 @@ public class CommitmentRepository extends Repository{
         return AppDatabase.databaseWriteExecutor.submit(new Callable<Pair<Long, Long[]>>() {
                         @Override
                         public Pair<Long, Long[]> call() {
+                long minC = commitmentDao.getMinIdCommitment();
+                long minS = commitmentDao.getMinIdStep();
+                if(minC<=lastCommitmentId){
+                    lastCommitmentId=minC-1;
+                }
+                if(minS<=lastStepId){
+                    lastStepId=minS-1;
+                }
                 commitment.idCommitment = lastCommitmentId--;
                 long id = commitmentDao.insert(commitment)[0];
                 for(MyStep s : steps){

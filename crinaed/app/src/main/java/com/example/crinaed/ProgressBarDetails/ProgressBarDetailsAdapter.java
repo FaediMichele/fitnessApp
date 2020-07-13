@@ -174,7 +174,13 @@ public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarD
         }
 
         public void setDescription(String text){
-            text = text.substring(0, 1).toUpperCase() + text.substring(1);
+            if(text.length()>0) {
+                text = text.substring(0, 1).toUpperCase();
+                if (text.length() > 1) {
+                    text += text.substring(1);
+                }
+            }
+
             description.setText(text);
         }
 
