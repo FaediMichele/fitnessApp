@@ -161,18 +161,18 @@ public class CommitmentRepository extends Repository{
     }
 
 
-    public LiveData<List<CommitmentWithMyStep>> getAllCommitmentOnGoing(){
-        return commitmentDao.getAllCommitment(false);
-    }
-
-    public LiveData<List<CommitmentWithMyStep>> getAllCommitmentEnded(){
-        return commitmentDao.getAllCommitment(true);
+    public LiveData<List<CommitmentWithMyStep>> getAllCommitmentOnGoing(boolean ended){
+        return commitmentDao.getAllCommitment(ended);
     }
 
     public LiveData<List<MyStepDoneWithMyStep>> getStepOnGoingByIdCommitment(long idCommitment, Period repetition){
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, repetition.getDay()*-1);
         return commitmentDao.getLastMyStepDoneWithMyStepByIdCommitment(idCommitment, calendar.getTime().getTime()-100, repetition.getDay());
+    }
+
+    public LiveData<List<MyStepDoneWithMyStep>> getStepHistoryByIdCommitment(final long idCommitment, final Date date, final Period repetition){
+        return commitmentDao.getMyStepDoneWithMyStepWithData(idCommitment, date.getTime(), repetition.getDay());
     }
 
     public Future<Pair<Long, Long[]>> insert(final MyCommitment commitment, final MyStep[] steps, final Lambda l){

@@ -21,9 +21,11 @@ import com.example.crinaed.database.entity.join.CommitmentWithMyStep;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
 import com.example.crinaed.database.repository.CommitmentRepository;
 import com.example.crinaed.util.Category;
+import com.example.crinaed.util.Lambda;
 import com.example.crinaed.util.Pair;
 import com.example.crinaed.util.Period;
 import com.example.crinaed.view.GraphUtil;
+import com.example.crinaed.view.MySliderAdapter;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -33,71 +35,34 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.smarteist.autoimageslider.SliderViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraphAdapter extends RecyclerView.Adapter<GraphAdapter.GraphAdapterVH> {
+public class GraphAdapter extends SliderViewAdapter<GraphAdapter.GraphAdapterVH> implements MySliderAdapter {
     List<CommitmentWithMyStep> newest;
-    Category category;
     LifecycleOwner owner;
-    TextView txt;
-    View divider;
+    Context context;
 
-    public GraphAdapter(LifecycleOwner owner, Category category){
-        this.category=category;
+    public GraphAdapter(LifecycleOwner owner, Context context, boolean old, final Lambda onUpdateSize){
         this.owner=owner;
-        newType();
-    }
-
-    public GraphAdapter(LifecycleOwner owner, Category category, TextView txt, View divider){
-        this.category=category;
-        this.owner=owner;
-        oldType();
-        this.txt=txt;
-        this.divider=divider;
-    }
-
-    private void newType(){
-        DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getCommitmentWithSteps(category).observe(owner, new Observer<List<CommitmentWithMyStep>>() {
+        this.context=context;
+        DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getAllCommitmentOnGoing(old).observe(owner, new Observer<List<CommitmentWithMyStep>>() {
             @Override
             public void onChanged(List<CommitmentWithMyStep> commitmentWithMySteps) {
                 newest=commitmentWithMySteps;
                 notifyDataSetChanged();
-            }
-        });
-    }
-
-    private void oldType(){
-        DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getCommitmentEndedWithSteps(category).observe(owner, new Observer<List<CommitmentWithMyStep>>() {
-            @Override
-            public void onChanged(List<CommitmentWithMyStep> commitmentWithMySteps) {
-                newest=commitmentWithMySteps;
-                if(newest.size()==0){
-                    if(divider!= null){
-                        divider.setVisibility(View.GONE);
-                    }
-                    if(txt!= null){
-                        txt.setVisibility(View.GONE);
-                    }
-                }else{
-                    if(divider!= null){
-                        divider.setVisibility(View.VISIBLE);
-                    }
-                    if(txt!= null){
-                        txt.setVisibility(View.VISIBLE);
-                    }
-                }
-                notifyDataSetChanged();
+                onUpdateSize.run(newest.size());
             }
         });
     }
 
     @NonNull
     @Override
-    public GraphAdapterVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_graph_objective, parent,false);
-        return new GraphAdapterVH(inflate, category, owner);
+    public GraphAdapterVH onCreateViewHolder(@NonNull ViewGroup parent) {
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_objective_charter, parent,false);
+        return new GraphAdapterVH(inflate, owner);
     }
 
     @Override
@@ -106,24 +71,32 @@ public class GraphAdapter extends RecyclerView.Adapter<GraphAdapter.GraphAdapter
     }
 
     @Override
-    public int getItemCount() {
+    public int getCount() {
         if(newest!=null){
             return  newest.size();
         }
         return 0;
     }
 
-    static class GraphAdapterVH extends RecyclerView.ViewHolder{
+    @Override
+    public Pair<Integer, Integer> getColorForPage(int position) {
+        if(newest!=null){
+            return newest.get(position).steps.get(0).myStep.category.toColor(context);
+        }
+        return new Pair<>(0,0);
+    }
+
+
+    static class GraphAdapterVH extends SliderViewAdapter.ViewHolder{
         TextView name;
-        Button week;
-        Button month;
-        Button year;
+        View week;
+        View month;
+        View year;
         LineChart chart;
         View itemView;
         Context context;
 
         Period period=Period.WEEK;
-        Category category;
         List<MyStepDoneWithMyStep> newestDay;
         List<MyStepDoneWithMyStep> newestWeek;
         List<MyStepDoneWithMyStep> newestBoth=new ArrayList<>();
@@ -149,16 +122,15 @@ public class GraphAdapter extends RecyclerView.Adapter<GraphAdapter.GraphAdapter
             }
         };
 
-        public GraphAdapterVH(@NonNull View itemView, Category category, LifecycleOwner owner) {
+        public GraphAdapterVH(@NonNull View itemView, LifecycleOwner owner) {
             super(itemView);
-            name=itemView.findViewById(R.id.name_objective);
+            name=itemView.findViewById(R.id.title);
             week=itemView.findViewById(R.id.button_week);
             month=itemView.findViewById(R.id.button_month);
             year=itemView.findViewById(R.id.button_year);
             chart=itemView.findViewById(R.id.lineChart);
             this.itemView=itemView;
             context=itemView.getContext();
-            this.category=category;
             this.owner=owner;
             week.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -192,22 +164,29 @@ public class GraphAdapter extends RecyclerView.Adapter<GraphAdapter.GraphAdapter
             this.data=data;
             name.setText(data.commitment.name);
             historyDay = repo
-                    .getStepHistoryForCommitment(data.commitment.idCommitment, category, period.daysAgo(), Period.DAY);
+                    .getStepHistoryByIdCommitment(data.commitment.idCommitment, period.daysAgo(), Period.DAY);
             historyWeek = repo
-                    .getStepHistoryForCommitment(data.commitment.idCommitment, category, period.daysAgo(), Period.WEEK);
+                    .getStepHistoryByIdCommitment(data.commitment.idCommitment, period.daysAgo(), Period.WEEK);
+            setColor(data.steps.get(0).myStep.category.toColor(context));
             update();
+        }
+
+        private void setColor(Pair<Integer, Integer> toColor) {
+            week.setBackgroundColor(toColor.getX());
+            month.setBackgroundColor(toColor.getX());
+            year.setBackgroundColor(toColor.getX());
         }
 
         private void updateObserver(){
             if(historyDay != null){
                 historyDay.removeObserver(historyObserverDay);
             }
-            historyDay = repo.getStepHistoryForCommitment(data.commitment.idCommitment, category, period.daysAgo(), Period.DAY);
+            historyDay = repo.getStepHistoryByIdCommitment(data.commitment.idCommitment, period.daysAgo(), Period.DAY);
             historyDay.observe(owner, historyObserverDay);
             if(historyWeek != null){
                 historyWeek.removeObserver(historyObserverDay);
             }
-            historyWeek = repo.getStepHistoryForCommitment(data.commitment.idCommitment, category, period.daysAgo(), Period.WEEK);
+            historyWeek = repo.getStepHistoryByIdCommitment(data.commitment.idCommitment, period.daysAgo(), Period.WEEK);
             historyWeek.observe(owner, historyObserverWeek);
         }
 
@@ -222,7 +201,7 @@ public class GraphAdapter extends RecyclerView.Adapter<GraphAdapter.GraphAdapter
             //Log.d("naed", category.name() + " -> newest both: " + newestBoth);
             Pair<List<Entry>, IAxisValueFormatter> entries = GraphUtil.getGraphData(data.commitment, newestBoth, period);
             LineData lineData = new LineData();
-            setLineDataSet(lineData, new LineDataSet(entries.getX(), context.getString(category.getRes())), category);
+            setLineDataSet(lineData, new LineDataSet(entries.getX(), data.commitment.name), data.steps.get(0).myStep.category.toColor(itemView.getContext()));
             chart.getXAxis().setValueFormatter(entries.getY());
             chart.setData(lineData);
             chart.animateY(300);
@@ -243,14 +222,14 @@ public class GraphAdapter extends RecyclerView.Adapter<GraphAdapter.GraphAdapter
             chart.getXAxis().setTextSize(15);
             chart.setDrawBorders(false);
         }
-        private void setLineDataSet(LineData lineData, LineDataSet lineDataSet, Category c){
-            lineDataSet.setColor(c.toColor(context).getX());
+        private void setLineDataSet(LineData lineData, LineDataSet lineDataSet, Pair<Integer,Integer> color){
+            lineDataSet.setColor(color.getX());
             lineDataSet.setCubicIntensity(0.5f);
             lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
             lineData.addDataSet(lineDataSet);
             lineDataSet.setValueTextColor(Color.argb(0,0,0,0));  // invisible value
             lineDataSet.setCircleRadius(lineDataSet.getLineWidth());                    // invisible circle
-            lineDataSet.setCircleColor(c.toColor(context).getY());                      // invisible circle
+            lineDataSet.setCircleColor(color.getY());                      // invisible circle
             lineDataSet.setLabel("");                                                   // hide legend text
             lineDataSet.setForm(Legend.LegendForm.NONE);                                // hide legend color
         }

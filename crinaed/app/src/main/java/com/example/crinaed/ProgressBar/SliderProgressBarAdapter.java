@@ -316,9 +316,9 @@ public class SliderProgressBarAdapter extends SliderViewAdapter<SliderProgressBa
                 textView_title_page.setText(context.getString(category.getRes()));
                 textView_graph_title.setText(context.getString(R.string.graph_title, context.getString(category.getRes())));
                 recyclerView.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
-                recyclerView.setAdapter(new GraphAdapter(owner, category));
+                //recyclerView.setAdapter(new GraphAdapter(owner, category));
                 recyclerView_old.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
-                recyclerView_old.setAdapter(new GraphAdapter(owner, category, txt_old, divider_old));
+                //recyclerView_old.setAdapter(new GraphAdapter(owner, category, txt_old, divider_old));
                 updateObserver();
             }
         }

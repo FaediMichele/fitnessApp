@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -17,17 +16,17 @@ import com.example.crinaed.database.DatabaseUtil;
 import com.example.crinaed.database.entity.MyCommitment;
 import com.example.crinaed.database.entity.join.CommitmentWithMyStep;
 import com.example.crinaed.database.entity.join.MyStepDoneWithMyStep;
-import com.example.crinaed.database.entity.join.MyStepWithMyStepDone;
 import com.example.crinaed.layout.home.DetailsProgressBarDialog;
 import com.example.crinaed.util.Pair;
 import com.example.crinaed.util.Period;
+import com.example.crinaed.view.MySliderAdapter;
 import com.example.crinaed.view.ProgressBarView;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SliderProgressBarAdapterNew extends SliderViewAdapter<SliderProgressBarAdapterNew.SliderProgressBarVH> {
+public class SliderProgressBarAdapterNew extends SliderViewAdapter<SliderProgressBarAdapterNew.SliderProgressBarVH> implements MySliderAdapter {
 
     public final static String TAG = "LAUNCH_DETAIL_FRAGMENT";
     private Context context;
@@ -37,7 +36,7 @@ public class SliderProgressBarAdapterNew extends SliderViewAdapter<SliderProgres
     public SliderProgressBarAdapterNew(Context context, LifecycleOwner owner) {
         this.context = context;
         this.owner=owner;
-        DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getAllCommitmentOnGoing().observe(owner, new Observer<List<CommitmentWithMyStep>>() {
+        DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getAllCommitmentOnGoing(false).observe(owner, new Observer<List<CommitmentWithMyStep>>() {
             @Override
             public void onChanged(List<CommitmentWithMyStep> commitmentWithMySteps) {
                 myCommitments=commitmentWithMySteps;
@@ -82,6 +81,7 @@ public class SliderProgressBarAdapterNew extends SliderViewAdapter<SliderProgres
         return 0;
     }
 
+    @Override
     public Pair<Integer,Integer> getColorForPage(int position){
         return myCommitments.get(position).steps.get(0).myStep.category.toColor(context);
     }

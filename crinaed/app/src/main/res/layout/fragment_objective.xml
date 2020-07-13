@@ -23,7 +23,7 @@
             <com.example.crinaed.view.NestedScrollableHost
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <com.example.crinaed.ProgressBar.SliderProgressBarNew
+                <com.example.crinaed.view.MySliderView
                     android:id="@+id/progress_bar_slider"
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
@@ -56,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <com.smarteist.autoimageslider.SliderView
+                <com.example.crinaed.view.MySliderView
                     android:id="@+id/slider_currently_objective"
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
@@ -88,7 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <com.smarteist.autoimageslider.SliderView
+                <com.example.crinaed.view.MySliderView
                     android:id="@+id/slider_old_objective"
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
@@ -105,43 +105,6 @@
                     app:sliderIndicatorRadius="2dp"
                     app:sliderScrollTimeInSec="1"/>
             </com.example.crinaed.view.NestedScrollableHost>
-        </com.google.android.material.card.MaterialCardView>
-
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardSlider"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            app:layout_constraintTop_toBottomOf="@id/card_old_objective"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <com.example.crinaed.view.NestedScrollableHost
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <com.example.crinaed.ProgressBar.SliderProgressBar
-                    android:id="@+id/progressBarSlider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1000dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="parent"
-                    app:sliderAnimationDuration="600"
-                    app:sliderAutoCycleDirection="back_and_forth"
-                    app:sliderIndicatorAnimationDuration="600"
-                    app:sliderIndicatorGravity="center_horizontal|bottom"
-                    app:sliderIndicatorMargin="0dp"
-                    app:sliderIndicatorOrientation="horizontal"
-                    app:sliderIndicatorPadding="3dp"
-                    app:sliderIndicatorRadius="2dp"
-                    app:sliderScrollTimeInSec="1">
-
-                </com.example.crinaed.ProgressBar.SliderProgressBar>
-            </com.example.crinaed.view.NestedScrollableHost>
-
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

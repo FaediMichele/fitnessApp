@@ -125,4 +125,8 @@ public interface MyCommitmentDao {
     @Transaction
     @Query("SELECT * FROM MyStepDone WHERE dateStart > (:afterDay) AND idMyStep IN(SELECT idMyStep FROM MyStep WHERE idCommitment=(:idCommitment) AND repetitionDay=(:repetition))")
     LiveData<List<MyStepDoneWithMyStep>> getLastMyStepDoneWithMyStepByIdCommitment(long idCommitment, long afterDay, int repetition);
+
+    @Transaction
+    @Query("SELECT * FROM MyStepDone WHERE idMyStep IN(SELECT idMyStep FROM MyStep WHERE repetitionDay=(:repetitionDay) AND idCommitment=(:idCommitment)) AND dateStart >= (:date) ORDER BY dateStart")
+    LiveData<List<MyStepDoneWithMyStep>> getMyStepDoneWithMyStepWithData(long idCommitment, long date, int repetitionDay);
 }
