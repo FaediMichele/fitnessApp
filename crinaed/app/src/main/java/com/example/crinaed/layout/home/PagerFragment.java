@@ -46,6 +46,7 @@ public class PagerFragment extends Fragment {
         viewPager = view.findViewById(R.id.container_page);
         pagerAdapter = new HomePagerAdapter(getChildFragmentManager(),getLifecycle());
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(OBJECTIVE_FRAGMENT,false);
         viewPager.registerOnPageChangeCallback(new PageChangeListener());
         //configure tab layout
         TabLayout tabs = view.findViewById(R.id.tabs);
@@ -80,7 +81,6 @@ public class PagerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        viewPager.setCurrentItem(OBJECTIVE_FRAGMENT,false);
     }
 
     private class PageChangeListener extends ViewPager2.OnPageChangeCallback{
