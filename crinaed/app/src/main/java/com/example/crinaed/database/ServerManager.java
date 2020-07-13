@@ -358,7 +358,7 @@ public class ServerManager {
         }
     }
 
-    public void blockUser(Long idUser, Lambda onSuccess, Lambda onFailure){
+    public void blockUser(Long idUser, final Lambda onSuccess, Lambda onFailure){
         JSONObject body = new JSONObject();
         try {
             body.put("idSession", Util.getInstance().getSessionId());
@@ -367,7 +367,19 @@ public class ServerManager {
             JSONObject data= new JSONObject();
             data.put("idFriend", idUser);
             body.put("data", data);
-            managePost(body.toString(), onSuccess, onFailure);
+            managePost(body.toString(), new Lambda() {
+                @Override
+                public Object[] run(Object... paramether) {
+                    try {
+                        Friendship friendship = new Friendship(new JSONObject(paramether[0].toString()));
+                        DatabaseUtil.getInstance().getRepositoryManager().getFriendRepository().updateFriendship(friendship, onSuccess);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    onSuccess.run();
+                    return null;
+                }
+            }, onFailure);
             stopMessagePolling();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -387,14 +399,12 @@ public class ServerManager {
             managePost(body.toString(), new Lambda() {
                 @Override
                 public Object[] run(Object... paramether) {
-                    Friendship friendship = new Friendship(Long.parseLong(paramether[0].toString()), Util.getInstance().getIdUser(), idUser);
-                    DatabaseUtil.getInstance().getRepositoryManager().getFriendRepository().addFriend(friendship, new Lambda() {
-                        @Override
-                        public Object[] run(Object... paramether) {
-                            onSuccess.run(paramether);
-                            return new Object[0];
-                        }
-                    });
+                    try {
+                        Friendship friendship = new Friendship(new JSONObject(paramether[0].toString()));
+                        DatabaseUtil.getInstance().getRepositoryManager().getFriendRepository().updateFriendship(friendship, onSuccess);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     return null;
                 }
             }, onFailure);

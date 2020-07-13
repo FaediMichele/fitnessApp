@@ -96,6 +96,4 @@ public abstract class Repository {
         } catch (JSONException ignore) {
         }
     }
-
-
 }

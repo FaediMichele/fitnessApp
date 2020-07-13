@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import androidx.room.Update;
 
 import com.example.crinaed.database.entity.Friendship;
 import com.example.crinaed.database.entity.join.user.UserWithUser;
@@ -23,6 +24,10 @@ public interface FriendshipDao {
     @Delete
     void delete(Friendship... friendships);
 
+    @Update
+    void update(Friendship... friendships);
+
+
     @Query("DELETE FROM Friendship")
     void deleteFriendship();
 
@@ -35,4 +40,8 @@ public interface FriendshipDao {
     @Transaction
     @Query("SELECT * FROM Friendship WHERE idUser2=(:idFriend) OR idUser1=(:idFriend)")
     LiveData<UserWithUser> getFriendshipByFriend(long idFriend);
+
+    @Transaction
+    @Query("SELECT * FROM Friendship WHERE idFriendship=(:idFriendship)")
+    LiveData<UserWithUser> getFriendshipById(long idFriendship);
 }

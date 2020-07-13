@@ -42,7 +42,7 @@ public interface UserDao {
     void deleteUserLevel();
 
     @Transaction
-    @Query("SELECT * FROM User WHERE idUser!=(:idUser) AND (idUser IN (SELECT idUser1 FROM Friendship) OR idUser IN (SELECT idUser2 FROM Friendship))")
+    @Query("SELECT * FROM User WHERE idUser!=(:idUser) AND (idUser IN (SELECT idUser1 FROM Friendship WHERE blocked<0 OR blocked=(:idUser)) OR idUser IN (SELECT idUser2 FROM Friendship WHERE blocked<0 OR blocked=(:idUser)))")
     LiveData<List<UserData>> getData(long idUser);
 
     @Transaction

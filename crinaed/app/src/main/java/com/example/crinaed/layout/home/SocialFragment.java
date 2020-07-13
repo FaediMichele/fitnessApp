@@ -33,6 +33,7 @@ import com.example.crinaed.database.entity.join.user.UserWithUser;
 import com.example.crinaed.layout.social.chat.ChatActivity;
 import com.example.crinaed.R;
 import com.example.crinaed.util.Lambda;
+import com.example.crinaed.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,31 +114,28 @@ public class SocialFragment extends Fragment {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (holder.button.getVisibility() == View.INVISIBLE) {
-                            Bundle bundle = new Bundle();
-                            bundle.putString(ChatActivity.SOCIAL_KEY_ID, String.valueOf(data.user.idUser));
-                            bundle.putString(ChatActivity.SOCIAL_KEY_NAME, data.user.firstname);
-                            bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME, data.user.surname);
-                            bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL, data.user.email);
-                            bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE, data.levels.get(1).cat + ": " + data.levels.get(1).level);
-                            bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP, data.levels.get(1).cat + ": " + data.levels.get(1).level);
-                            if (data.user.imageDownloaded) {
-                                bundle.putString(ChatActivity.SOCIAL_KEY_IMAGE_PATH, data.user.image);
-                            }
-                            Intent chatIntent = new Intent(context, ChatActivity.class);
-                            chatIntent.putExtras(bundle);
-                            activity.startActivityForResult(chatIntent, HomeActivity.REQUEST_CODE_CHAT);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(ChatActivity.SOCIAL_KEY_ID, String.valueOf(data.user.idUser));
+                        bundle.putString(ChatActivity.SOCIAL_KEY_NAME, data.user.firstname);
+                        bundle.putString(ChatActivity.SOCIAL_KEY_LAST_NAME, data.user.surname);
+                        bundle.putString(ChatActivity.SOCIAL_KEY_EMAIL, data.user.email);
+                        bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_OBJECTIVE, data.levels.get(1).cat + ": " + data.levels.get(1).level);
+                        bundle.putString(ChatActivity.SOCIAL_KEY_TITLE_STEP, data.levels.get(1).cat + ": " + data.levels.get(1).level);
+                        if (data.user.imageDownloaded) {
+                            bundle.putString(ChatActivity.SOCIAL_KEY_IMAGE_PATH, data.user.image);
                         }
+                        Intent chatIntent = new Intent(context, ChatActivity.class);
+                        chatIntent.putExtras(bundle);
+                        activity.startActivityForResult(chatIntent, HomeActivity.REQUEST_CODE_CHAT);
                     }
                 });
                 holder.button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ServerManager.getInstance(context).unblockUser(data.user.idUser, new Lambda() {
+                        ServerManager.getInstance(context).blockUser(data.user.idUser, new Lambda() {
                             @Override
                             public Object[] run(Object... paramether) {
                                 Toast.makeText(context, context.getString(R.string.unblock_ok), Toast.LENGTH_SHORT).show();
-                                holder.setIdFriendship(Long.parseLong(paramether[0].toString()));
                                 return new Object[0];
                             }
                         }, new Lambda() {
@@ -210,10 +208,10 @@ public class SocialFragment extends Fragment {
             old = new Observer<UserWithUser>() {
                     @Override
                     public void onChanged(UserWithUser userWithUser) {
-                        if(userWithUser !=null){
-                            button.setVisibility(View.INVISIBLE);
-                        } else {
+                        if(userWithUser.friendship.blocked == Util.getInstance().getIdUser()){
                             button.setVisibility(View.VISIBLE);
+                        } else {
+                            button.setVisibility(View.INVISIBLE);
                         }
                     }
                 };

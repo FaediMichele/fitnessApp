@@ -44,6 +44,10 @@ public class FriendRepository extends Repository{
         return friendMessageDao.getMessageByIdFriendship(idFriendship);
     }
 
+    public LiveData<UserWithUser> getFriendshipByFriendship(long idFriendship){
+        return friendshipDao.getFriendshipById(idFriendship);
+    }
+
 
     public Future<?> addFriend(final Friendship friendship, final Lambda onAddDone){
         Log.d("naed", "creating new friendship" + friendship.idFriendship);
@@ -85,6 +89,17 @@ public class FriendRepository extends Repository{
             }
         });
     }
+
+    public Future<?> updateFriendship(final Friendship friendship, final Lambda onDone){
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                friendshipDao.update(friendship);
+                onDone.run();
+            }
+        });
+    }
+
     public Future<?> deleteMessages(final FriendMessage... friendMessages){
         return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
             @Override

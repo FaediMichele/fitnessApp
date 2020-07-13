@@ -27,6 +27,7 @@ public class Friendship  implements MyEntity{
     public long idFriendship;
     public long idUser1;
     public long idUser2;
+    public long blocked;
 
     public Friendship(long idFriendship, long idUser1, long idUser2) {
         this.idFriendship = idFriendship;
@@ -37,6 +38,7 @@ public class Friendship  implements MyEntity{
         this.idFriendship = obj.getLong("idFriendship");
         this.idUser1 = obj.getLong("idUser1");
         this.idUser2 = obj.getLong("idUser2");
+        this.blocked= obj.getLong("blocked");
     }
     @Override
     public JSONObject toJson() throws JSONException {
