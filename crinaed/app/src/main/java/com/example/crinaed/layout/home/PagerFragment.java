@@ -88,7 +88,7 @@ public class PagerFragment extends Fragment {
                     fab.setVisibility(View.INVISIBLE);
                     break;
                 case OBJECTIVE_FRAGMENT:
-                    this.fabAnimation(R.drawable.setting,R.color.bluPrimary);
+                    this.fabAnimation(R.drawable.ic_baseline_add_24,R.color.bluPrimary);
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

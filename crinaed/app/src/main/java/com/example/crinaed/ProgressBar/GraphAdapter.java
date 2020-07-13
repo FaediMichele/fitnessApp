@@ -175,6 +175,7 @@ public class GraphAdapter extends SliderViewAdapter<GraphAdapter.GraphAdapterVH>
             week.setBackgroundColor(toColor.getX());
             month.setBackgroundColor(toColor.getX());
             year.setBackgroundColor(toColor.getX());
+            name.setTextColor(toColor.getX());
         }
 
         private void updateObserver(){
