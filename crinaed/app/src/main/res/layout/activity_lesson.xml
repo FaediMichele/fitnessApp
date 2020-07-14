@@ -76,14 +76,22 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-    <Button android:id="@+id/add_to_my_commitment"
-        android:layout_height="wrap_content"
+    
+    <com.google.android.material.button.MaterialButton
         android:layout_width="match_parent"
-        android:text="@string/add_to_my_objective"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_to_my_commitment"
+        app:cornerRadius="20dp"
+        android:backgroundTint="@color/redPrimary"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
         android:layout_marginHorizontal="10dp"
+        android:text="@string/add_to_my_objective"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
