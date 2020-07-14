@@ -45,10 +45,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.Semaphore;
 
 public class ServerManager {
-    private static final String SERVER = "http://192.168.1.5:8080";
+    private static final String SERVER = "http://192.168.1.6:8080";
     private static ServerManager instance;
     private Context context;
     private static final int MS_SOCKET_TIMEOUT = 100;
+    private static final int MS_MESSAGES=1000;
     private NetworkUtil networkUtil;
 
 
@@ -454,7 +455,7 @@ public class ServerManager {
                             }
                         });
                     } catch (JSONException ignore) {
-                        ignore.printStackTrace();
+                        //ignore.printStackTrace();
                         Log.d("naed", "add friend response: " + paramether[0].toString());
                         onSuccess.run(true);
                     } catch (InterruptedException | ExecutionException e) {
@@ -587,7 +588,6 @@ public class ServerManager {
             data.put("firstname", firstname);
             data.put("surname", surname);
             data.put("email", email);
-            data.put("firstname", firstname);
             data.put("hashPassword", hashPassword);
             body.put("data", data);
             managePost(body.toString(), new Lambda() {
@@ -625,7 +625,7 @@ public class ServerManager {
                             public void run() {
                                 runLoop();
                             }
-                        }, 2000);
+                        }, MS_MESSAGES);
 
                     } catch (JSONException e) {
                         e.printStackTrace();

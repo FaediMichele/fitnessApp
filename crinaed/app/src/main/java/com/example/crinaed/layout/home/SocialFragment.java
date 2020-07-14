@@ -221,8 +221,11 @@ public class SocialFragment extends Fragment {
         }
 
         public void setUserData(UserData userData, Context context){
+            Log.d("naed", "!!!!!image setted: " + userData.user.imageDownloaded);
             if(userData.user.imageDownloaded && imageView!=null) {
                 imageView.setImageURI(Uri.parse(userData.user.image));
+                Log.d("naed", "!!!!!image setted: " + imageView);
+
             }
             nameLastName.setText(context.getString(R.string.name_surname, userData.user.firstname, userData.user.surname));
             email.setText(userData.user.email);
