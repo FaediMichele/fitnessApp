@@ -2,6 +2,7 @@ package com.example.crinaed.ProgressBar;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +40,11 @@ public class SliderProgressBarAdapterNew extends SliderViewAdapter<SliderProgres
         DatabaseUtil.getInstance().getRepositoryManager().getCommitmentRepository().getAllCommitmentOnGoing(false).observe(owner, new Observer<List<CommitmentWithMyStep>>() {
             @Override
             public void onChanged(List<CommitmentWithMyStep> commitmentWithMySteps) {
-                myCommitments=commitmentWithMySteps;
-                notifyDataSetChanged();
+                if(myCommitments== null || myCommitments.size()!=commitmentWithMySteps.size()) {
+                    myCommitments = commitmentWithMySteps;
+                    Log.d("naed", "update of my commitment");
+                    notifyDataSetChanged();
+                }
             }
         });
     }

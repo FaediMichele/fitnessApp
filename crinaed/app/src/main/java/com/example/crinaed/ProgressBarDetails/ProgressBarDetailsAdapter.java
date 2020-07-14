@@ -173,15 +173,16 @@ public class ProgressBarDetailsAdapter extends RecyclerView.Adapter<ProgressBarD
             this.itemView = itemView;
         }
 
-        public void setDescription(String text){
+        public void setDescription(final String text){
+            String s="";
             if(text.length()>0) {
-                text = text.substring(0, 1).toUpperCase();
+                s = text.substring(0, 1).toUpperCase();
                 if (text.length() > 1) {
-                    text += text.substring(1);
+                    s += text.substring(1);
                 }
             }
 
-            description.setText(text);
+            description.setText(s);
         }
 
         public float getResult(){
