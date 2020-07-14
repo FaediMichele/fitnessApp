@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -216,6 +217,7 @@ public class SocialSearchActivity extends AppCompatActivity {
                 }catch (JSONException ignore) {
                 }
                 try{
+                    Log.d("naed", obj.toString());
                     if(obj.getBoolean("requestSended")){
                         sendRequest.setText(R.string.request_sended);
                         sendRequest.setEnabled(false);

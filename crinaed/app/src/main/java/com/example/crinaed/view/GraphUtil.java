@@ -30,10 +30,11 @@ public class GraphUtil {
         return new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                axis.setTypeface(Typeface.MONOSPACE);
+                //axis.setTypeface(Typeface.MONOSPACE);
+                axis.setYOffset(-1);
                 Calendar c = GregorianCalendar.getInstance();
-                c.add(Calendar.DAY_OF_YEAR, (int) -Math.ceil(t.getDay() - value));
-                axis.setLabelCount(t== Period.YEAR?6:t==Period.MONTH?5:7, true);
+                c.add(Calendar.DAY_OF_YEAR, (int) -Math.ceil(t.getDay() - value)-1);
+                axis.setLabelCount(t== Period.YEAR?6:t==Period.MONTH?4:7, true);
                 return Util.timestampToIsoMonth(c.getTime().getTime());
             }
         };
