@@ -1,11 +1,124 @@
 <resources>
     <string name="app_name">crinaed</string>
     <string name="ciao">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel varius justo, a faucibus urna. Fusce enim diam, venenatis at risus ut, tempus volutpat nibh. Sed eros ipsum, volutpat at dolor ac, maximus lobortis sem. Curabitur placerat laoreet lectus, ac vulputate nulla rhoncus non. Morbi bibendum tempus convallis. In condimentum vestibulum erat, ac elementum massa eleifend blandit. Fusce urna diam, mollis lobortis sapien eu, venenatis sollicitudin libero. Nulla volutpat diam id finibus blandit. Donec lobortis commodo dui vel rhoncus. Fusce urna neque, vestibulum non bibendum dictum, ullamcorper et dolor. Nulla a faucibus lacus, nec consectetur massa. Proin dapibus nisi nisi, in euismod velit varius eu. Quisque efficitur pulvinar maximus. Proin pulvinar viverra suscipit. Quisque sagittis sem lacus, a molestie lacus vulputate a.
-
-Curabitur vel velit id ante volutpat porta. In nec dapibus ipsum. Vivamus vulputate purus ac eros interdum, interdum mollis sem maximus. Pellentesque eu enim ut nibh tincidunt pretium. Suspendisse aliquet mauris sed ligula consequat semper. Duis pretium nec libero non scelerisque. Donec tincidunt rhoncus ligula in placerat. Donec vitae maximus tortor, vitae rhoncus risus. Quisque vel vulputate nulla. Quisque commodo augue enim, ut dapibus odio consectetur eget. Phasellus ex est, feugiat at lacus vel, egestas bibendum magna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec pulvinar faucibus consectetur. Aliquam mauris tortor, laoreet sed metus vitae, bibendum accumsan nunc. Cras pulvinar justo et vehicula elementum. Vestibulum eu est hendrerit, euismod elit sed, maximus ligula.
-
-Suspendisse dui massa, placerat at consequat in, dictum ut diam. Etiam gravida venenatis lobortis. Morbi et metus eget nisi aliquam tincidunt. Phasellus vel cursus turpis. Aenean rutrum, neque id euismod consequat, enim tellus pharetra nisi, et imperdiet ligula tortor in quam. Nulla maximus ante eu tempus ultricies. Phasellus id placerat orci, non ornare nibh. Nulla ac sodales ipsum. Integer ultricies lacinia nibh ac molestie. Sed in mi justo. Etiam vehicula libero et odio varius, in rutrum justo tincidunt. Ut id augue volutpat, molestie risus non, tempor nibh. Integer at efficitur orci, non molestie turpis. Mauris sit amet lorem eget eros molestie sodales. Proin id feugiat dui.
-
-Nulla fringilla dapibus leo, quis convallis risus venenatis vel. Sed quis diam nulla. Aliquam sit amet eros in turpis efficitur lobortis ac et justo. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean laoreet est sed congue interdum. Morbi mattis in ligula quis tristique. Maecenas erat nisl, cursus sed tincidunt in, efficitur in urna. Ut faucibus nunc metus, et feugiat nunc dignissim lobortis. Sed ornare, ante tincidunt tincidunt congue, diam magna pulvinar lectus, sit amet pellentesque velit magna non velit. Curabitur suscipit hendrerit lectus, auctor accumsan libero mollis id. Phasellus non augue at mi malesuada consectetur eget a tortor. Curabitur neque ante, finibus non sapien ut, placerat fringilla lacus. Mauris interdum lacinia porttitor.
+Curabitur vel velit id ante volutpat porta.
     </string>
+    <string name="tab_objective">obiettivi</string>
+    <string name="tab_social">social</string>
+    <string name="tab_learning">learning</string>
+    <string name="tab_learnign_details">info</string>
+    <string name="tab_learnign_bought">lezioni</string>
+    <string name="sessionId">sessionId</string>
+    <string name="social">Social</string>
+    <string name="sport">Sport</string>
+    <string name="mental">Mental</string>
+    <string name="write_message">Scrivi un messaggio</string>
+    <string name="archive">archivio</string>
+    <string name="name_surname">%s %s</string>
+    <string name="week">Week</string>
+    <string name="month">Month</string>
+    <string name="year">Year</string>
+    <string name="day">Day</string>
+    <string name="ever">Ever</string>
+    <string name="graph_title">%s statistics</string>
+    <string name="delete">Delete</string>
+    <string name="confirm">Confirm</string>
+    <string name="progress_text">%d/%d</string>
+    <string name="block_friend">Block friend</string>
+    <string name="friend_image">Friend image</string>
+    <string name="exit">Exit</string>
+    <string name="block_ok">User blocked</string>
+    <string name="connection_error">%s,. The connection cannot be established</string>
+    <string name="block_error">Cannot block user</string>
+    <string name="unblock">Unblock</string>
+    <string name="unblock_ok">User unblocked</string>
+    <string name="request_friendship">Send request</string>
+    <string name="search_hint">Search a friend, an objective name or a step name</string>
+    <string name="request_sended">Request sended</string>
+    <string name="request_received">Accept request</string>
+    <string name="request_accepted">The friendship has been accepted</string>
+    <string name="email">e-mail</string>
+    <string name="wrong_email">e-mail is not valid</string>
+    <string name="wrong_password">The password must be longher than 6 character</string>
+    <string name="login_action_label">Login</string>
+    <string name="cannot_login">The connection with the server cannot be established</string>
+    <string name="wrong_credential">The email or the password is wrong</string>
+    <string name="cat_level">%s: %d</string>
+    <string name="old_commitment_data">Old commitment data</string>
+    <string name="checklist">Single</string>
+    <string name="progression">Progression</string>
+    <string name="error_name">The name must not be empty</string>
+    <string name="error_max">Accepted value 1–99999</string>
+    <string-array name="unit_measure">
+        <item>Km</item>
+        <item>m</item>
+        <item>hr</item>
+        <item>Times</item>
+        <item>Kg</item>
+        <item>Km</item>
+        <item>mi</item>
+        <item>L</item>
+        <item>lb</item>
+    </string-array>
+    <string name="review">Review</string>
+    <string name="info_of_course">info sul corso</string>
+    <string name="descritpion">Descrizione</string>
+    <string name="buy_courese">compra il corso</string>
+    <string name="value_review">Value Review</string>
+    <string name="price">Price</string>
+    <string name="buy_for_view_video">Compra il corso per visualizzare le video lezioni</string>
+    <string name="congratulation">Congratulazioni per aver acquistato il corso</string>
+    <string name="course_bought">Corso acquistato</string>
+    <string name="scrivi_anche_tu_una_recensione">scrivi anche tu una recensione</string>
+    <string name="value_max_10">value max 10</string>
+    <string name="value">value</string>
+    <string name="max_10">max 10</string>
+    <string name="wrong_data">The server sent the wrong data</string>
+    <string name="review_val">%.1f/10</string>
+    <string name="unknown_error">There is an unexpected error</string>
+    <string name="price_val">%s€</string>
+    <string name="buy_for">BUY FOR %s€</string>
+    <string name="course_not_bought">There was an internal error: the couse cannot be bought</string>
+    <string name="course_name">Course name</string>
+    <string name="review_val_error">The value mus be from 0 to 10</string>
+    <string name="review_added">The review has been adde with success</string>
+    <string name="review_exist">You can make only one review for this course</string>
+    <string name="archived">The course is now archived</string>
+    <string name="not_archived">The course is not archived</string>
+    <string name="remove_archive">Restore</string>
+    <string name="add_archive">Archive</string>
+    <string name="add_to_my_objective">Add to my objective</string>
+    <string name="warning">Warning</string>
+    <string name="commitment_exist">Already exist an objective with the same name. Are you sure you want to add another one?</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="objective_added">The objective is added in the main page</string>
+    <string name="no_import_data">This course not support the import of the objective</string>
+    <string name="info_of_school">info of school</string>
+    <string name="login">Login</string>
+    <string name="register">register</string>
+    <string name="name">Name</string>
+    <string name="last_name">Last name</string>
+    <string name="title_objective">Title objective</string>
+    <string name="create_management">Create management</string>
+    <string name="create_objective">create objective</string>
+    <string name="objective_management">Objective management</string>
+    <string name="delete_objective">delete objective</string>
+    <string name="select_objective_to_delete">Select objective to delete</string>
+    <string name="progressive_format">Progressive : %d%s</string>
+    <string name="error_description">The description must not be empty</string>
+    <string name="no_step">The Objective must contain at least one step</string>
+    <string name="error_lastname">The surname must not be empty</string>
+    <string name="error_email">The email must not be empty</string>
+    <string name="error_password">The password must not be empty</string>
+    <string name="logout_done">The logout is succesfull</string>
+    <string name="go_to_school">go to school</string>
+    <string name="logout">Logout</string>
+    <string name="name_formatted">Name: %s</string>
+    <string name="last_name_formatted">Last name: %s</string>
+    <string name="email_formatted">"E-mail: %s"</string>
+    <plurals name="commitment_ended">
+        <item quantity="one">%d commitment is archived</item>
+        <item quantity="other">%d commitments is archived</item>
+    </plurals>
 </resources>

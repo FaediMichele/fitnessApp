@@ -6,11 +6,19 @@
     <color name="colorPrimaryb">#f00</color>
     <color name="colorPrimaryDarkb">#0f0</color>
     <color name="colorAccentb">#00f</color>
-    <color name="colorSettingIcon">#949494</color>
-    <color name="colorRedPrimary">#FF8599 </color>
-    <color name="colorRedSecondary">#FF7DC2</color>
-    <color name="colorGreenPrimary">#7DFF7D</color>
-    <color name="colorGreenSecondary">#85FFC6</color>
-    <color name="colorBluPrimary">#85C6FF</color>
-    <color name="colorBluSecondary">#7D7DFF</color>
+    <!--colori della nostra app-->
+    <color name="transparent">#00000000</color>
+    <color name="grey">#BABABA</color>
+    <color name="settingIcon">#949494</color>
+    <color name="background">#e9e9e9</color>
+    <color name="backgroundItem">#fff</color>
+    <color name="redPrimary">#D9576C </color>
+    <color name="redSecondary">#FF96CE</color>
+    <color name="greenPrimary">#4DBF4D</color>
+    <color name="greenSecondary">#99FFAD</color>
+    <color name="bluPrimary">#7373E6</color>
+    <color name="bluSecondary">#A6D5FF</color>
+    <color name="orange">#FF8800</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>

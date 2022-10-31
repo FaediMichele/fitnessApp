@@ -1,0 +1,42 @@
+- chat activitiy
+	- mettere un marine tra la tastirea e EditText della chat!!!!!!!!!
+	- da sistemare l'animazione quando si è al primo messaggio(più vecchio) e si invia un messaggio
+	- allineare correttamente le chat quando c'è poco testo.
+	- ricerca quando vai indietro deve andare nel scoial fragment non nel social activity
+- social activity 
+	- da fra funzionare la ricerca
+- lesson
+	-il player musicale non full screen il controller rimane fixed dove compare
+- objective 
+	-lo slidere ha il VH statico deve essere publico non statico
+
+- sistemare il cazzo di player controller
+
+- login
+	-logo
+
+- il tornare indietro in tutte le activity tranne learning 
+
+- creazione obbiettivo
+
+- logout
+
+- creazione dell'utente
+
+
+- sistemare la dialog creazione step
+
+
+
+- dialgo create -> deve essere stondata
+- pulsante acetta chat da sistemare
+
+- la ricerca deve avere il testo binaco !!!! 
+
+
+- cambiare l'icona impostazione dagli obbiettivi
+
+- controllare la animazione da scuola a corso che sembra tornare indietro ma dovrebbe andare avanti(questo evita il loop infinito. se vuoi cè un todo che indica la causa della animazione brutta)
+------------
+logins
+riga 57 true

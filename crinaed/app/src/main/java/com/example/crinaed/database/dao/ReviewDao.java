@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
@@ -16,7 +17,7 @@ import java.util.List;
 @Dao
 public interface ReviewDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     Long[] insert(Review... reviews);
 
     @Update
@@ -25,11 +26,18 @@ public interface ReviewDao {
     @Delete
     void delete(Review... reviews);
 
+    @Query("DELETE FROM Review")
+    void deleteReview();
+
     @Transaction
     @Query("SELECT * FROM User")
     LiveData<List<UserReview>> getUserReview();
 
     @Transaction
-    @Query("SELECT * FROM Review WHERE idSchool = (:idSchool)")
-    LiveData<List<Review>> getSchoolReview(long idSchool);
+    @Query("SELECT * FROM Review")
+    List<Review> getUserReviewList();
+
+    @Transaction
+    @Query("SELECT * FROM Review WHERE idCourse = (:idCourse)")
+    LiveData<List<Review>> getSchoolReview(long idCourse);
 }

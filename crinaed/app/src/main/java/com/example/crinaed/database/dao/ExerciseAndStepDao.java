@@ -4,40 +4,35 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.crinaed.database.entity.Exercise;
-import com.example.crinaed.database.entity.Step;
-import com.example.crinaed.database.entity.join.ExerciseWithStep;
 
 import java.util.List;
 
 @Dao
 public interface ExerciseAndStepDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     Long[] insert(Exercise... exercises);
-
-    @Insert
-    Long[] insert(Step... steps);
 
     @Update
     void update(Exercise... exercises);
 
-    @Update
-    void update(Step... steps);
-
     @Delete
     void delete(Exercise... exercises);
 
-    @Delete
-    void delete(Step... steps);
+    @Query("DELETE FROM Exercise")
+    void deleteExercise();
 
-    @Transaction
-    @Query("SELECT * FROM Exercise WHERE idCourse = (:idCourse)")
-    LiveData<List<ExerciseWithStep>> get(long idCourse);
+    @Query("SELECT * FROM Exercise")
+    List<Exercise> getExerciseList();
 
-    @Query("SELECT * FROM Step WHERE idExercise = (:idExercise)")
-    List<Step> getStepByIdExercise(long idExercise);
+    @Query("SELECT * FROM Exercise WHERE idCourse=(:idCourse)")
+    LiveData<List<Exercise>> getExercise(long idCourse);
+
+    @Query("SELECT * FROM Exercise WHERE idExercise=(:idExercise)")
+    LiveData<Exercise> getExerciseById(long idExercise);
 }

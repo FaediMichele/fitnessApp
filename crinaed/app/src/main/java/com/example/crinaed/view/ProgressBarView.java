@@ -85,7 +85,7 @@ public class ProgressBarView extends View {
         strokeWidth = attributes.getDimension(R.styleable.ProgressBarView_strokeWidth, strokeWidth);
         backgroundStrokeWidth = attributes.getDimension(R.styleable.ProgressBarView_backgroundStrokeWidth, strokeWidth);
         if(backgroundStrokeWidth > strokeWidth){
-            backgroundStrokeWidth = strokeWidth;
+            backgroundStrokeWidth = strokeWidth/2;
         }
         showText = attributes.getBoolean(R.styleable.ProgressBarView_showPercentage, showText);
         startAngle = attributes.getInteger(R.styleable.ProgressBarView_startAngle, startAngle);
@@ -142,7 +142,10 @@ public class ProgressBarView extends View {
     }
 
     public void setProgress(float progress) {
-        this.progress = Float.valueOf(new DecimalFormat("#.##").format(progress));
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        String stringDecimal = decimalFormat.format(progress);
+        stringDecimal = stringDecimal.replace(",",".");
+        this.progress = Float.parseFloat(stringDecimal);
 
         if (this.progress > getMax()) {
             Log.d("ProgressBarView", "progress: "+ this.progress  + ", max: " + getMax());
@@ -268,9 +271,11 @@ public class ProgressBarView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         float startAngle = 270 - arcAngle + this.startAngle;
-        float finishedSweepAngle = progress / (float) getMax() * arcAngle;
+        float finishedSweepAngle = (progress < 1 ? 1f : progress) / (float) getMax() * arcAngle;
         float finishedStartAngle = startAngle;
-        if(progress == 0) finishedStartAngle = 0.01f + this.startAngle;
+        if(progress == 0){
+            finishedStartAngle = 0.01f + this.startAngle;
+        }
         backgroundPaint.setColor(backgroundColor);
         canvas.drawArc(rectFBackground, startAngle, arcAngle, false, backgroundPaint);
 
@@ -319,7 +324,7 @@ public class ProgressBarView extends View {
             strokeWidth = bundle.getFloat(INSTANCE_STROKE_WIDTH);
             backgroundStrokeWidth = bundle.getFloat(INSTANCE_BACKGROUND_STROKE_WIDTH);
             if(backgroundStrokeWidth > strokeWidth){
-                backgroundStrokeWidth = strokeWidth;
+                backgroundStrokeWidth = strokeWidth/2;
             }
             textSize = bundle.getFloat(INSTANCE_TEXT_SIZE);
             textColor = bundle.getInt(INSTANCE_TEXT_COLOR);

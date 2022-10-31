@@ -1,19 +1,68 @@
-<resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.MyApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowBackground">@color/background</item>
+        <item name="materialCardViewStyle">@style/MyCard</item>
+<!--        da qui solo colori -->
+<!--        <item name="colorAccent">#ff8800</item>-->
+        <item name="colorPrimary">#ff8800</item>
+        <item name="colorPrimaryVariant">#ffb944</item>
+<!--        color status bar-->
+        <item name="colorPrimaryDark">#ff8800</item>
+<!--        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>-->
+        <item name="colorOnPrimary">#000</item>
+        <item name="colorSecondary">#ff470d</item>
+        <item name="colorSecondaryVariant">#c30000</item>
+        <item name="colorOnSecondary">#fff</item>
     </style>
 
-    <!-- Base application theme. -->
-    <style name="ThemeCri" parent="Theme.AppCompat.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimaryb</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkb</item>
-        <item name="colorAccent">@color/colorAccentb</item>
+    <style name="Theme.Social" parent="Theme.MyApp">
+        <item name="colorAccent">#ff8800</item>
+        <item name="colorPrimary">@color/greenPrimary</item>
     </style>
+
+    <style name="RoundedCornerMaterialButton">
+        <item name="colorAccent">@color/redPrimary</item>
+    </style>
+
+<!--init card style-->
+    <style name="MyCard" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/backgroundItem</item>
+        <item name="cardElevation">1dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.MyApp.MediumComponent</item>
+    </style>
+    <style name="ShapeAppearance.MyApp.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+<!--end card style-->
+
+<!--init dialog details-->
+    <!-- Animation for dialog box -->
+    <style name="DialogSlideTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+    </style>
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up_dialog</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_down</item>
+    </style>
+
+<!--init dialog details-->
+
+<!--    style for image circle-->
+    <style name="roundedImageViewRounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="roundedImageViewDetails">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <style name="roundedImageViewRoundedVideo">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
 
 </resources>

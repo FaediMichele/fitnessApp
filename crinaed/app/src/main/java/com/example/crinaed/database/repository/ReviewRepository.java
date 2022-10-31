@@ -1,7 +1,6 @@
 package com.example.crinaed.database.repository;
 
-import android.app.Application;
-import android.util.Log;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
@@ -19,12 +18,13 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class ReviewRepository implements Repository{
+public class ReviewRepository extends Repository{
     private ReviewDao reviewDao;
 
-    public ReviewRepository(Application application){
-        AppDatabase db = AppDatabase.getDatabase(application);
+    public ReviewRepository(Context context){
+        AppDatabase db = AppDatabase.getDatabase(context);
         reviewDao = db.reviewDao();
+        setContext(context);
     }
 
     public LiveData<List<UserReview>> getUserReview(){
@@ -66,10 +66,32 @@ public class ReviewRepository implements Repository{
         JSONArray array = data.getJSONArray("Review");
         final List<Review> reviews = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
-            JSONObject obj = array.getJSONObject(i);
-            Review review = new Review(obj.getLong("idSchool"), obj.getLong("idUser"), obj.getInt("val"), obj.getString("comment"));
-            reviews.add(review);
+            reviews.add(new Review(array.getJSONObject(i)));
         }
         return insert(reviews.toArray(new Review[0]));
+    }
+
+    @Override
+    public Future<?> extractData(final JSONObject root) {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    root.put("Review", listToJSONArray(reviewDao.getUserReviewList()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    @Override
+    public Future<?> deleteAll() {
+        return AppDatabase.databaseWriteExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                reviewDao.deleteReview();
+            }
+        });
     }
 }
